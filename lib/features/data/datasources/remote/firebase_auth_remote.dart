@@ -1,4 +1,4 @@
-import 'package:final_project/common/exception.dart';
+import 'package:final_project/common/error/exception.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class FirebaseAuthRemoteData {
@@ -19,6 +19,7 @@ class FirebaseAuthRemoteDataImpl implements FirebaseAuthRemoteData {
       } else if (e.code == 'wrong-password') {
         throw ServerException('Wrong password provided for that user.');
       }
+      throw ServerException(e.message.toString());
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -40,6 +41,7 @@ class FirebaseAuthRemoteDataImpl implements FirebaseAuthRemoteData {
       } else if (e.code == 'email-already-in-use') {
         throw ServerException('The account already exists for that email.');
       }
+      throw ServerException(e.message.toString());
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -50,7 +52,7 @@ class FirebaseAuthRemoteDataImpl implements FirebaseAuthRemoteData {
     try {
       await FirebaseAuth.instance.signOut();
     } on FirebaseAuthException catch (e) {
-      throw ServerException(e.toString());
+      throw ServerException(e.message.toString());
     } catch (e) {
       throw Exception(e.toString());
     }

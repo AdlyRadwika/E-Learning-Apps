@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:final_project/common/exception.dart';
-import 'package:final_project/common/failure.dart';
+import 'package:final_project/common/error/exception.dart';
+import 'package:final_project/common/error/failure.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_auth_remote.dart';
 import 'package:final_project/features/domain/repositories/firebase_auth_repository.dart';
 
@@ -17,7 +17,7 @@ class FirebaseAuthRepositoryImpl implements FirebaseAuthRepository {
           await remoteDataSource.login(email: email, password: password);
       return Right(result);
     } on ServerException catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ServerFailure(e.message.toString()));
     } catch (e) {
       return Left(UnexpectedFailure(e.toString()));
     }
@@ -29,7 +29,7 @@ class FirebaseAuthRepositoryImpl implements FirebaseAuthRepository {
       final result = await remoteDataSource.logout();
       return Right(result);
     } on ServerException catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ServerFailure(e.message.toString()));
     } catch (e) {
       return Left(UnexpectedFailure(e.toString()));
     }
@@ -43,7 +43,7 @@ class FirebaseAuthRepositoryImpl implements FirebaseAuthRepository {
           await remoteDataSource.login(email: email, password: password);
       return Right(result);
     } on ServerException catch (e) {
-      return Left(ServerFailure(e.toString()));
+      return Left(ServerFailure(e.message.toString()));
     } catch (e) {
       return Left(UnexpectedFailure(e.toString()));
     }

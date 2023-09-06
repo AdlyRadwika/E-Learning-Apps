@@ -1,3 +1,4 @@
+import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/firebase_options.dart';
 import 'package:final_project/injection.dart' as di;
 import 'package:flutter/foundation.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/services.dart';
+import 'package:final_project/features/presentation/route.dart' as route;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,11 +40,8 @@ class MainApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: Colors.blueAccent,
       ),
-      home: const Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+      onGenerateRoute: route.controller,
+      initialRoute: LoginPage.route,
     );
   }
 }

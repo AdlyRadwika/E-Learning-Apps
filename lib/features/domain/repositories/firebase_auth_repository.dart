@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:final_project/common/failure.dart';
+import 'package:final_project/common/error/failure.dart';
 
 abstract class FirebaseAuthRepository {
   Future<Either<Failure, void>> login(

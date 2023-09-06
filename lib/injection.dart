@@ -4,15 +4,18 @@ import 'package:final_project/features/domain/repositories/firebase_auth_reposit
 import 'package:final_project/features/domain/usecases/auth/login.dart';
 import 'package:final_project/features/domain/usecases/auth/logout.dart';
 import 'package:final_project/features/domain/usecases/auth/register.dart';
+import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 final locator = GetIt.instance;
 
 void init() {
   // Bloc
-
+  locator.registerFactory<AuthBloc>(() => AuthBloc(
+      loginUseCase: locator(),
+      registerUseCase: locator(),
+      logoutUseCase: locator()));
   // Usecases
-  // Auth
   locator.registerLazySingleton<LoginUseCase>(() => LoginUseCase(locator()));
   locator
       .registerLazySingleton<RegisterUseCase>(() => RegisterUseCase(locator()));
