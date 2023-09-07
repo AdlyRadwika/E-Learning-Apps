@@ -19,7 +19,7 @@ class FirebaseAuthRemoteDataImpl implements FirebaseAuthRemoteData {
       } else if (e.code == 'wrong-password') {
         throw ServerException('Wrong password provided for that user.');
       }
-      throw ServerException(e.message.toString());
+      throw ServerException(e.message ?? "Unknown exception (firebase)");
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -41,7 +41,7 @@ class FirebaseAuthRemoteDataImpl implements FirebaseAuthRemoteData {
       } else if (e.code == 'email-already-in-use') {
         throw ServerException('The account already exists for that email.');
       }
-      throw ServerException(e.message.toString());
+      throw ServerException(e.message ?? "Unknown exception (firebase)");
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -52,7 +52,7 @@ class FirebaseAuthRemoteDataImpl implements FirebaseAuthRemoteData {
     try {
       await FirebaseAuth.instance.signOut();
     } on FirebaseAuthException catch (e) {
-      throw ServerException(e.message.toString());
+      throw ServerException(e.message ?? "Unknown exception (firebase)");
     } catch (e) {
       throw Exception(e.toString());
     }

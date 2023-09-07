@@ -1,3 +1,4 @@
+import 'package:final_project/common/util/theme.dart';
 import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/firebase_options.dart';
 import 'package:final_project/injection.dart' as di;
@@ -36,10 +37,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Colors.blueAccent,
-      ),
+      theme: themeData,
       onGenerateRoute: route.controller,
       initialRoute: LoginPage.route,
     );

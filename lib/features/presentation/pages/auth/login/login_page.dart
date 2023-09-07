@@ -1,6 +1,9 @@
 import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
+import 'package:final_project/features/presentation/pages/auth/login/widgets/navigate_rich_text_widget.dart';
+import 'package:final_project/features/presentation/pages/auth/register/register_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
+import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,43 +42,67 @@ class _LoginPageState extends State<LoginPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: emailC,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomTextField(
+                        controller: emailC,
+                        label: 'Email',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomTextField(
+                        controller: passC,
+                        label: 'Password',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      //TODO: implement forget password
+                      const NavigateRichTextWidget(
+                        questionText: 'Forget password?',
+                        btnText: 'Reset here',
+                        route: 'Soon',
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: passC,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
+                Column(
+                  children: [
+                    BlocListener<AuthBloc, AuthState>(
+                      listener: (context, state) {
+                        if (state is LoginResult && state.isSuccess) {
+                          Navigator.pushReplacementNamed(
+                              context, HomePage.route);
+                        } else if (state is LoginResult && !state.isSuccess) {
+                          context.showErrorSnackBar(message: state.message);
+                        }
+                      },
+                      child: ElevatedButton(
+                          onPressed: () {
+                            _login();
+                          },
+                          child: const Text('Login')),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const NavigateRichTextWidget(
+                      questionText: "Doesn't have an account?",
+                      btnText: 'Register here',
+                      route: RegisterPage.route,
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              BlocListener<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  if (state is LoginResult && state.isSuccess) {
-                    Navigator.pushReplacementNamed(context, HomePage.route);
-                  } else if (state is LoginResult && !state.isSuccess) {
-                    context.showErrorSnackBar(message: state.message);
-                  }
-                },
-                child: ElevatedButton(
-                    onPressed: () {
-                      _login();
-                    },
-                    child: const Text('Login')),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

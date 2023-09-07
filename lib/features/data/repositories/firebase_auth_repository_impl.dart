@@ -40,7 +40,7 @@ class FirebaseAuthRepositoryImpl implements FirebaseAuthRepository {
       {required String email, required String password}) async {
     try {
       final result =
-          await remoteDataSource.login(email: email, password: password);
+          await remoteDataSource.register(email: email, password: password);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message.toString()));

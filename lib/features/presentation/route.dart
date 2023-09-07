@@ -1,5 +1,6 @@
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
+import 'package:final_project/features/presentation/pages/auth/register/register_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,12 @@ Route<dynamic> controller(RouteSettings settings) {
           builder: (context) => BlocProvider<AuthBloc>(
                 create: (context) => locator<AuthBloc>(),
                 child: const LoginPage(),
+              ));
+    case RegisterPage.route:
+      return MaterialPageRoute(
+          builder: (context) => BlocProvider<AuthBloc>(
+                create: (context) => locator<AuthBloc>(),
+                child: const RegisterPage(),
               ));
     default:
       return MaterialPageRoute(
