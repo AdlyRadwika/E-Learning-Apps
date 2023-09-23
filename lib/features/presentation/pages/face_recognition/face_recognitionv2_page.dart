@@ -9,6 +9,7 @@ import 'package:final_project/features/presentation/pages/face_recognition/widge
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/camera_header.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/face_painter.dart';
 import 'package:final_project/injection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:flutter/material.dart';
 
@@ -112,7 +113,9 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
               });
             }
           } else {
-            print('face is null');
+            if (kDebugMode) {
+              print('face is null');
+            }
             setState(() {
               faceDetected = null;
             });
@@ -120,7 +123,9 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
 
           _detectingFaces = false;
         } catch (e) {
-          print('Error _faceDetectorService face => $e');
+          if (kDebugMode) {
+            print('Error _faceDetectorService face => $e');
+          }
           _detectingFaces = false;
         }
       }

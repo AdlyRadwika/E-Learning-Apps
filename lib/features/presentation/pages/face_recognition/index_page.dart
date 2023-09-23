@@ -106,7 +106,6 @@ class _IndexPageState extends State<IndexPage> {
                           child: const Text('Login')),
                       GestureDetector(
                         onTap: () {
-                          print('ello!');
                           Navigator.pushNamed(
                               context, FaceRecognitionV2Page.route);
                         },

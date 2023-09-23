@@ -1,9 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as imglib;
 import 'package:camera/camera.dart';
 
 imglib.Image convertToImage(CameraImage image) {
   try {
-    print('image.format.group=>${image.format.group}');
     if (image.format.group == ImageFormatGroup.yuv420) {
       return _convertYUV420(image);
     } else if (image.format.group == ImageFormatGroup.bgra8888) {
@@ -11,7 +11,9 @@ imglib.Image convertToImage(CameraImage image) {
     }
     throw Exception('Image format not supported');
   } catch (e) {
-    print("ERROR:" + e.toString());
+    if (kDebugMode) {
+      print(e);
+    }
   }
   throw Exception('Image format not supported');
 }

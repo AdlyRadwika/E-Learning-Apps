@@ -6,6 +6,7 @@ import 'package:final_project/features/presentation/pages/face_recognition/model
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/app_button.dart';
 import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
 import 'package:final_project/injection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AuthActionButton extends StatefulWidget {
@@ -41,6 +42,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
       password: password,
       modelData: predictedData,
     );
+    //TODO: replace with firebase firestore
     await databaseHelper.insert(userToSave);
     _mlService.setPredictedData([]);
   }
@@ -83,7 +85,9 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         bottomSheetController.closed.whenComplete(() => widget.reload());
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 

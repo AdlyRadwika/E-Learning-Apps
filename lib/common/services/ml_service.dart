@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:final_project/common/consts/asset_conts.dart';
 import 'package:final_project/common/services/image_converter.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/db/database_helper.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/model/user_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as imglib;
@@ -43,8 +43,10 @@ class MLService {
       _interpreter = await Interpreter.fromAsset(AssetConts.othersTflite,
           options: interpreterOptions);
     } catch (e) {
-      print('Failed to load model.');
-      print(e);
+      if (kDebugMode) {
+        print('Failed to load model.');
+        print(e);
+      }
     }
   }
 
@@ -111,14 +113,13 @@ class MLService {
   }
 
   Future<User?> _searchResult(List predictedData) async {
+    //TODO: replace with firebase data
     DatabaseHelper dbHelper = DatabaseHelper.instance;
 
     List<User> users = await dbHelper.queryAllUsers();
     double minDist = 999;
     double currDist = 0.0;
     User? predictedResult;
-
-    print('users.length=> ${users.length}');
 
     for (User u in users) {
       currDist = _euclideanDistance(u.modelData, predictedData);
