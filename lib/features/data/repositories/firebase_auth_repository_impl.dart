@@ -3,9 +3,10 @@ import 'package:final_project/common/error/exception.dart';
 import 'package:final_project/common/error/failure.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_auth_remote.dart';
 import 'package:final_project/features/domain/repositories/firebase_auth_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthRepositoryImpl implements FirebaseAuthRepository {
-  final FirebaseAuthRemoteData remoteDataSource;
+  final FirebaseAuthRemote remoteDataSource;
 
   FirebaseAuthRepositoryImpl({required this.remoteDataSource});
 
@@ -36,11 +37,14 @@ class FirebaseAuthRepositoryImpl implements FirebaseAuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> register(
-      {required String email, required String password}) async {
+  Future<Either<Failure, User?>> register(
+      {required String email,
+      required String password,
+      required String userName,
+      required String role}) async {
     try {
-      final result =
-          await remoteDataSource.register(email: email, password: password);
+      final result = await remoteDataSource.register(
+          email: email, password: password, userName: userName, role: role);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message.toString()));

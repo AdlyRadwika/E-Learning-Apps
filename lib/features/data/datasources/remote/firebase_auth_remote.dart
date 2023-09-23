@@ -1,18 +1,23 @@
 import 'package:final_project/common/error/exception.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class FirebaseAuthRemoteData {
-  Future<void> register({required String email, required String password});
+abstract class FirebaseAuthRemote {
+  Future<User?> register(
+      {required String email,
+      required String password,
+      required String userName,
+      required String role});
   Future<void> login({required String email, required String password});
   Future<void> logout();
 }
 
-class FirebaseAuthRemoteDataImpl implements FirebaseAuthRemoteData {
+class FirebaseAuthRemoteImpl implements FirebaseAuthRemote {
+  final auth = FirebaseAuth.instance;
+
   @override
   Future<void> login({required String email, required String password}) async {
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         throw ServerException('No user found for that email.');
@@ -26,15 +31,17 @@ class FirebaseAuthRemoteDataImpl implements FirebaseAuthRemoteData {
   }
 
   @override
-  Future<void> register(
-      {required String email, required String password}) async {
+  Future<User?> register(
+      {required String email,
+      required String password,
+      required String userName,
+      required String role}) async {
     try {
-      //FIXME:
-      // final credential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final response = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      return response.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw ServerException('Password is too weak');
@@ -50,7 +57,7 @@ class FirebaseAuthRemoteDataImpl implements FirebaseAuthRemoteData {
   @override
   Future<void> logout() async {
     try {
-      await FirebaseAuth.instance.signOut();
+      await auth.signOut();
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? "Unknown exception (firebase)");
     } catch (e) {

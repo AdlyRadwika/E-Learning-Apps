@@ -1,4 +1,6 @@
 import 'package:final_project/common/util/theme.dart';
+import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
+import 'package:final_project/features/presentation/bloc/user_store/user_store_bloc.dart';
 import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/firebase_options.dart';
 import 'package:final_project/injection.dart' as di;
@@ -8,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/services.dart';
 import 'package:final_project/features/presentation/route.dart' as route;
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,10 +39,16 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: themeData,
-      onGenerateRoute: route.controller,
-      initialRoute: LoginPage.route,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(create: (context) => di.locator<AuthBloc>()),
+        BlocProvider<UserStoreBloc>(create: (context) => di.locator<UserStoreBloc>()),
+      ],
+      child: MaterialApp(
+        theme: themeData,
+        onGenerateRoute: route.controller,
+        initialRoute: LoginPage.route,
+      ),
     );
   }
 }

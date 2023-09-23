@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:final_project/features/domain/usecases/auth/login.dart';
 import 'package:final_project/features/domain/usecases/auth/logout.dart';
 import 'package:final_project/features/domain/usecases/auth/register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -29,11 +30,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(RegisterLoading());
 
       final result = await registerUseCase.execute(
-          email: event.email, password: event.password);
+          userName: event.userName,
+          role: event.role,
+          email: event.email,
+          password: event.password);
 
       emit(result.fold(
           (l) => RegisterResult(isSuccess: false, message: l.message),
-          (r) => RegisterResult(isSuccess: true)));
+          (r) => RegisterResult(isSuccess: true, user: r)));
     });
     on<LogoutEvent>((event, emit) async {
       final result = await logoutUseCase.execute();

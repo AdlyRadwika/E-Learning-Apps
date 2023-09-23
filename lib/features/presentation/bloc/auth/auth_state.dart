@@ -18,8 +18,9 @@ class RegisterLoading extends AuthState {}
 class RegisterResult extends AuthState {
   final String message;
   final bool isSuccess;
+  final User? user;
 
-  RegisterResult({this.message = '', required this.isSuccess});
+  RegisterResult({this.message = '', required this.isSuccess, this.user});
 }
 
 class LogoutResult extends AuthState {
