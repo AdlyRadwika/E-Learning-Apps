@@ -1,3 +1,6 @@
+import 'package:final_project/common/services/camera_service.dart';
+import 'package:final_project/common/services/face_detector_service.dart';
+import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_auth_remote.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_user_store_remote.dart';
 import 'package:final_project/features/data/repositories/firebase_auth_repository_impl.dart';
@@ -44,4 +47,7 @@ void init() {
       () => FirebaseUserStoreRemoteImpl());
 
   // External
+  locator.registerLazySingleton<CameraService>(() => CameraService());
+  locator.registerLazySingleton<FaceDetectorService>(() => FaceDetectorService());
+  locator.registerLazySingleton<MLService>(() => MLService());
 }

@@ -1,7 +1,7 @@
 import 'package:final_project/common/util/theme.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_store/user_store_bloc.dart';
-import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
+import 'package:final_project/features/presentation/pages/face_recognition/index_page.dart';
 import 'package:final_project/firebase_options.dart';
 import 'package:final_project/injection.dart' as di;
 import 'package:flutter/foundation.dart';
@@ -42,12 +42,13 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(create: (context) => di.locator<AuthBloc>()),
-        BlocProvider<UserStoreBloc>(create: (context) => di.locator<UserStoreBloc>()),
+        BlocProvider<UserStoreBloc>(
+            create: (context) => di.locator<UserStoreBloc>()),
       ],
       child: MaterialApp(
         theme: themeData,
         onGenerateRoute: route.controller,
-        initialRoute: LoginPage.route,
+        initialRoute: IndexPage.route,
       ),
     );
   }
