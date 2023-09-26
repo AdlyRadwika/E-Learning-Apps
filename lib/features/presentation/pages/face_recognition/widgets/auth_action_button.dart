@@ -18,8 +18,9 @@ class AuthActionButton extends StatefulWidget {
   final Function onPressed;
   final bool isLogin;
   final Function reload;
+
   @override
-  _AuthActionButtonState createState() => _AuthActionButtonState();
+  State<AuthActionButton> createState() => _AuthActionButtonState();
 }
 
 class _AuthActionButtonState extends State<AuthActionButton> {
@@ -27,6 +28,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
 
   final TextEditingController _userTextEditingController =
       TextEditingController(text: '');
+
   final TextEditingController _passwordTextEditingController =
       TextEditingController(text: '');
 
@@ -44,7 +46,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     );
     //TODO: replace with firebase firestore
     await databaseHelper.insert(userToSave);
-    _mlService.setPredictedData([]);
   }
 
   Future _signIn(BuildContext context) async {
@@ -198,10 +199,5 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

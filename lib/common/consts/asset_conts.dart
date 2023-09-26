@@ -1,3 +1,3 @@
 class AssetConts {
-  static const othersTflite = 'others/mobilefacenet.tflite';
+  static const tflite = 'assets/mobilefacenet.tflite';
 }

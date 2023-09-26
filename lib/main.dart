@@ -34,8 +34,9 @@ void main() async {
   runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends StatelessWidget with WidgetsBindingObserver{
   const MainApp({super.key});
+
 
   @override
   Widget build(BuildContext context) {

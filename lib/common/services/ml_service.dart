@@ -6,7 +6,7 @@ import 'package:final_project/common/services/image_converter.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/db/database_helper.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/model/user_model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as imglib;
 
@@ -19,29 +19,28 @@ class MLService {
 
   Future initialize() async {
     late Delegate delegate;
-    _interpreter?.close();
     try {
       if (Platform.isAndroid) {
+        print('delegate on android!');
         delegate = GpuDelegateV2(
           options: GpuDelegateOptionsV2(
             isPrecisionLossAllowed: false,
-            inferencePreference: TfLiteGpuInferenceUsage.fastSingleAnswer,
-            inferencePriority1: TfLiteGpuInferencePriority.minLatency,
-            inferencePriority2: TfLiteGpuInferencePriority.minMemoryUsage,
-            inferencePriority3: TfLiteGpuInferencePriority.auto,
+            inferencePreference: 0,
+            inferencePriority1: 2,
+            inferencePriority2: 3,
+            inferencePriority3: 0,
           ),
         );
       } else if (Platform.isIOS) {
         delegate = GpuDelegate(
-          options: GpuDelegateOptions(
-              allowPrecisionLoss: true,
-              waitType: TFLGpuDelegateWaitType.active),
+          options: GpuDelegateOptions(allowPrecisionLoss: true, waitType: 1),
         );
       }
       var interpreterOptions = InterpreterOptions()..addDelegate(delegate);
 
-      _interpreter = await Interpreter.fromAsset(AssetConts.othersTflite,
+      _interpreter = await Interpreter.fromAsset(AssetConts.tflite,
           options: interpreterOptions);
+      print('delegate on android!');
     } catch (e) {
       if (kDebugMode) {
         print('Failed to load model.');

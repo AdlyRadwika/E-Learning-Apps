@@ -7,10 +7,9 @@ import 'package:final_project/common/services/face_detector_service.dart';
 import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/auth_action_button.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/camera_header.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/widgets/face_painter.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:flutter/material.dart';
 
 class FaceRecognitionV2Page extends StatefulWidget {
@@ -188,10 +187,10 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
                   fit: StackFit.expand,
                   children: <Widget>[
                     CameraPreview(_cameraService.cameraController!),
-                    CustomPaint(
-                      painter: FacePainter(
-                          face: faceDetected, imageSize: imageSize!),
-                    ),
+                    // CustomPaint(
+                    //   painter: FacePainter(
+                    //       face: faceDetected, imageSize: imageSize!),
+                    // ),
                   ],
                 ),
               ),

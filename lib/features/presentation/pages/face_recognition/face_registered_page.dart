@@ -64,7 +64,7 @@ class FaceDetectionPageState extends State<FaceDetectionPage> {
     });
   }
 
-  Future<void> _predictFacesFromImage({@required CameraImage? image}) async {
+  Future<void> _predictFacesFromImage({required CameraImage? image}) async {
     assert(image != null, 'Image is null');
     await _faceDetectorService.detectFacesFromImage(image!);
     if (_faceDetectorService.faceDetected) {
@@ -99,39 +99,35 @@ class FaceDetectionPageState extends State<FaceDetectionPage> {
     if (_faceDetectorService.faceDetected) {
       User? user = await _mlService.predict();
       var bottomSheetController = scaffoldKey.currentState!
-          .showBottomSheet((context) => faceDetectionPageSheet(user: user));
+          .showBottomSheet((context) => _faceDetectionPageSheet(user: user));
       bottomSheetController.closed.whenComplete(_reload);
     }
-  }
-
-  Widget getBodyWidget() {
-    if (_isInitializing) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    if (_isPictureTaken) {
-      return SinglePicture(imagePath: _cameraService.imagePath!);
-    }
-    return CameraDetectionPreview();
   }
 
   @override
   Widget build(BuildContext context) {
     Widget header = CameraHeader("LOGIN", onBackPressed: _onBackPressed);
-    Widget body = getBodyWidget();
     Widget? fab;
     if (!_isPictureTaken) fab = AuthButton(onTap: onTap);
 
     return Scaffold(
       key: scaffoldKey,
       body: Stack(
-        children: [body, header],
+        children: [
+          BodyWidget(
+            isInitializing: _isInitializing,
+            isPictureTaken: _isPictureTaken,
+            cameraService: _cameraService,
+          ),
+          header
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: fab,
     );
   }
 
-  faceDetectionPageSheet({required User? user}) => user == null
+  _faceDetectionPageSheet({required User? user}) => user == null
       ? Container(
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.all(20),
@@ -141,4 +137,28 @@ class FaceDetectionPageState extends State<FaceDetectionPage> {
           ),
         )
       : SignInSheet(user: user);
+}
+
+class BodyWidget extends StatelessWidget {
+  const BodyWidget({
+    super.key,
+    required this.isInitializing,
+    required this.isPictureTaken,
+    required this.cameraService,
+  });
+
+  final bool isInitializing;
+  final bool isPictureTaken;
+  final CameraService cameraService;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isInitializing) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (isPictureTaken) {
+      return SinglePicture(imagePath: cameraService.imagePath!);
+    }
+    return CameraDetectionPreview();
+  }
 }

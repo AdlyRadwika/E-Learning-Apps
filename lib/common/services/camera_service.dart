@@ -1,9 +1,13 @@
-import 'dart:ui';
+import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
-class CameraService {
+class CameraService with WidgetsBindingObserver {
+  List<CameraDescription> cameras = [];
+
   CameraController? _cameraController;
   CameraController? get cameraController => _cameraController;
 
@@ -12,6 +16,20 @@ class CameraService {
 
   String? _imagePath;
   String? get imagePath => _imagePath;
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // App state changed before we got the chance to initialize.
+    if (cameraController == null ||
+        cameraController?.value.isInitialized == false) {
+      return;
+    }
+    if (state == AppLifecycleState.inactive) {
+      cameraController?.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      initialize();
+    }
+  }
 
   Future<void> initialize() async {
     if (_cameraController != null) return;
@@ -23,7 +41,7 @@ class CameraService {
   }
 
   Future<CameraDescription> _getCameraDescription() async {
-    List<CameraDescription> cameras = await availableCameras();
+    cameras = await availableCameras();
     return cameras.firstWhere((CameraDescription camera) =>
         camera.lensDirection == CameraLensDirection.front);
   }
@@ -35,6 +53,9 @@ class CameraService {
       description,
       ResolutionPreset.high,
       enableAudio: false,
+      imageFormatGroup: Platform.isAndroid
+          ? ImageFormatGroup.nv21 // for Android
+          : ImageFormatGroup.bgra8888,
     );
     await _cameraController?.initialize();
   }
@@ -53,11 +74,17 @@ class CameraService {
   }
 
   Future<XFile?> takePicture() async {
-    assert(_cameraController != null, 'Camera controller not initialized');
-    await _cameraController?.stopImageStream();
-    XFile? file = await _cameraController?.takePicture();
-    _imagePath = file?.path;
-    return file;
+    try {
+      await _cameraController?.stopImageStream();
+      XFile? file = await _cameraController?.takePicture();
+      _imagePath = file?.path;
+      return file;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return null;
+    }
   }
 
   Size getImageSize() {
