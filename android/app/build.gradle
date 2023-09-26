@@ -23,7 +23,6 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'com.google.gms.google-services'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
@@ -78,8 +77,10 @@ flutter {
     source '../..'
 }
 
-dependencies {
+dependencies {    
+    def tflite_version = "2.12.0"
+    
+    implementation("org.tensorflow:tensorflow-lite:${tflite_version}")
+    implementation("org.tensorflow:tensorflow-lite-gpu:${tflite_version}")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'org.tensorflow:tensorflow-lite:2.3.0'
-    implementation 'org.tensorflow:tensorflow-lite-gpu:2.3.0'
 }
