@@ -17,11 +17,6 @@ class FaceDetectorService {
   bool get faceDetected => _faces.isNotEmpty;
 
   void initialize() {
-    // _faceDetector = FaceDetector(
-    //   FaceDetectorOptions(
-    //     performanceMode: FaceDetectorMode.accurate,
-    //   ),
-    // );
 
     _faceDetector = FaceDetector(
         options: FaceDetectorOptions(
@@ -30,104 +25,31 @@ class FaceDetectorService {
             enableClassification: true));
   }
 
-  // Future<void> detectFacesFromImage(CameraImage image) async {
-  //   InputImageData firebaseImageMetadata = InputImageData(
-  //     imageRotation:
-  //         _cameraService.cameraRotation ?? InputImageRotation.rotation0deg,
-
-  //     // inputImageFormat: InputImageFormat.yuv_420_888,
-
-  //     inputImageFormat: InputImageFormatValue.fromRawValue(image.format.raw)
-  //         // InputImageFormatMethods.fromRawValue(image.format.raw) for new version
-  //         ??
-  //         InputImageFormat.yuv_420_888,
-  //     size: Size(image.width.toDouble(), image.height.toDouble()),
-  //     planeData: image.planes.map(
-  //       (Plane plane) {
-  //         return InputImagePlaneMetadata(
-  //           bytesPerRow: plane.bytesPerRow,
-  //           height: plane.height,
-  //           width: plane.width,
-  //         );
-  //       },
-  //     ).toList(),
-  //   );
-
-  //   // for mlkit 13
-  //   final WriteBuffer allBytes = WriteBuffer();
-  //   for (final Plane plane in image.planes) {
-  //     allBytes.putUint8List(plane.bytes);
-  //   }
-  //   final bytes = allBytes.done().buffer.asUint8List();
-
-  //   InputImage firebaseVisionImage = InputImage.fromBytes(
-  //     // bytes: image.planes[0].bytes,
-  //     bytes: bytes,
-  //     metadata: firebaseImageMetadata,
-  //   );
-  //   // for mlkit 13
-
-  //   _faces = await _faceDetector.processImage(firebaseVisionImage);
-  // }
-
-  // Future<List<Face>> detect(CameraImage image, InputImageRotation rotation) {
-  //   final faceDetector = FaceDetector(
-  //     options: FaceDetectorOptions(
-  //       performanceMode: FaceDetectorMode.accurate,
-  //       enableLandmarks: true,
-  //     ),
-  //   );
-  //   final WriteBuffer allBytes = WriteBuffer();
-  //   for (final Plane plane in image.planes) {
-  //     allBytes.putUint8List(plane.bytes);
-  //   }
-  //   final bytes = allBytes.done().buffer.asUint8List();
-
-  //   final Size imageSize =
-  //       Size(image.width.toDouble(), image.height.toDouble());
-  //   final inputImageFormat =
-  //       InputImageFormatValue.fromRawValue(image.format.raw) ??
-  //           InputImageFormat.yuv_420_888;
-
-  //   final planeData = image.planes.map(
-  //     (Plane plane) {
-  //       return InputImagePlaneMetadata(
-  //         bytesPerRow: plane.bytesPerRow,
-  //         height: plane.height,
-  //         width: plane.width,
-  //       );
-  //     },
-  //   ).toList();
-
-  //   final inputImageData = InputImageData(
-  //     size: imageSize,
-  //     imageRotation: rotation,
-  //     inputImageFormat: inputImageFormat,
-  //     planeData: planeData,
-  //   );
-
-  //   return faceDetector.processImage(
-  //     InputImage.fromBytes(bytes: bytes, inputImageData: inputImageData),
-  //   );
-  // }
-
-  ///for new version
   Future<void> detectFacesFromImage(CameraImage image) async {
     final rotation = _cameraService.cameraRotation;
     if (rotation == null) return;
 
-    final format = InputImageFormatValue.fromRawValue(image.format.raw);
+    final format = Platform.isAndroid
+        ? InputImageFormat.yuv420
+        : InputImageFormatValue.fromRawValue(image.format.raw);
     if (format == null ||
-        (Platform.isAndroid && format != InputImageFormat.nv21) ||
+        (Platform.isAndroid && format != InputImageFormat.yuv420) ||
         (Platform.isIOS && format != InputImageFormat.bgra8888)) return;
 
-    if (image.planes.length != 1) return;
     final plane = image.planes.first;
 
+    final size = Size(image.width.toDouble(), image.height.toDouble());
+
+    final WriteBuffer allBytes = WriteBuffer();
+    for (final Plane plane in image.planes) {
+      allBytes.putUint8List(plane.bytes);
+    }
+    final bytes = allBytes.done().buffer.asUint8List();
+
     final firebaseVisionImage = InputImage.fromBytes(
-      bytes: plane.bytes,
+      bytes: bytes,
       metadata: InputImageMetadata(
-        size: Size(image.width.toDouble(), image.height.toDouble()),
+        size: size,
         rotation: rotation, // used only in Android
         format: format, // used only in iOS
         bytesPerRow: plane.bytesPerRow, // used only in iOS

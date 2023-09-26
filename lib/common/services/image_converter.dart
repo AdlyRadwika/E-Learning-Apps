@@ -14,8 +14,8 @@ imglib.Image convertToImage(CameraImage image) {
     if (kDebugMode) {
       print(e);
     }
+    throw Exception('Image format not supported');
   }
-  throw Exception('Image format not supported');
 }
 
 imglib.Image _convertBGRA8888(CameraImage image) {

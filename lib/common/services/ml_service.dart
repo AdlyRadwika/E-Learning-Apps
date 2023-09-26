@@ -21,7 +21,6 @@ class MLService {
     late tfl.Delegate delegate;
     try {
       if (Platform.isAndroid) {
-        print('delegate on android!');
         delegate = tfl.GpuDelegateV2(
           options: tfl.GpuDelegateOptionsV2(
             isPrecisionLossAllowed: false,
@@ -41,7 +40,6 @@ class MLService {
 
       _interpreter = await tfl.Interpreter.fromAsset(AssetConts.tflite,
           options: interpreterOptions);
-      print('delegate on android!');
     } catch (e) {
       if (kDebugMode) {
         print('Failed to load model.');
@@ -53,8 +51,6 @@ class MLService {
   void setCurrentPrediction(CameraImage cameraImage, Face? face) {
     if (_interpreter == null) {
       initialize();
-    } else {
-      throw Exception('Interpreter is null');
     }
     if (face == null) throw Exception('Face is null');
     List input = _preProcess(cameraImage, face);
@@ -146,6 +142,5 @@ class MLService {
   }
 
   dispose() {
-    _interpreter?.close();
   }
 }

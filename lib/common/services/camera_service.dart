@@ -54,7 +54,7 @@ class CameraService with WidgetsBindingObserver {
       ResolutionPreset.high,
       enableAudio: false,
       imageFormatGroup: Platform.isAndroid
-          ? ImageFormatGroup.nv21 // for Android
+          ? ImageFormatGroup.yuv420 // for Android
           : ImageFormatGroup.bgra8888,
     );
     await _cameraController?.initialize();

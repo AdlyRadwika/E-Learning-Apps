@@ -106,8 +106,6 @@ class _RegisterPageState extends State<RegisterPage> {
               listener: (context, state) {
                 if (state is RegisterResult && state.isSuccess) {
                   final user = state.user;
-                  print(user);
-                  print(user?.uid);
                   context.read<UserStoreBloc>().add(InsertUserEvent(
                         uid: user?.uid ?? "-",
                         email: emailC.text.trim(),
@@ -127,7 +125,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       message: 'User Data inserted!',
                       backgroundColor: Colors.green);
                 } else if (state is InsertUserResult && !state.isSuccess) {
-                  print(state.message);
                   context.showErrorSnackBar(message: state.message);
                 }
               },
