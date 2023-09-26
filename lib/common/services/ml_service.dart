@@ -7,23 +7,23 @@ import 'package:final_project/features/presentation/pages/face_recognition/db/da
 import 'package:final_project/features/presentation/pages/face_recognition/model/user_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:tflite_flutter/tflite_flutter.dart' as tfl;
 import 'package:image/image.dart' as imglib;
 
 class MLService {
-  Interpreter? _interpreter;
+  tfl.Interpreter? _interpreter;
   double threshold = 0.5;
 
   List _predictedData = [];
   List get predictedData => _predictedData;
 
   Future initialize() async {
-    late Delegate delegate;
+    late tfl.Delegate delegate;
     try {
       if (Platform.isAndroid) {
         print('delegate on android!');
-        delegate = GpuDelegateV2(
-          options: GpuDelegateOptionsV2(
+        delegate = tfl.GpuDelegateV2(
+          options: tfl.GpuDelegateOptionsV2(
             isPrecisionLossAllowed: false,
             inferencePreference: 0,
             inferencePriority1: 2,
@@ -32,13 +32,14 @@ class MLService {
           ),
         );
       } else if (Platform.isIOS) {
-        delegate = GpuDelegate(
-          options: GpuDelegateOptions(allowPrecisionLoss: true, waitType: 1),
+        delegate = tfl.GpuDelegate(
+          options:
+              tfl.GpuDelegateOptions(allowPrecisionLoss: true, waitType: 1),
         );
       }
-      var interpreterOptions = InterpreterOptions()..addDelegate(delegate);
+      var interpreterOptions = tfl.InterpreterOptions()..addDelegate(delegate);
 
-      _interpreter = await Interpreter.fromAsset(AssetConts.tflite,
+      _interpreter = await tfl.Interpreter.fromAsset(AssetConts.tflite,
           options: interpreterOptions);
       print('delegate on android!');
     } catch (e) {
@@ -144,5 +145,7 @@ class MLService {
     _predictedData = value;
   }
 
-  dispose() {}
+  dispose() {
+    _interpreter?.close();
+  }
 }

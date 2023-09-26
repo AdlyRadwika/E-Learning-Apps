@@ -111,34 +111,9 @@ class FaceDetectorService {
   //   );
   // }
 
-  final _orientations = {
-    DeviceOrientation.portraitUp: 0,
-    DeviceOrientation.landscapeLeft: 90,
-    DeviceOrientation.portraitDown: 180,
-    DeviceOrientation.landscapeRight: 270,
-  };
-
   ///for new version
   Future<void> detectFacesFromImage(CameraImage image) async {
-    final camera = _cameraService.cameras[-1];
-    final sensorOrientation = camera.sensorOrientation;
-    InputImageRotation? rotation;
-    if (Platform.isIOS) {
-      rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
-    } else if (Platform.isAndroid) {
-      var rotationCompensation = _orientations[
-          _cameraService.cameraController!.value.deviceOrientation];
-      if (rotationCompensation == null) return;
-      if (camera.lensDirection == CameraLensDirection.front) {
-        // front-facing
-        rotationCompensation = (sensorOrientation + rotationCompensation) % 360;
-      } else {
-        // back-facing
-        rotationCompensation =
-            (sensorOrientation - rotationCompensation + 360) % 360;
-      }
-      rotation = InputImageRotationValue.fromRawValue(rotationCompensation);
-    }
+    final rotation = _cameraService.cameraRotation;
     if (rotation == null) return;
 
     final format = InputImageFormatValue.fromRawValue(image.format.raw);

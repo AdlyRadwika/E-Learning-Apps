@@ -64,9 +64,8 @@ class FaceDetectionPageState extends State<FaceDetectionPage> {
     });
   }
 
-  Future<void> _predictFacesFromImage({required CameraImage? image}) async {
-    assert(image != null, 'Image is null');
-    await _faceDetectorService.detectFacesFromImage(image!);
+  Future<void> _predictFacesFromImage({required CameraImage image}) async {
+    await _faceDetectorService.detectFacesFromImage(image);
     if (_faceDetectorService.faceDetected) {
       _mlService.setCurrentPrediction(image, _faceDetectorService.faces[0]);
     }
