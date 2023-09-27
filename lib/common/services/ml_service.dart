@@ -12,7 +12,7 @@ import 'package:image/image.dart' as imglib;
 
 class MLService {
   tfl.Interpreter? _interpreter;
-  double threshold = 1.5;
+  double threshold = 1.0;
 
   List _predictedData = [];
   List get predictedData => _predictedData;
@@ -56,7 +56,7 @@ class MLService {
     List input = _preProcess(cameraImage, face);
 
     input = input.reshape([1, 112, 112, 3]);
-    List output = List.generate(1, (index) => List.filled(192, 0));
+    List output = List.filled(1 * 192, null, growable: false).reshape([1, 192]);
 
     _interpreter?.run(input, output);
     output = output.reshape([192]);
@@ -113,27 +113,32 @@ class MLService {
     DatabaseHelper dbHelper = DatabaseHelper.instance;
 
     List<User> users = await dbHelper.queryAllUsers();
-    num minDist = 999;
+    double minDist = 999;
+    double currDist = 0.0;
     User? predictedResult;
 
     for (User u in users) {
-      var currDist = _euclideanDistance(u.modelData, predictedData);
+      currDist = _euclideanDistance(u.modelData, predictedData);
       if (currDist <= threshold && currDist < minDist) {
         minDist = currDist;
         predictedResult = u;
+      } else {
+        currDist = 0.0;
+        minDist = 999;
+        predictedResult = null;
       }
     }
     return predictedResult;
   }
 
-  num _euclideanDistance(List? e1, List? e2) {
+  double _euclideanDistance(List? e1, List? e2) {
     if (e1 == null || e2 == null) throw Exception("Null argument");
 
     double sum = 0.0;
     for (int i = 0; i < e1.length; i++) {
       sum += pow((e1[i] - e2[i]), 2);
     }
-    return pow(sum, 0.5);
+    return sqrt(sum);
   }
 
   void setPredictedData(value) {

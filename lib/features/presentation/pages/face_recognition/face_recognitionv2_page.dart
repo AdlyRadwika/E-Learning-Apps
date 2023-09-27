@@ -155,9 +155,12 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
             alignment: Alignment.center,
             transform: Matrix4.rotationY(mirror),
             child: FittedBox(
-              fit: BoxFit.cover,
-              child: Image.file(File(imagePath!)),
-            )),
+                fit: BoxFit.cover,
+                child: imagePath?.trim().isNotEmpty == true
+                    ? Image.file(File(imagePath!))
+                    : Container(
+                        color: Colors.black,
+                      ))),
       );
     }
 

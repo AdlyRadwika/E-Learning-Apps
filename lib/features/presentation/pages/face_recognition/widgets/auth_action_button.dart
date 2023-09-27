@@ -72,7 +72,9 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                   : Container(),
         );
       },
-    ).then((value) => widget.reload());
+    ).then((value) {
+      Navigator.pushReplacementNamed(context, IndexPage.route);
+    });
   }
 
   Future onTap() async {
