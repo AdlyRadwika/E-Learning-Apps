@@ -12,7 +12,7 @@ import 'package:image/image.dart' as imglib;
 
 class MLService {
   tfl.Interpreter? _interpreter;
-  double threshold = 0.5;
+  double threshold = 1.5;
 
   List _predictedData = [];
   List get predictedData => _predictedData;
@@ -113,12 +113,11 @@ class MLService {
     DatabaseHelper dbHelper = DatabaseHelper.instance;
 
     List<User> users = await dbHelper.queryAllUsers();
-    double minDist = 999;
-    double currDist = 0.0;
+    num minDist = 999;
     User? predictedResult;
 
     for (User u in users) {
-      currDist = _euclideanDistance(u.modelData, predictedData);
+      var currDist = _euclideanDistance(u.modelData, predictedData);
       if (currDist <= threshold && currDist < minDist) {
         minDist = currDist;
         predictedResult = u;
@@ -127,20 +126,19 @@ class MLService {
     return predictedResult;
   }
 
-  double _euclideanDistance(List? e1, List? e2) {
+  num _euclideanDistance(List? e1, List? e2) {
     if (e1 == null || e2 == null) throw Exception("Null argument");
 
     double sum = 0.0;
     for (int i = 0; i < e1.length; i++) {
       sum += pow((e1[i] - e2[i]), 2);
     }
-    return sqrt(sum);
+    return pow(sum, 0.5);
   }
 
   void setPredictedData(value) {
     _predictedData = value;
   }
 
-  dispose() {
-  }
+  dispose() {}
 }

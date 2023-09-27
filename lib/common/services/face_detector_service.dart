@@ -17,7 +17,6 @@ class FaceDetectorService {
   bool get faceDetected => _faces.isNotEmpty;
 
   void initialize() {
-
     _faceDetector = FaceDetector(
         options: FaceDetectorOptions(
             performanceMode: FaceDetectorMode.fast,
@@ -55,6 +54,7 @@ class FaceDetectorService {
         bytesPerRow: plane.bytesPerRow, // used only in iOS
       ),
     );
+    
     _faces = await _faceDetector.processImage(firebaseVisionImage);
   }
 
