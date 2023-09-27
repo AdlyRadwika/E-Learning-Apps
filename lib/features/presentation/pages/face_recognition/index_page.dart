@@ -1,4 +1,3 @@
-import 'package:final_project/common/services/camera_service.dart';
 import 'package:final_project/common/services/face_detector_service.dart';
 import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/db/database_helper.dart';
@@ -17,7 +16,6 @@ class IndexPage extends StatefulWidget {
 class _IndexPageState extends State<IndexPage> {
   final MLService _mlService = locator<MLService>();
   final FaceDetectorService _mlKitService = locator<FaceDetectorService>();
-  final CameraService _cameraService = locator<CameraService>();
   bool loading = false;
 
   @override
@@ -28,7 +26,6 @@ class _IndexPageState extends State<IndexPage> {
 
   _initializeServices() async {
     setState(() => loading = true);
-    await _cameraService.initialize();
     await _mlService.initialize();
     _mlKitService.initialize();
     setState(() => loading = false);

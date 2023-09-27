@@ -3,7 +3,6 @@ import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/db/database_helper.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/index_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/model/user_model.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/widgets/app_button.dart';
 import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/foundation.dart';
@@ -35,11 +34,12 @@ class _AuthActionButtonState extends State<AuthActionButton> {
 
   User? predictedUser;
 
-  Future _signUp(BuildContext context) async {
+  bool _isBottomSheetVisible = false;
+
+  Future _signUp(BuildContext context,
+      {required String user, required String password}) async {
     DatabaseHelper databaseHelper = DatabaseHelper.instance;
     List predictedData = _mlService.predictedData;
-    String user = _userTextEditingController.text;
-    String password = _passwordTextEditingController.text;
     User userToSave = User(
       user: user,
       password: password,
@@ -47,22 +47,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     );
     //TODO: replace with firebase firestore
     await databaseHelper.insert(userToSave);
-  }
-
-  Future _signIn(BuildContext context) async {
-    String password = _passwordTextEditingController.text;
-    if (predictedUser!.password == password) {
-      context.showSnackBar(message: 'Login!', backgroundColor: Colors.green);
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            content: Text('Wrong password!'),
-          );
-        },
-      );
-    }
   }
 
   Future<User?> _predictUser() async {
@@ -104,7 +88,22 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           if (mounted) {
             _showLoginDialog();
           } else {
-            print("unmounted!");
+            widget.reload();
+          }
+        } else {
+          if (mounted) {
+            setState(() {
+              _isBottomSheetVisible = true;
+            });
+            final bottomSheetC = Scaffold.of(context)
+                .showBottomSheet((context) => signUpSheet(context));
+            bottomSheetC.closed.whenComplete(() {
+              widget.reload();
+              setState(() {
+                _isBottomSheetVisible = false;
+              });
+            });
+          } else {
             widget.reload();
           }
         }
@@ -118,42 +117,19 @@ class _AuthActionButtonState extends State<AuthActionButton> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.blue[200],
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.blue.withOpacity(0.1),
-              blurRadius: 1,
-              offset: const Offset(0, 2),
+    return _isBottomSheetVisible
+        ? const SizedBox.shrink()
+        : IconButton(
+            onPressed: onTap,
+            icon: const Icon(
+              Icons.radio_button_checked,
+              color: Colors.white,
+              size: 60,
             ),
-          ],
-        ),
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: 60,
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'CAPTURE',
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Icon(Icons.camera_alt, color: Colors.white)
-          ],
-        ),
-      ),
-    );
+          );
   }
 
-  signSheet(BuildContext context) {
+  signUpSheet(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -162,51 +138,39 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         children: [
           Column(
             children: [
-              !widget.isLogin
-                  ? CustomTextField(
-                      controller: _userTextEditingController,
-                      label: "Your Name",
-                    )
-                  : Container(),
+              CustomTextField(
+                controller: _userTextEditingController,
+                label: "Your Name",
+              ),
               const SizedBox(height: 10),
-              widget.isLogin && predictedUser == null
-                  ? Container()
-                  : CustomTextField(
-                      controller: _passwordTextEditingController,
-                      label: "Password",
-                    ),
+              CustomTextField(
+                controller: _passwordTextEditingController,
+                label: "Password",
+              ),
               const SizedBox(height: 10),
               const Divider(),
               const SizedBox(height: 10),
-              widget.isLogin && predictedUser != null
-                  ? AppButton(
-                      text: 'LOGIN',
-                      onPressed: () async {
-                        _signIn(context);
-                      },
-                      icon: const Icon(
-                        Icons.login,
-                        color: Colors.white,
-                      ),
-                    )
-                  : !widget.isLogin
-                      ? AppButton(
-                          text: 'SIGN UP',
-                          onPressed: () async {
-                            await _signUp(context).then((value) {
-                              context.showSnackBar(
-                                  message: 'Register success!',
-                                  backgroundColor: Colors.green);
-                              Navigator.pushReplacementNamed(
-                                  context, IndexPage.route);
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.person_add,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Container(),
+              OutlinedButton(
+                onPressed: () async {
+                  final user = _userTextEditingController.text.trim();
+                  final password = _passwordTextEditingController.text.trim();
+
+                  if (user.isEmpty || password.isEmpty) {
+                    context.showErrorSnackBar(
+                      message: 'Isi username atau password!',
+                    );
+                  } else {
+                    await _signUp(context, user: user, password: password)
+                        .then((value) {
+                      context.showSnackBar(
+                          message: 'Register berhasil!',
+                          backgroundColor: Colors.green);
+                      Navigator.pushReplacementNamed(context, IndexPage.route);
+                    });
+                  }
+                },
+                child: const Text('SIGN UP'),
+              )
             ],
           ),
         ],

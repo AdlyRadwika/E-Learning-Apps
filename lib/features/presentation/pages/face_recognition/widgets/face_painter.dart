@@ -1,60 +1,46 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:flutter/material.dart';
 
 class FacePainter extends CustomPainter {
-  FacePainter({required this.imageSize, required this.face});
-  final Size imageSize;
-  double? scaleX, scaleY;
-  Face? face;
+  final double screenWidth;
+  final double screenHeight;
+
+  FacePainter({required this.screenWidth, required this.screenHeight});
+
   @override
   void paint(Canvas canvas, Size size) {
-    if (face == null) return;
+    final radius = screenWidth * 0.35;
+    const strokeWidth = 2.0;
+    final offset = Offset(screenWidth / 2, screenHeight / 2.5);
+    final circlePath = Path()
+      ..addOval(Rect.fromCircle(
+        center: offset,
+        radius: radius,
+      ));
 
-    Paint paint;
+    final outerPath = Path()
+      ..addRect(Rect.fromLTWH(0, 0, screenWidth, screenHeight));
+    final overlayPath =
+        Path.combine(PathOperation.difference, outerPath, circlePath);
 
-    if (face!.headEulerAngleY! > 10 || face!.headEulerAngleY! < -10) {
-      paint = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3.0
-        ..color = Colors.red;
-    } else {
-      paint = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3.0
-        ..color = Colors.green;
-    }
+    final paint = Paint()
+      ..color = Colors.black.withOpacity(0.7)
+      ..style = PaintingStyle.fill;
 
-    scaleX = size.width / imageSize.width;
-    scaleY = size.height / imageSize.height;
+    final borderPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
 
-    canvas.drawRRect(
-        _scaleRect(
-            rect: face!.boundingBox,
-            imageSize: imageSize,
-            widgetSize: size,
-            scaleX: scaleX ?? 1,
-            scaleY: scaleY ?? 1),
-        paint);
+    canvas.drawPath(overlayPath, paint);
+    canvas.drawCircle(
+      offset,
+      radius,
+      borderPaint,
+    );
   }
 
   @override
-  bool shouldRepaint(FacePainter oldDelegate) {
-    return oldDelegate.imageSize != imageSize || oldDelegate.face != face;
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
-}
-
-RRect _scaleRect(
-    {required Rect rect,
-    required Size imageSize,
-    required Size widgetSize,
-    double scaleX = 1,
-    double scaleY = 1}) {
-  return RRect.fromLTRBR(
-      (widgetSize.width - rect.left.toDouble() * scaleX),
-      rect.top.toDouble() * scaleY,
-      widgetSize.width - rect.right.toDouble() * scaleX,
-      rect.bottom.toDouble() * scaleY,
-      Radius.circular(10));
 }

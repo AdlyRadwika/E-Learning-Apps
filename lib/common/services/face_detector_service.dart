@@ -12,9 +12,8 @@ class FaceDetectorService {
   late FaceDetector _faceDetector;
   FaceDetector get faceDetector => _faceDetector;
 
-  List<Face> _faces = [];
-  List<Face> get faces => _faces;
-  bool get faceDetected => _faces.isNotEmpty;
+  List<Face> faces = [];
+  bool get faceDetected => faces.isNotEmpty;
 
   void initialize() {
     _faceDetector = FaceDetector(
@@ -54,8 +53,8 @@ class FaceDetectorService {
         bytesPerRow: plane.bytesPerRow, // used only in iOS
       ),
     );
-    
-    _faces = await _faceDetector.processImage(firebaseVisionImage);
+
+    faces = await _faceDetector.processImage(firebaseVisionImage);
   }
 
   dispose() {

@@ -7,9 +7,9 @@ import 'package:final_project/common/services/face_detector_service.dart';
 import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/auth_action_button.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/camera_header.dart';
+import 'package:final_project/features/presentation/pages/face_recognition/widgets/face_painter.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:flutter/material.dart';
 
 class FaceRecognitionV2Page extends StatefulWidget {
@@ -26,7 +26,6 @@ class FaceRecognitionV2Page extends StatefulWidget {
 
 class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
   String? imagePath;
-  Face? faceDetected;
 
   bool _detectingFaces = false;
   bool pictureTaken = false;
@@ -34,7 +33,6 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
   bool _initializing = false;
 
   bool _saving = false;
-  bool _bottomSheetVisible = false;
 
   // service injection
   final FaceDetectorService _faceDetectorService =
@@ -63,7 +61,7 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
   }
 
   Future<bool> onShot() async {
-    if (faceDetected == null) {
+    if (!_faceDetectorService.faceDetected) {
       showDialog(
         context: context,
         builder: (context) {
@@ -77,13 +75,10 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
     } else {
       _saving = true;
       await Future.delayed(const Duration(milliseconds: 500));
-      // await _cameraService.cameraController?.stopImageStream();
-      await Future.delayed(const Duration(milliseconds: 200));
       XFile? file = await _cameraService.takePicture();
       imagePath = file?.path;
 
       setState(() {
-        _bottomSheetVisible = true;
         pictureTaken = true;
       });
 
@@ -101,10 +96,8 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
         try {
           await _faceDetectorService.detectFacesFromImage(image);
 
-          if (_faceDetectorService.faces.isNotEmpty) {
-            setState(() {
-              faceDetected = _faceDetectorService.faces[0];
-            });
+          if (_faceDetectorService.faceDetected) {
+            var faceDetected = _faceDetectorService.faces[0];
             if (_saving) {
               _mlService.setCurrentPrediction(image, faceDetected);
               setState(() {
@@ -115,15 +108,14 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
             if (kDebugMode) {
               print('face is null');
             }
-            setState(() {
-              faceDetected = null;
-            });
+            _faceDetectorService.faces = [];
           }
 
           _detectingFaces = false;
-        } catch (e) {
+        } catch (e, stacktrace) {
           if (kDebugMode) {
             print('Error _faceDetectorService face => $e');
+            print('Error _faceDetectorService stacktrace => $stacktrace');
           }
           _detectingFaces = false;
         }
@@ -137,7 +129,6 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
 
   _reload() {
     setState(() {
-      _bottomSheetVisible = false;
       pictureTaken = false;
     });
     _start();
@@ -187,6 +178,10 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
                   fit: StackFit.expand,
                   children: <Widget>[
                     CameraPreview(_cameraService.cameraController!),
+                    CustomPaint(
+                      painter:
+                          FacePainter(screenWidth: width, screenHeight: height),
+                    )
                   ],
                 ),
               ),
@@ -207,12 +202,10 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: !_bottomSheetVisible
-            ? AuthActionButton(
-                onPressed: onShot,
-                isLogin: widget.isLogin,
-                reload: _reload,
-              )
-            : Container());
+        floatingActionButton: AuthActionButton(
+          onPressed: onShot,
+          isLogin: widget.isLogin,
+          reload: _reload,
+        ));
   }
 }
