@@ -10,11 +10,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AuthActionButton extends StatefulWidget {
-  const AuthActionButton(
-      {super.key,
-      required this.onPressed,
-      required this.isLogin,
-      required this.reload});
+  const AuthActionButton({
+    super.key,
+    required this.onPressed,
+    required this.isLogin,
+    required this.reload,
+  });
   final Function onPressed;
   final bool isLogin;
   final Function reload;
@@ -69,6 +70,27 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     return userAndPass;
   }
 
+  void _showLoginDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: widget.isLogin && predictedUser != null
+              ? Text(
+                  'Welcome back, ${predictedUser!.user}.',
+                  style: const TextStyle(fontSize: 20),
+                )
+              : widget.isLogin && predictedUser == null
+                  ? const Text(
+                      'User not found 😞',
+                      style: TextStyle(fontSize: 20),
+                    )
+                  : Container(),
+        );
+      },
+    ).then((value) => widget.reload());
+  }
+
   Future onTap() async {
     try {
       bool faceDetected = await widget.onPressed();
@@ -78,12 +100,14 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           if (user != null) {
             predictedUser = user;
           }
+          //FIXME: jadi navigate ke screen baru karena risiko mounted
+          if (mounted) {
+            _showLoginDialog();
+          } else {
+            print("unmounted!");
+            widget.reload();
+          }
         }
-        if (!mounted) return;
-        PersistentBottomSheetController bottomSheetController =
-            Scaffold.of(context)
-                .showBottomSheet((context) => signSheet(context));
-        bottomSheetController.closed.whenComplete(() => widget.reload());
       }
     } catch (e) {
       if (kDebugMode) {
@@ -136,17 +160,6 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          widget.isLogin && predictedUser != null
-              ? Text(
-                  'Welcome back, ${predictedUser!.user}.',
-                  style: const TextStyle(fontSize: 20),
-                )
-              : widget.isLogin
-                  ? const Text(
-                      'User not found 😞',
-                      style: TextStyle(fontSize: 20),
-                    )
-                  : Container(),
           Column(
             children: [
               !widget.isLogin

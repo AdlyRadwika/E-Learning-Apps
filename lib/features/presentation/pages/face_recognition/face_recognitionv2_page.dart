@@ -15,7 +15,10 @@ import 'package:flutter/material.dart';
 class FaceRecognitionV2Page extends StatefulWidget {
   static const route = '/face-recognition-v2';
 
-  const FaceRecognitionV2Page({Key? key}) : super(key: key);
+  const FaceRecognitionV2Page({Key? key, this.isLogin = false})
+      : super(key: key);
+
+  final bool isLogin;
 
   @override
   FaceRecognitionV2PageState createState() => FaceRecognitionV2PageState();
@@ -24,7 +27,6 @@ class FaceRecognitionV2Page extends StatefulWidget {
 class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
   String? imagePath;
   Face? faceDetected;
-  Size? imageSize;
 
   bool _detectingFaces = false;
   bool pictureTaken = false;
@@ -90,8 +92,6 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
   }
 
   _frameFaces() {
-    imageSize = _cameraService.getImageSize();
-
     _cameraService.cameraController?.startImageStream((image) async {
       if (_cameraService.cameraController != null) {
         if (_detectingFaces) return;
@@ -187,10 +187,6 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
                   fit: StackFit.expand,
                   children: <Widget>[
                     CameraPreview(_cameraService.cameraController!),
-                    // CustomPaint(
-                    //   painter: FacePainter(
-                    //       face: faceDetected, imageSize: imageSize!),
-                    // ),
                   ],
                 ),
               ),
@@ -205,7 +201,7 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
           children: [
             body,
             CameraHeader(
-              "SIGN UP",
+              widget.isLogin ? "Login" : "Register",
               onBackPressed: _onBackPressed,
             )
           ],
@@ -214,7 +210,7 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
         floatingActionButton: !_bottomSheetVisible
             ? AuthActionButton(
                 onPressed: onShot,
-                isLogin: false,
+                isLogin: widget.isLogin,
                 reload: _reload,
               )
             : Container());

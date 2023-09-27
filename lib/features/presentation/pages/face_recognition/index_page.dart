@@ -3,7 +3,6 @@ import 'package:final_project/common/services/face_detector_service.dart';
 import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/db/database_helper.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/face_registered_page.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
 
@@ -102,12 +101,18 @@ class _IndexPageState extends State<IndexPage> {
                     children: [
                       ElevatedButton(
                           onPressed: () => Navigator.pushNamed(
-                              context, FaceDetectionPage.route),
+                                  context, FaceRecognitionV2Page.route,
+                                  arguments: {
+                                    "isLogin": true,
+                                  }),
                           child: const Text('Login')),
                       GestureDetector(
                         onTap: () {
                           Navigator.pushNamed(
-                              context, FaceRecognitionV2Page.route);
+                              context, FaceRecognitionV2Page.route,
+                              arguments: {
+                                "isLogin": false,
+                              });
                         },
                         child: Container(
                           decoration: BoxDecoration(
