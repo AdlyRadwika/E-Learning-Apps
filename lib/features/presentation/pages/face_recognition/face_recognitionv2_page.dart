@@ -5,7 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:final_project/common/services/camera_service.dart';
 import 'package:final_project/common/services/face_detector_service.dart';
 import 'package:final_project/common/services/ml_service.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/widgets/auth_action_button.dart';
+import 'package:final_project/features/presentation/pages/face_recognition/widgets/capture_button.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/camera_header.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/face_painter.dart';
 import 'package:final_project/injection.dart';
@@ -15,10 +15,10 @@ import 'package:flutter/material.dart';
 class FaceRecognitionV2Page extends StatefulWidget {
   static const route = '/face-recognition-v2';
 
-  const FaceRecognitionV2Page({Key? key, this.isLogin = false})
+  const FaceRecognitionV2Page({Key? key, this.isAttendance = false})
       : super(key: key);
 
-  final bool isLogin;
+  final bool isAttendance;
 
   @override
   FaceRecognitionV2PageState createState() => FaceRecognitionV2PageState();
@@ -203,15 +203,15 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
           children: [
             body,
             CameraHeader(
-              widget.isLogin ? "Login" : "Register",
+              widget.isAttendance ? "Face Recognition" : "Register",
               onBackPressed: _onBackPressed,
             )
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: AuthActionButton(
+        floatingActionButton: CaptureButton(
           onPressed: onShot,
-          isLogin: widget.isLogin,
+          isAttendance: widget.isAttendance,
           reload: _reload,
         ));
   }

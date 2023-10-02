@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.pushNamed(context, FaceRecognitionV2Page.route,
                     arguments: {
-                      "isLogin": true,
+                      "isAttendance": true,
                     });
               },
               child: const Text('Face Recognition')),

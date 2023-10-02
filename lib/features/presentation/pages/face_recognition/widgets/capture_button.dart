@@ -11,22 +11,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AuthActionButton extends StatefulWidget {
-  const AuthActionButton({
+class CaptureButton extends StatefulWidget {
+  const CaptureButton({
     super.key,
     required this.onPressed,
-    required this.isLogin,
+    required this.isAttendance,
     required this.reload,
   });
   final Function onPressed;
-  final bool isLogin;
+  final bool isAttendance;
   final Function reload;
 
   @override
-  State<AuthActionButton> createState() => _AuthActionButtonState();
+  State<CaptureButton> createState() => _CaptureButtonState();
 }
 
-class _AuthActionButtonState extends State<AuthActionButton> {
+class _CaptureButtonState extends State<CaptureButton> {
   final MLService _mlService = locator<MLService>();
   final _storageService = locator<SecureStorageService>();
 
@@ -37,23 +37,14 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   bool _isBottomSheetVisible = false;
 
   Future<void> _getRegisterForm() async {
-    !widget.isLogin
+    !widget.isAttendance
         ? _registerForm = await _storageService.getRegisterData()
         : null;
   }
 
-  Future<User?> _predictUser() async {
-    User? userAndPass = await _mlService.predict(
-        user: const User(
-            name: 'name',
-            email: 'email',
-            imageUrl: 'imageUrl',
-            imageData: ['imageData'],
-            role: 'role',
-            updatedAt: 'updatedAt',
-            createdAt: 'createdAt',
-            uid: 'uid'));
-    return userAndPass;
+  Future<User?> _predictUser({required User user}) async {
+    User? result = await _mlService.predict(user: user);
+    return result;
   }
 
   void _showLoginDialog() {
@@ -61,12 +52,12 @@ class _AuthActionButtonState extends State<AuthActionButton> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          content: widget.isLogin && predictedUser != null
+          content: widget.isAttendance && predictedUser != null
               ? Text(
                   'Welcome back, ${predictedUser!.name}.',
                   style: const TextStyle(fontSize: 20),
                 )
-              : widget.isLogin && predictedUser == null
+              : widget.isAttendance && predictedUser == null
                   ? const Text(
                       'User not found 😞',
                       style: TextStyle(fontSize: 20),
@@ -83,17 +74,15 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     });
   }
 
-  Future onTap() async {
+  Future onTap({User? currentUser}) async {
     try {
       bool faceDetected = await widget.onPressed();
       if (faceDetected) {
-        if (widget.isLogin) {
-          //FIXME: betulin flownya tinggal kasih object usernya ke ml service
-          var user = await _predictUser();
-          if (user != null) {
+        if (widget.isAttendance) {
+          if (currentUser != null) {
+            var user = await _predictUser(user: currentUser);
             predictedUser = user;
           }
-          //FIXME: jadi navigate ke screen baru karena risiko mounted
           if (mounted) {
             _showLoginDialog();
           } else {
@@ -135,14 +124,23 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   Widget build(BuildContext context) {
     return _isBottomSheetVisible
         ? const SizedBox.shrink()
-        : IconButton(
-            onPressed: onTap,
-            icon: const Icon(
+        : BlocBuilder<UserCloudBloc, UserCloudState>(builder: (context, state) {
+            if (state is GetUserByIdResult && state.isSuccess) {
+              return IconButton(
+                onPressed: () => onTap(currentUser: state.user),
+                icon: const Icon(
+                  Icons.radio_button_checked,
+                  color: Colors.white,
+                  size: 60,
+                ),
+              );
+            }
+            return const Icon(
               Icons.radio_button_checked,
-              color: Colors.white,
-              size: 60,
-            ),
-          );
+              color: Colors.grey,
+              size: 60.0,
+            );
+          });
   }
 
   signUpSheet(BuildContext context) {

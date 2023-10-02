@@ -20,7 +20,7 @@ Route<dynamic>? controller(RouteSettings settings) {
           settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
           builder: (context) => FaceRecognitionV2Page(
-                isLogin: args["isLogin"],
+                isAttendance: args["isAttendance"],
               ));
     default:
       return null;

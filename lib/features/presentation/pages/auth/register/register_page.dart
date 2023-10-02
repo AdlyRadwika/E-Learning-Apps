@@ -148,7 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _storageService.saveRegisterData(user: user);
 
     Navigator.pushNamed(context, FaceRecognitionV2Page.route, arguments: {
-      "isLogin": false,
+      "isAttendance": false,
     });
   }
 }
