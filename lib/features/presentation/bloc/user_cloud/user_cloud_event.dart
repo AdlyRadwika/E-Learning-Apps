@@ -16,7 +16,7 @@ class InsertUserEvent extends UserCloudEvent {
     required this.userName,
     required this.role,
     required this.imageData,
-    this.imageUrl = '',
+    required this.imageUrl,
   });
 }
 
@@ -25,5 +25,13 @@ class GetUserByIdEvent extends UserCloudEvent {
 
   GetUserByIdEvent({
     required this.uid,
+  });
+}
+
+class GetPhotoProfileURLEvent extends UserCloudEvent {
+  final File file;
+
+  GetPhotoProfileURLEvent({
+    required this.file,
   });
 }

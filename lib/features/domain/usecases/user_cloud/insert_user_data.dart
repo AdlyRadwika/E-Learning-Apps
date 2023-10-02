@@ -12,7 +12,7 @@ class InsertUserDataUseCase {
       required String email,
       required String userName,
       required List imageData,
-      String imageUrl = '',
+      required String imageUrl,
       required String role}) {
     return repository.insertUserData(
         uid: uid,

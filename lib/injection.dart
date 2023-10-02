@@ -12,6 +12,7 @@ import 'package:final_project/features/domain/usecases/auth/login.dart';
 import 'package:final_project/features/domain/usecases/auth/logout.dart';
 import 'package:final_project/features/domain/usecases/auth/register.dart';
 import 'package:final_project/features/domain/usecases/auth/reset_password.dart';
+import 'package:final_project/features/domain/usecases/user_cloud/get_photo_profile_url.dart';
 import 'package:final_project/features/domain/usecases/user_cloud/get_user_by_id.dart';
 import 'package:final_project/features/domain/usecases/user_cloud/insert_user_data.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
@@ -29,6 +30,7 @@ void init() {
       logoutUseCase: locator()));
   locator.registerFactory<UserCloudBloc>(() => UserCloudBloc(
         getUserByIdUseCase: locator(),
+        getPhotoProfileURLUseCase: locator(),
         insertUserDataUseCase: locator(),
       ));
   // Usecases
@@ -42,6 +44,8 @@ void init() {
       () => InsertUserDataUseCase(locator()));
   locator.registerLazySingleton<GetUserByIdUseCase>(
       () => GetUserByIdUseCase(locator()));
+  locator.registerLazySingleton<GetPhotoProfileURLUseCase>(
+      () => GetPhotoProfileURLUseCase(locator()));
 
   // Repository
   locator.registerLazySingleton<FirebaseAuthRepository>(

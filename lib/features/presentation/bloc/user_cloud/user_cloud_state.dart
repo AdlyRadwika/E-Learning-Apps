@@ -26,3 +26,17 @@ class GetUserByIdResult extends UserCloudState {
     this.user,
   });
 }
+
+class GetPhotoProfileURLLoading extends UserCloudState {}
+
+class GetPhotoProfileURLResult extends UserCloudState {
+  final String message;
+  final bool isSuccess;
+  final String url;
+
+  GetPhotoProfileURLResult({
+    this.message = '',
+    required this.isSuccess,
+    this.url = '',
+  });
+}

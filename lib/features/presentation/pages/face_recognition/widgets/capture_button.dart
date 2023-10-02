@@ -1,10 +1,11 @@
-import 'package:final_project/common/extensions/snackbar.dart';
+import 'dart:io';
+
+import 'package:final_project/common/services/camera_service.dart';
 import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/features/domain/entities/user/user.dart';
-import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
-import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
+import 'package:final_project/features/presentation/pages/face_recognition/widgets/sign_up_sheet.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/foundation.dart';
@@ -27,8 +28,9 @@ class CaptureButton extends StatefulWidget {
 }
 
 class _CaptureButtonState extends State<CaptureButton> {
-  final MLService _mlService = locator<MLService>();
+  final _mlService = locator<MLService>();
   final _storageService = locator<SecureStorageService>();
+  final _cameraService = locator<CameraService>();
 
   late Map<String, dynamic> _registerForm;
 
@@ -74,7 +76,7 @@ class _CaptureButtonState extends State<CaptureButton> {
     });
   }
 
-  Future onTap({User? currentUser}) async {
+  Future _onAttendancePressed({User? currentUser}) async {
     try {
       bool faceDetected = await widget.onPressed();
       if (faceDetected) {
@@ -88,22 +90,37 @@ class _CaptureButtonState extends State<CaptureButton> {
           } else {
             widget.reload();
           }
-        } else {
-          if (mounted) {
-            setState(() {
-              _isBottomSheetVisible = true;
-            });
-            final bottomSheetC = Scaffold.of(context)
-                .showBottomSheet((context) => signUpSheet(context));
-            bottomSheetC.closed.whenComplete(() {
-              widget.reload();
-              setState(() {
-                _isBottomSheetVisible = false;
-              });
-            });
-          } else {
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
+  Future _onRegisterPressed() async {
+    try {
+      bool faceDetected = await widget.onPressed();
+      if (faceDetected) {
+        if (mounted) {
+          setState(() {
+            _isBottomSheetVisible = true;
+          });
+          final bottomSheetC = Scaffold.of(context).showBottomSheet((context) =>
+              SignUpSheetWidget(
+                  image: File(_cameraService.imagePath!),
+                  predictedData: _mlService.predictedData,
+                  registerForm: _registerForm,
+                  storageService: _storageService));
+          bottomSheetC.closed.whenComplete(() {
             widget.reload();
-          }
+            setState(() {
+              _isBottomSheetVisible = false;
+            });
+          });
+        } else {
+          widget.reload();
         }
       }
     } catch (e) {
@@ -127,7 +144,7 @@ class _CaptureButtonState extends State<CaptureButton> {
         : BlocBuilder<UserCloudBloc, UserCloudState>(builder: (context, state) {
             if (state is GetUserByIdResult && state.isSuccess) {
               return IconButton(
-                onPressed: () => onTap(currentUser: state.user),
+                onPressed: () => _onAttendancePressed(currentUser: state.user),
                 icon: const Icon(
                   Icons.radio_button_checked,
                   color: Colors.white,
@@ -135,74 +152,14 @@ class _CaptureButtonState extends State<CaptureButton> {
                 ),
               );
             }
-            return const Icon(
-              Icons.radio_button_checked,
-              color: Colors.grey,
-              size: 60.0,
+            return IconButton(
+              onPressed: () => _onRegisterPressed(),
+              icon: const Icon(
+                Icons.radio_button_checked,
+                color: Colors.white,
+                size: 60,
+              ),
             );
           });
-  }
-
-  signUpSheet(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          MultiBlocListener(
-            listeners: [
-              BlocListener<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  if (state is RegisterResult && state.isSuccess) {
-                    final user = state.user;
-                    List predictedData = _mlService.predictedData;
-                    context.read<UserCloudBloc>().add(InsertUserEvent(
-                          uid: user?.uid ?? "-",
-                          email: _registerForm["email"],
-                          userName: _registerForm["name"],
-                          role: _registerForm["role"].toString().toLowerCase(),
-                          imageData: predictedData,
-                        ));
-                  } else if (state is RegisterResult && !state.isSuccess) {
-                    context.showErrorSnackBar(message: state.message);
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-              BlocListener<UserCloudBloc, UserCloudState>(
-                listener: (context, state) {
-                  if (state is InsertUserResult && state.isSuccess) {
-                    context.showSnackBar(
-                        message: 'User Data inserted!',
-                        backgroundColor: Colors.green);
-                    _storageService.deleteRegisterData();
-                    _registerForm = {};
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      LoginPage.route,
-                      (route) => false,
-                    );
-                  } else if (state is InsertUserResult && !state.isSuccess) {
-                    context.showErrorSnackBar(message: state.message);
-                    Navigator.pop(context);
-                  }
-                },
-              ),
-            ],
-            child: OutlinedButton(
-              onPressed: () async {
-                context.read<AuthBloc>().add(RegisterEvent(
-                    email: _registerForm["email"],
-                    password: _registerForm["password"],
-                    userName: _registerForm["name"],
-                    role: _registerForm["role"]));
-              },
-              child: const Text('Continue'),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
