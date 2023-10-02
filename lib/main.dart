@@ -1,6 +1,6 @@
 import 'package:final_project/common/util/theme.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
-import 'package:final_project/features/presentation/bloc/user_store/user_store_bloc.dart';
+import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/firebase_options.dart';
 import 'package:final_project/injection.dart' as di;
@@ -42,8 +42,8 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(create: (context) => di.locator<AuthBloc>()),
-        BlocProvider<UserStoreBloc>(
-            create: (context) => di.locator<UserStoreBloc>()),
+        BlocProvider<UserCloudBloc>(
+            create: (context) => di.locator<UserCloudBloc>()),
       ],
       child: MaterialApp(
         theme: themeData,

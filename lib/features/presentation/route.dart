@@ -1,7 +1,6 @@
 import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/features/presentation/pages/auth/register/register_page.dart';
 import 'package:final_project/features/presentation/pages/auth/reset_password/reset_password_page.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/index_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +15,6 @@ Route<dynamic>? controller(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const RegisterPage());
     case ResetPasswordPage.route:
       return MaterialPageRoute(builder: (context) => const ResetPasswordPage());
-    case IndexPage.route:
-      return MaterialPageRoute(builder: (context) => const IndexPage());
     case FaceRecognitionV2Page.route:
       final Map<String, dynamic> args =
           settings.arguments as Map<String, dynamic>;

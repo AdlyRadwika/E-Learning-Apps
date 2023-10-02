@@ -3,8 +3,7 @@ import 'dart:math';
 import 'package:camera/camera.dart';
 import 'package:final_project/common/consts/asset_conts.dart';
 import 'package:final_project/common/services/image_converter.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/db/database_helper.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/model/user_model.dart';
+import 'package:final_project/features/domain/entities/user/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart' as tfl;
@@ -64,10 +63,6 @@ class MLService {
     _predictedData = List.from(output);
   }
 
-  Future<User?> predict() async {
-    return _searchResult(_predictedData);
-  }
-
   List _preProcess(CameraImage image, Face faceDetected) {
     imglib.Image croppedImage = _cropFace(image, faceDetected);
     imglib.Image img = imglib.copyResizeCropSquare(croppedImage, 112);
@@ -108,17 +103,19 @@ class MLService {
     return convertedBytes.buffer.asFloat32List();
   }
 
-  Future<User?> _searchResult(List predictedData) async {
-    //TODO: replace with firebase data
-    DatabaseHelper dbHelper = DatabaseHelper.instance;
+  Future<User?> predict({required User user}) async {
+    return _searchResult(predictedData: _predictedData, user: user);
+  }
 
-    List<User> users = await dbHelper.queryAllUsers();
+  Future<User?> _searchResult(
+      {required User user, required List predictedData}) async {
+    List<User> users = [user];
     double minDist = 999;
     double currDist = 0.0;
     User? predictedResult;
 
     for (User u in users) {
-      currDist = _euclideanDistance(u.modelData, predictedData);
+      currDist = _euclideanDistance(u.imageData, predictedData);
       if (currDist <= threshold && currDist < minDist) {
         minDist = currDist;
         predictedResult = u;

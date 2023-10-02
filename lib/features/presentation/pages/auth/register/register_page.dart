@@ -103,10 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-        bottomNavigationBar:
-            //  MultiBlocListener(
-            // child:
-            Padding(
+        bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(8.0),
           child: ElevatedButton(
               onPressed: () {

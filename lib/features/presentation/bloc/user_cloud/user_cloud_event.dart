@@ -1,8 +1,8 @@
-part of 'user_store_bloc.dart';
+part of 'user_cloud_bloc.dart';
 
-abstract class UserStoreEvent {}
+abstract class UserCloudEvent {}
 
-class InsertUserEvent extends UserStoreEvent {
+class InsertUserEvent extends UserCloudEvent {
   final String uid;
   final String email;
   final String userName;
@@ -17,5 +17,13 @@ class InsertUserEvent extends UserStoreEvent {
     required this.role,
     required this.imageData,
     this.imageUrl = '',
+  });
+}
+
+class GetUserByIdEvent extends UserCloudEvent {
+  final String uid;
+
+  GetUserByIdEvent({
+    required this.uid,
   });
 }

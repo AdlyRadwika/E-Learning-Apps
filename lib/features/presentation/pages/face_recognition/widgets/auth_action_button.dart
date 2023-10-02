@@ -1,11 +1,11 @@
 import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/common/services/secure_storage_service.dart';
+import 'package:final_project/features/domain/entities/user/user.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
-import 'package:final_project/features/presentation/bloc/user_store/user_store_bloc.dart';
+import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/index_page.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/model/user_model.dart';
+import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -37,11 +37,22 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   bool _isBottomSheetVisible = false;
 
   Future<void> _getRegisterForm() async {
-    _registerForm = await _storageService.getRegisterData();
+    !widget.isLogin
+        ? _registerForm = await _storageService.getRegisterData()
+        : null;
   }
 
   Future<User?> _predictUser() async {
-    User? userAndPass = await _mlService.predict();
+    User? userAndPass = await _mlService.predict(
+        user: const User(
+            name: 'name',
+            email: 'email',
+            imageUrl: 'imageUrl',
+            imageData: ['imageData'],
+            role: 'role',
+            updatedAt: 'updatedAt',
+            createdAt: 'createdAt',
+            uid: 'uid'));
     return userAndPass;
   }
 
@@ -52,7 +63,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         return AlertDialog(
           content: widget.isLogin && predictedUser != null
               ? Text(
-                  'Welcome back, ${predictedUser!.user}.',
+                  'Welcome back, ${predictedUser!.name}.',
                   style: const TextStyle(fontSize: 20),
                 )
               : widget.isLogin && predictedUser == null
@@ -66,7 +77,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     ).then((value) {
       Navigator.pushNamedAndRemoveUntil(
         context,
-        IndexPage.route,
+        HomePage.route,
         (route) => false,
       );
     });
@@ -77,6 +88,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
       bool faceDetected = await widget.onPressed();
       if (faceDetected) {
         if (widget.isLogin) {
+          //FIXME: betulin flownya tinggal kasih object usernya ke ml service
           var user = await _predictUser();
           if (user != null) {
             predictedUser = user;
@@ -147,7 +159,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                   if (state is RegisterResult && state.isSuccess) {
                     final user = state.user;
                     List predictedData = _mlService.predictedData;
-                    context.read<UserStoreBloc>().add(InsertUserEvent(
+                    context.read<UserCloudBloc>().add(InsertUserEvent(
                           uid: user?.uid ?? "-",
                           email: _registerForm["email"],
                           userName: _registerForm["name"],
@@ -160,7 +172,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                   }
                 },
               ),
-              BlocListener<UserStoreBloc, UserStoreState>(
+              BlocListener<UserCloudBloc, UserCloudState>(
                 listener: (context, state) {
                   if (state is InsertUserResult && state.isSuccess) {
                     context.showSnackBar(
