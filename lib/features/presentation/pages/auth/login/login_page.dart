@@ -2,6 +2,7 @@ import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/pages/auth/login/widgets/navigate_rich_text_widget.dart';
 import 'package:final_project/features/presentation/pages/auth/register/register_page.dart';
+import 'package:final_project/features/presentation/pages/auth/reset_password/reset_password_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -65,11 +66,10 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(
                         height: 10,
                       ),
-                      //TODO: implement forget password
                       const NavigateRichTextWidget(
                         questionText: 'Forget password?',
                         btnText: 'Reset here',
-                        route: 'Soon',
+                        route: ResetPasswordPage.route,
                       ),
                     ],
                   ),

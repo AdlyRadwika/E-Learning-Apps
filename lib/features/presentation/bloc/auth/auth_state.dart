@@ -29,3 +29,12 @@ class LogoutResult extends AuthState {
 
   LogoutResult({this.message = '', required this.isSuccess});
 }
+
+class ResetPasswordLoading extends AuthState {}
+
+class ResetPasswordResult extends AuthState {
+  final String message;
+  final bool isSuccess;
+
+  ResetPasswordResult({this.message = '', required this.isSuccess});
+}

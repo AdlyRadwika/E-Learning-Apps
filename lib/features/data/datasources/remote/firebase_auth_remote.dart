@@ -9,6 +9,7 @@ abstract class FirebaseAuthRemote {
       required String role});
   Future<void> login({required String email, required String password});
   Future<void> logout();
+  Future<void> resetPassword({required String email});
 }
 
 class FirebaseAuthRemoteImpl implements FirebaseAuthRemote {
@@ -58,6 +59,17 @@ class FirebaseAuthRemoteImpl implements FirebaseAuthRemote {
   Future<void> logout() async {
     try {
       await auth.signOut();
+    } on FirebaseAuthException catch (e) {
+      throw ServerException(e.message ?? "Unknown exception (firebase)");
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<void> resetPassword({required String email}) async {
+    try {
+      await auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? "Unknown exception (firebase)");
     } catch (e) {
