@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
             ElevatedButton(
                 onPressed: () {
                   context.read<AuthBloc>().add(LogoutEvent());
-                  Navigator.pushReplacementNamed(context, LoginPage.route);
+                  Navigator.pushNamedAndRemoveUntil(context, LoginPage.route, (route) => false,);
                 },
                 child: const Text('Logout'))
           ],

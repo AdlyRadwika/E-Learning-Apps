@@ -48,8 +48,10 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
 
   @override
   void dispose() {
-    _cameraService.dispose();
     super.dispose();
+
+    _cameraService.dispose();
+    _faceDetectorService.dispose();
   }
 
   _start() async {

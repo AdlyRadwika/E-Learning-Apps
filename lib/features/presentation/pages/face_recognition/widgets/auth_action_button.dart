@@ -64,7 +64,11 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         );
       },
     ).then((value) {
-      Navigator.pushReplacementNamed(context, IndexPage.route);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        IndexPage.route,
+        (route) => false,
+      );
     });
   }
 
@@ -164,7 +168,11 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                         backgroundColor: Colors.green);
                     _storageService.deleteRegisterData();
                     _registerForm = {};
-                    Navigator.pushReplacementNamed(context, LoginPage.route);
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      LoginPage.route,
+                      (route) => false,
+                    );
                   } else if (state is InsertUserResult && !state.isSuccess) {
                     context.showErrorSnackBar(message: state.message);
                     Navigator.pop(context);

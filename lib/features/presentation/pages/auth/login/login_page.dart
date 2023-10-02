@@ -79,8 +79,11 @@ class _LoginPageState extends State<LoginPage> {
                     BlocListener<AuthBloc, AuthState>(
                       listener: (context, state) {
                         if (state is LoginResult && state.isSuccess) {
-                          Navigator.pushReplacementNamed(
-                              context, HomePage.route);
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            HomePage.route,
+                            (route) => false,
+                          );
                         } else if (state is LoginResult && !state.isSuccess) {
                           context.showErrorSnackBar(message: state.message);
                         }
