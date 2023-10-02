@@ -6,5 +6,7 @@ abstract class FirebaseUserStoreRepository {
       {required String uid,
       required String email,
       required String userName,
+      required List imageData,
+      String imageUrl = '',
       required String role});
 }

@@ -1,12 +1,15 @@
 import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/common/services/ml_service.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/db/database_helper.dart';
+import 'package:final_project/common/services/secure_storage_service.dart';
+import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
+import 'package:final_project/features/presentation/bloc/user_store/user_store_bloc.dart';
+import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/index_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/model/user_model.dart';
-import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthActionButton extends StatefulWidget {
   const AuthActionButton({
@@ -25,28 +28,16 @@ class AuthActionButton extends StatefulWidget {
 
 class _AuthActionButtonState extends State<AuthActionButton> {
   final MLService _mlService = locator<MLService>();
+  final _storageService = locator<SecureStorageService>();
 
-  final TextEditingController _userTextEditingController =
-      TextEditingController(text: '');
-
-  final TextEditingController _passwordTextEditingController =
-      TextEditingController(text: '');
+  late Map<String, dynamic> _registerForm;
 
   User? predictedUser;
 
   bool _isBottomSheetVisible = false;
 
-  Future _signUp(BuildContext context,
-      {required String user, required String password}) async {
-    DatabaseHelper databaseHelper = DatabaseHelper.instance;
-    List predictedData = _mlService.predictedData;
-    User userToSave = User(
-      user: user,
-      password: password,
-      modelData: predictedData,
-    );
-    //TODO: replace with firebase firestore
-    await databaseHelper.insert(userToSave);
+  Future<void> _getRegisterForm() async {
+    _registerForm = await _storageService.getRegisterData();
   }
 
   Future<User?> _predictUser() async {
@@ -118,6 +109,13 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    _getRegisterForm();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return _isBottomSheetVisible
         ? const SizedBox.shrink()
@@ -138,42 +136,52 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            children: [
-              CustomTextField(
-                controller: _userTextEditingController,
-                label: "Your Name",
-              ),
-              const SizedBox(height: 10),
-              CustomTextField(
-                controller: _passwordTextEditingController,
-                label: "Password",
-              ),
-              const SizedBox(height: 10),
-              const Divider(),
-              const SizedBox(height: 10),
-              OutlinedButton(
-                onPressed: () async {
-                  final user = _userTextEditingController.text.trim();
-                  final password = _passwordTextEditingController.text.trim();
-
-                  if (user.isEmpty || password.isEmpty) {
-                    context.showErrorSnackBar(
-                      message: 'Isi username atau password!',
-                    );
-                  } else {
-                    await _signUp(context, user: user, password: password)
-                        .then((value) {
-                      context.showSnackBar(
-                          message: 'Register berhasil!',
-                          backgroundColor: Colors.green);
-                      Navigator.pushReplacementNamed(context, IndexPage.route);
-                    });
+          MultiBlocListener(
+            listeners: [
+              BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is RegisterResult && state.isSuccess) {
+                    final user = state.user;
+                    List predictedData = _mlService.predictedData;
+                    context.read<UserStoreBloc>().add(InsertUserEvent(
+                          uid: user?.uid ?? "-",
+                          email: _registerForm["email"],
+                          userName: _registerForm["name"],
+                          role: _registerForm["role"].toString().toLowerCase(),
+                          imageData: predictedData,
+                        ));
+                  } else if (state is RegisterResult && !state.isSuccess) {
+                    context.showErrorSnackBar(message: state.message);
+                    Navigator.pop(context);
                   }
                 },
-                child: const Text('SIGN UP'),
-              )
+              ),
+              BlocListener<UserStoreBloc, UserStoreState>(
+                listener: (context, state) {
+                  if (state is InsertUserResult && state.isSuccess) {
+                    context.showSnackBar(
+                        message: 'User Data inserted!',
+                        backgroundColor: Colors.green);
+                    _storageService.deleteRegisterData();
+                    _registerForm = {};
+                    Navigator.pushReplacementNamed(context, LoginPage.route);
+                  } else if (state is InsertUserResult && !state.isSuccess) {
+                    context.showErrorSnackBar(message: state.message);
+                    Navigator.pop(context);
+                  }
+                },
+              ),
             ],
+            child: OutlinedButton(
+              onPressed: () async {
+                context.read<AuthBloc>().add(RegisterEvent(
+                    email: _registerForm["email"],
+                    password: _registerForm["password"],
+                    userName: _registerForm["name"],
+                    role: _registerForm["role"]));
+              },
+              child: const Text('Continue'),
+            ),
           ),
         ],
       ),

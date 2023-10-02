@@ -1,10 +1,11 @@
 import 'package:final_project/common/extensions/snackbar.dart';
-import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
-import 'package:final_project/features/presentation/bloc/user_store/user_store_bloc.dart';
+import 'package:final_project/common/services/secure_storage_service.dart';
+import 'package:final_project/features/domain/entities/register/register_form.dart';
 import 'package:final_project/features/presentation/pages/auth/register/widgets/custom_dropdown_widget.dart';
+import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
 import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
+import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
   static const route = '/register';
@@ -16,6 +17,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final _storageService = locator.get<SecureStorageService>();
+
   late TextEditingController usernameC;
   late TextEditingController emailC;
   late TextEditingController passC;
@@ -100,45 +103,18 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-        bottomNavigationBar: MultiBlocListener(
-          listeners: [
-            BlocListener<AuthBloc, AuthState>(
-              listener: (context, state) {
-                if (state is RegisterResult && state.isSuccess) {
-                  final user = state.user;
-                  context.read<UserStoreBloc>().add(InsertUserEvent(
-                        uid: user?.uid ?? "-",
-                        email: emailC.text.trim(),
-                        userName: usernameC.text.trim(),
-                        role: roleC.text.trim().toLowerCase(),
-                      ));
-                  // Navigator.pushReplacementNamed(context, HomePage.route);
-                } else if (state is RegisterResult && !state.isSuccess) {
-                  context.showErrorSnackBar(message: state.message);
-                }
+        bottomNavigationBar:
+            //  MultiBlocListener(
+            // child:
+            Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+              onPressed: () {
+                _register();
               },
-            ),
-            BlocListener<UserStoreBloc, UserStoreState>(
-              listener: (context, state) {
-                if (state is InsertUserResult && state.isSuccess) {
-                  context.showSnackBar(
-                      message: 'User Data inserted!',
-                      backgroundColor: Colors.green);
-                } else if (state is InsertUserResult && !state.isSuccess) {
-                  context.showErrorSnackBar(message: state.message);
-                }
-              },
-            ),
-          ],
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton(
-                onPressed: () {
-                  _register();
-                },
-                child: const Text('Register')),
-          ),
+              child: const Text('Register')),
         ),
+        // ),
       ),
     );
   }
@@ -169,7 +145,13 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    context.read<AuthBloc>().add(RegisterEvent(
-        email: email, password: confirmPass, userName: userName, role: role));
+    final user = RegisterData(
+        password: confirmPass, name: userName, role: role, email: email);
+
+    _storageService.saveRegisterData(user: user);
+
+    Navigator.pushNamed(context, FaceRecognitionV2Page.route, arguments: {
+      "isLogin": false,
+    });
   }
 }

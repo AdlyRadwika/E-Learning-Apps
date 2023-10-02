@@ -55,6 +55,8 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
   _start() async {
     setState(() => _initializing = true);
     await _cameraService.initialize();
+    await _mlService.initialize();
+    _faceDetectorService.initialize();
     setState(() => _initializing = false);
 
     _frameFaces();
@@ -124,7 +126,7 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
   }
 
   _onBackPressed() {
-    Navigator.of(context).pop();
+    Navigator.pop(context);
   }
 
   _reload() {

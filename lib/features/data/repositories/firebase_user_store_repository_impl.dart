@@ -14,13 +14,17 @@ class FirebaseUserStoreRepositoryImpl implements FirebaseUserStoreRepository {
       {required String uid,
       required String email,
       required String userName,
+      required List imageData,
+      String imageUrl = '',
       required String role}) async {
     try {
       final result = await remoteDataSource.insertUserData(
           uid: uid,
           email: email,
+          imageData: imageData,
+          imageUrl: imageUrl,
           userName: userName,
-          role: role);
+          role: role,);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message.toString()));

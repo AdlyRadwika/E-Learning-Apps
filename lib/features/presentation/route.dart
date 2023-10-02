@@ -5,7 +5,7 @@ import 'package:final_project/features/presentation/pages/face_recognition/face_
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 
-Route<dynamic> controller(RouteSettings settings) {
+Route<dynamic>? controller(RouteSettings settings) {
   switch (settings.name) {
     case HomePage.route:
       return MaterialPageRoute(builder: (context) => const HomePage());
@@ -16,17 +16,13 @@ Route<dynamic> controller(RouteSettings settings) {
     case IndexPage.route:
       return MaterialPageRoute(builder: (context) => const IndexPage());
     case FaceRecognitionV2Page.route:
-      final Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      final Map<String, dynamic> args =
+          settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
           builder: (context) => FaceRecognitionV2Page(
-            isLogin: args["isLogin"],
-          ));
-    default:
-      return MaterialPageRoute(
-          builder: (_) => const Scaffold(
-                body: Center(
-                  child: Text('The page is not found'),
-                ),
+                isLogin: args["isLogin"],
               ));
+    default:
+      return null;
   }
 }

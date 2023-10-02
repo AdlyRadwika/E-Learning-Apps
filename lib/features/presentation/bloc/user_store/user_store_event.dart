@@ -7,10 +7,15 @@ class InsertUserEvent extends UserStoreEvent {
   final String email;
   final String userName;
   final String role;
+  final List imageData;
+  final String imageUrl;
 
-  InsertUserEvent(
-      {required this.uid,
-      required this.email,
-      required this.userName,
-      required this.role});
+  InsertUserEvent({
+    required this.uid,
+    required this.email,
+    required this.userName,
+    required this.role,
+    required this.imageData,
+    this.imageUrl = '',
+  });
 }

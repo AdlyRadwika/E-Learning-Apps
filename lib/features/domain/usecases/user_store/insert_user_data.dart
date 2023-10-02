@@ -7,12 +7,14 @@ class InsertUserDataUseCase {
 
   const InsertUserDataUseCase(this.repository);
 
-    Future<Either<Failure, void>> execute({
-    required String uid,
-    required String email,
-    required String userName,
-    required String role,
-  }) {
-    return repository.insertUserData(uid: uid, email: email, userName: userName, role: role);
+  Future<Either<Failure, void>> execute(
+      {required String uid,
+      required String email,
+      required String userName,
+      required List imageData,
+      String imageUrl = '',
+      required String role}) {
+    return repository.insertUserData(
+        uid: uid, email: email, userName: userName, role: role, imageData: imageData, imageUrl: imageUrl);
   }
 }

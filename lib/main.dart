@@ -1,7 +1,7 @@
 import 'package:final_project/common/util/theme.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_store/user_store_bloc.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/index_page.dart';
+import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/firebase_options.dart';
 import 'package:final_project/injection.dart' as di;
 import 'package:flutter/foundation.dart';
@@ -34,9 +34,8 @@ void main() async {
   runApp(const MainApp());
 }
 
-class MainApp extends StatelessWidget with WidgetsBindingObserver{
+class MainApp extends StatelessWidget with WidgetsBindingObserver {
   const MainApp({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +48,7 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver{
       child: MaterialApp(
         theme: themeData,
         onGenerateRoute: route.controller,
-        initialRoute: IndexPage.route,
+        home: const LoginPage(),
       ),
     );
   }
