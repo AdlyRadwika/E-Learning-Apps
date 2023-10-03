@@ -23,7 +23,8 @@ class SignUpSheetWidget extends StatefulWidget {
       required this.registerForm,
       required this.storageService,
       required this.image,
-      required this.isUpdate, this.userId = ''});
+      required this.isUpdate,
+      this.userId = ''});
 
   @override
   State<SignUpSheetWidget> createState() => _SignUpSheetWidgetState();
@@ -103,18 +104,21 @@ class _SignUpSheetWidgetState extends State<SignUpSheetWidget> {
                     context.showErrorSnackBar(message: state.message);
                     Navigator.pop(context);
                   }
-                  if (state is UpdatePhotoProfileResult && state.isSuccess) {
-                    context.showSnackBar(
-                        message: 'Your photo profile has been updated!',
-                        backgroundColor: Colors.green);
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      HomePage.route,
-                      (route) => false,
-                    );
-                  } else if (state is UpdatePhotoProfileResult && !state.isSuccess) {
-                    context.showErrorSnackBar(message: state.message);
-                    Navigator.pop(context);
+                  if (widget.isUpdate) {
+                    if (state is UpdatePhotoProfileResult && state.isSuccess) {
+                      context.showSnackBar(
+                          message: 'Your photo profile has been updated!',
+                          backgroundColor: Colors.green);
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        HomePage.route,
+                        (route) => false,
+                      );
+                    } else if (state is UpdatePhotoProfileResult &&
+                        !state.isSuccess) {
+                      context.showErrorSnackBar(message: state.message);
+                      Navigator.pop(context);
+                    }
                   }
                 },
               ),
