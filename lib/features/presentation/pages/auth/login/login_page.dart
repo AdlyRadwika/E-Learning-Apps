@@ -18,6 +18,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final _formKey = GlobalKey<FormState>();
   late TextEditingController emailC;
   late TextEditingController passC;
 
@@ -48,30 +49,37 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomTextField(
-                        controller: emailC,
-                        label: 'Email',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: passC,
-                        label: 'Password',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const NavigateRichTextWidget(
-                        questionText: 'Forget password?',
-                        btnText: 'Reset here',
-                        route: ResetPasswordPage.route,
-                      ),
-                    ],
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomTextFormField(
+                          icon: Icons.alternate_email,
+                          controller: emailC,
+                          keyboardType: TextInputType.emailAddress,
+                          label: 'Email',
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        CustomTextFormField(
+                          icon: Icons.lock,
+                          controller: passC,
+                          isPassword: true,
+                          label: 'Password',
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const NavigateRichTextWidget(
+                          questionText: 'Forget password?',
+                          btnText: 'Reset here',
+                          route: ResetPasswordPage.route,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Column(
@@ -115,10 +123,9 @@ class _LoginPageState extends State<LoginPage> {
   void _login() {
     final email = emailC.text.trim();
     final pass = passC.text.trim();
-    if (email.isEmpty && pass.isEmpty || email.isEmpty || pass.isEmpty) {
-      context.showErrorSnackBar(message: 'Email or password should be filled!');
-      return;
+    
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(LoginEvent(email: email, password: pass));
     }
-    context.read<AuthBloc>().add(LoginEvent(email: email, password: pass));
   }
 }

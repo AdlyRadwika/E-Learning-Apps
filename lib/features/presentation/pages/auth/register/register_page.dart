@@ -1,4 +1,3 @@
-import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/features/domain/entities/register/register_form.dart';
 import 'package:final_project/features/presentation/pages/auth/register/widgets/custom_dropdown_widget.dart';
@@ -18,6 +17,8 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _storageService = locator.get<SecureStorageService>();
+
+  final _formKey = GlobalKey<FormState>();
 
   late TextEditingController usernameC;
   late TextEditingController emailC;
@@ -59,47 +60,50 @@ class _RegisterPageState extends State<RegisterPage> {
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CustomTextField(
-                      controller: usernameC,
-                      label: 'Username',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomTextField(
-                      controller: emailC,
-                      label: 'Email',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomTextField(
-                      controller: passC,
-                      label: 'Password',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomTextField(
-                      controller: confirmPassC,
-                      label: 'Password Confirmation',
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomDropdownWidget(
-                        dynamicWidth: dynamicWidth, roleC: roleC)
-                  ],
-                ),
-              ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomTextFormField(
+                    icon: Icons.person,
+                    controller: usernameC,
+                    label: 'Username',
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextFormField(
+                    icon: Icons.alternate_email,
+                    controller: emailC,
+                    label: 'Email',
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextFormField(
+                    icon: Icons.lock,
+                    controller: passC,
+                    label: 'Password',
+                    isPassword: true,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextFormField(
+                    icon: Icons.lock,
+                    controller: confirmPassC,
+                    label: 'Password Confirmation',
+                    isPassword: true,
+                    valueComparison: passC.text,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomDropdownWidget(dynamicWidth: dynamicWidth, roleC: roleC)
+                ],
+              ),
             ),
           ),
         ),
@@ -119,37 +123,19 @@ class _RegisterPageState extends State<RegisterPage> {
   void _register() {
     final userName = usernameC.text.trim();
     final email = emailC.text.trim();
-    final pass = passC.text.trim();
     final confirmPass = confirmPassC.text.trim();
     final role = roleC.text.trim().toLowerCase();
 
-    if (email.isEmpty &&
-            pass.isEmpty &&
-            confirmPass.isEmpty &&
-            role.isEmpty &&
-            userName.isEmpty ||
-        email.isEmpty ||
-        pass.isEmpty ||
-        confirmPass.isEmpty ||
-        userName.isEmpty ||
-        role.isEmpty) {
-      context.showErrorSnackBar(message: 'The input(s) should be filled!');
-      return;
+    if (_formKey.currentState!.validate()) {
+      final user = RegisterData(
+          password: confirmPass, name: userName, role: role, email: email);
+
+      _storageService.saveRegisterData(user: user);
+
+      Navigator.pushNamed(context, FaceRecognitionV2Page.route, arguments: {
+        "isAttendance": false,
+        "isUpdate": false,
+      });
     }
-    if (confirmPass != pass) {
-      context.showErrorSnackBar(
-          message: 'Your password confirmation is not the same!');
-      return;
-    }
-
-    final user = RegisterData(
-        password: confirmPass, name: userName, role: role, email: email);
-
-    _storageService.saveRegisterData(user: user);
-
-    Navigator.pushNamed(context, FaceRecognitionV2Page.route, arguments: {
-      "isAttendance": false,
-      "isUpdate": false,
-    });
   }
 }

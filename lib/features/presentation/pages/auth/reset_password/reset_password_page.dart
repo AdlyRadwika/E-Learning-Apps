@@ -15,6 +15,8 @@ class ResetPasswordPage extends StatefulWidget {
 }
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
+  final _formKey = GlobalKey<FormState>();
+
   late TextEditingController emailC;
 
   @override
@@ -38,29 +40,29 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(title: const Text('Reset Password')),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
+        body: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Form(
+            key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Input your email",
-                        style: theme.textTheme.titleLarge,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: emailC,
-                        label: 'Email',
-                      ),
-                    ],
-                  ),
+                Text(
+                  "",
+                  style: theme.textTheme.titleLarge,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomTextFormField(
+                  icon: Icons.alternate_email,
+                  controller: emailC,
+                  label: 'Email',
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 BlocListener<AuthBloc, AuthState>(
                   listener: (context, state) {
@@ -90,12 +92,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   void _resetPassword() {
     final email = emailC.text.trim();
-    if (email.isEmpty) {
-      context.showErrorSnackBar(message: 'Email should be filled!');
-      return;
+
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(ResetPasswordEvent(
+            email: email,
+          ));
     }
-    context.read<AuthBloc>().add(ResetPasswordEvent(
-          email: email,
-        ));
   }
 }

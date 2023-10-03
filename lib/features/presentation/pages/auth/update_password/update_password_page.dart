@@ -17,6 +17,8 @@ class UpdatePasswordPage extends StatefulWidget {
 }
 
 class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
+  final _formKey = GlobalKey<FormState>();
+
   late TextEditingController oldPassC;
   late TextEditingController newPassC;
   late TextEditingController newPassConfirmC;
@@ -50,29 +52,39 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
             child: Column(
               children: [
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomTextField(
-                        controller: oldPassC,
-                        label: 'Old Password',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: newPassC,
-                        label: 'New Password',
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextField(
-                        controller: newPassConfirmC,
-                        label: 'New Password Confirmation',
-                      ),
-                    ],
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomTextFormField(
+                          icon: Icons.lock,
+                          controller: oldPassC,
+                          label: 'Old Password',
+                          isPassword: true,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        CustomTextFormField(
+                          icon: Icons.lock,
+                          controller: newPassC,
+                          label: 'New Password',
+                          isPassword: true,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        CustomTextFormField(
+                          icon: Icons.lock,
+                          controller: newPassConfirmC,
+                          label: 'New Password Confirmation',
+                          isPassword: true,
+                          valueComparison: newPassC.text,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 BlocListener<AuthBloc, AuthState>(
@@ -111,23 +123,14 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
 
   void _updatePassword({required String email}) {
     final oldPass = oldPassC.text.trim();
-    final newPass = newPassC.text.trim();
     final newPassConfirm = newPassConfirmC.text.trim();
-    if (oldPass.isEmpty && newPass.isEmpty && newPassConfirm.isEmpty ||
-        oldPass.isEmpty ||
-        newPass.isEmpty ||
-        newPassConfirm.isEmpty) {
-      context.showErrorSnackBar(message: 'Input(s) should be filled!');
-      return;
+
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(UpdatePasswordEvent(
+            email: email,
+            newPass: newPassConfirm,
+            oldPass: oldPass,
+          ));
     }
-    if (newPassConfirm != newPass) {
-      context.showErrorSnackBar(message: 'Your new password should be same!');
-      return;
-    }
-    context.read<AuthBloc>().add(UpdatePasswordEvent(
-          email: email,
-          newPass: newPassConfirm,
-          oldPass: oldPass,
-        ));
   }
 }
