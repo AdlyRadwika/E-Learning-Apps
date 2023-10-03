@@ -38,3 +38,12 @@ class ResetPasswordResult extends AuthState {
 
   ResetPasswordResult({this.message = '', required this.isSuccess});
 }
+
+class UpdatePasswordLoading extends AuthState {}
+
+class UpdatePasswordResult extends AuthState {
+  final String message;
+  final bool isSuccess;
+
+  UpdatePasswordResult({this.message = '', required this.isSuccess});
+}

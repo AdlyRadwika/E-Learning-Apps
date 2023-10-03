@@ -5,6 +5,7 @@ import 'package:final_project/features/domain/entities/user/user.dart';
 import 'package:final_project/features/domain/usecases/user_cloud/get_photo_profile_url.dart';
 import 'package:final_project/features/domain/usecases/user_cloud/get_user_by_id.dart';
 import 'package:final_project/features/domain/usecases/user_cloud/insert_user_data.dart';
+import 'package:final_project/features/domain/usecases/user_cloud/update_photo_profile.dart';
 
 part 'user_cloud_event.dart';
 part 'user_cloud_state.dart';
@@ -13,11 +14,13 @@ class UserCloudBloc extends Bloc<UserCloudEvent, UserCloudState> {
   final InsertUserDataUseCase insertUserDataUseCase;
   final GetUserByIdUseCase getUserByIdUseCase;
   final GetPhotoProfileURLUseCase getPhotoProfileURLUseCase;
+  final UpdatePhotoProfileUseCase updatePhotoProfileUseCase;
 
   UserCloudBloc({
     required this.insertUserDataUseCase,
     required this.getUserByIdUseCase,
     required this.getPhotoProfileURLUseCase,
+    required this.updatePhotoProfileUseCase,
   }) : super(UserCloudInitial()) {
     on<InsertUserEvent>((event, emit) async {
       emit(InsertUserLoading());
@@ -56,6 +59,21 @@ class UserCloudBloc extends Bloc<UserCloudEvent, UserCloudState> {
       emit(result.fold(
           (l) => GetPhotoProfileURLResult(isSuccess: false, message: l.message),
           (r) => GetPhotoProfileURLResult(isSuccess: true, url: r)));
+    });
+    on<UpdatePhotoProfileEvent>((event, emit) async {
+      emit(UpdatePhotoProfileLoading());
+
+      final result = await updatePhotoProfileUseCase.execute(
+        imageUrl: event.imageUrl,
+        uid: event.uid,
+        imageData: event.imageData,
+      );
+
+      emit(result.fold(
+          (l) => UpdatePhotoProfileResult(isSuccess: false, message: l.message),
+          (r) => UpdatePhotoProfileResult(
+                isSuccess: true,
+              )));
     });
   }
 }

@@ -1,7 +1,6 @@
-import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
-import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
+import 'package:final_project/features/presentation/pages/profile/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,28 +43,27 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, FaceRecognitionV2Page.route,
-                    arguments: {
-                      "isAttendance": true,
-                    });
-              },
-              child: const Text('Face Recognition')),
-          ElevatedButton(
-              onPressed: () {
-                context.read<AuthBloc>().add(LogoutEvent());
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  LoginPage.route,
-                  (route) => false,
-                );
-              },
-              child: const Text('Logout')),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton.icon(
+                onPressed: () =>
+                    Navigator.pushNamed(context, ProfilePage.route),
+                icon: const Icon(Icons.edit),
+                label: const Text('Configure Your Profile')),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, FaceRecognitionV2Page.route,
+                      arguments: {
+                        "isAttendance": true,
+                        "isUpdate": false,
+                      });
+                },
+                child: const Text('Face Recognition')),
+          ],
+        ),
       ),
     );
   }

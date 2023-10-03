@@ -67,4 +67,24 @@ class FirebaseUserCloudRepositoryImpl implements FirebaseUserCloudRepository {
       return Left(UnexpectedFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> updatePhotoProfile({
+    required String imageUrl,
+    required String uid,
+    required List imageData,
+  }) async {
+    try {
+      final result = await remoteDataSource.updatePhotoProfile(
+        imageUrl: imageUrl,
+        uid: uid,
+        imageData: imageData,
+      );
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message.toString()));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
 }

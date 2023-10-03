@@ -16,4 +16,5 @@ abstract class FirebaseUserCloudRepository {
     required String uid,
   });
   Future<Either<Failure, String>> getPhotoProfileUrl({required File file});
+  Future<Either<Failure, void>> updatePhotoProfile({required String imageUrl, required String uid, required List imageData});
 }

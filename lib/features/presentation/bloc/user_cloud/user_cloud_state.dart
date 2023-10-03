@@ -40,3 +40,15 @@ class GetPhotoProfileURLResult extends UserCloudState {
     this.url = '',
   });
 }
+
+class UpdatePhotoProfileLoading extends UserCloudState {}
+
+class UpdatePhotoProfileResult extends UserCloudState {
+  final String message;
+  final bool isSuccess;
+
+  UpdatePhotoProfileResult({
+    this.message = '',
+    required this.isSuccess,
+  });
+}

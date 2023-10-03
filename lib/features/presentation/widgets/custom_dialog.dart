@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 Future<void> showResultDialog(
   BuildContext context, {
   required bool isSuccess,
+  String routeName = LoginPage.route,
   required String labelContent,
 }) {
   return showDialog(
@@ -13,6 +14,7 @@ Future<void> showResultDialog(
       return _ResultDialog(
         isSuccess: isSuccess,
         labelContent: labelContent,
+        routeName: routeName,
       );
     },
   );
@@ -21,22 +23,22 @@ Future<void> showResultDialog(
 class _ResultDialog extends StatelessWidget {
   final bool isSuccess;
   final String labelContent;
+  final String routeName;
 
   const _ResultDialog({
     required this.isSuccess,
-    required this.labelContent,
+    required this.labelContent, required this.routeName,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      // title: Image.asset(
-      //   isSuccess ? AssetsConst.imageSuccessIcon : AssetsConst.imageErrorIcon,
-      //   height: 60.h,
-      //   width: 60.h,
-      //   fit: BoxFit.fitHeight,
-      // ),
+      title: Text(
+        isSuccess ? 'Success!' : 'Failed!',
+        style: theme.textTheme.labelLarge,
+        textScaleFactor: 1.1,
+      ),
       content: Wrap(
         children: [
           Center(
@@ -53,11 +55,6 @@ class _ResultDialog extends StatelessWidget {
                     textScaleFactor: 1.1,
                   ),
                 ),
-                Text(
-                  isSuccess ? 'Success!' : 'Failed!',
-                  style: theme.textTheme.labelLarge,
-                  textScaleFactor: 1.1,
-                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -66,7 +63,7 @@ class _ResultDialog extends StatelessWidget {
                     isSuccess
                         ? Navigator.pushNamedAndRemoveUntil(
                             context,
-                            LoginPage.route,
+                            routeName,
                             (route) => false,
                           )
                         : Navigator.pop(context);

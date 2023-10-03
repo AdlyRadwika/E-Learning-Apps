@@ -17,10 +17,12 @@ class CaptureButton extends StatefulWidget {
     super.key,
     required this.onPressed,
     required this.isAttendance,
+    required this.isUpdate,
     required this.reload,
   });
   final Function onPressed;
   final bool isAttendance;
+  final bool isUpdate;
   final Function reload;
 
   @override
@@ -40,7 +42,9 @@ class _CaptureButtonState extends State<CaptureButton> {
 
   Future<void> _getRegisterForm() async {
     !widget.isAttendance
-        ? _registerForm = await _storageService.getRegisterData()
+        ? !widget.isUpdate
+            ? _registerForm = await _storageService.getRegisterData()
+            : _registerForm = {}
         : null;
   }
 
@@ -80,16 +84,14 @@ class _CaptureButtonState extends State<CaptureButton> {
     try {
       bool faceDetected = await widget.onPressed();
       if (faceDetected) {
-        if (widget.isAttendance) {
-          if (currentUser != null) {
-            var user = await _predictUser(user: currentUser);
-            predictedUser = user;
-          }
-          if (mounted) {
-            _showLoginDialog();
-          } else {
-            widget.reload();
-          }
+        if (currentUser != null) {
+          var user = await _predictUser(user: currentUser);
+          predictedUser = user;
+        }
+        if (mounted) {
+          _showLoginDialog();
+        } else {
+          widget.reload();
         }
       }
     } catch (e) {
@@ -99,7 +101,7 @@ class _CaptureButtonState extends State<CaptureButton> {
     }
   }
 
-  Future _onRegisterPressed() async {
+  Future _onSaveToCloud({String userId = ''}) async {
     try {
       bool faceDetected = await widget.onPressed();
       if (faceDetected) {
@@ -109,6 +111,8 @@ class _CaptureButtonState extends State<CaptureButton> {
           });
           final bottomSheetC = Scaffold.of(context).showBottomSheet((context) =>
               SignUpSheetWidget(
+                  userId: userId,
+                  isUpdate: widget.isUpdate,
                   image: File(_cameraService.imagePath!),
                   predictedData: _mlService.predictedData,
                   registerForm: _registerForm,
@@ -143,8 +147,15 @@ class _CaptureButtonState extends State<CaptureButton> {
         ? const SizedBox.shrink()
         : BlocBuilder<UserCloudBloc, UserCloudState>(builder: (context, state) {
             if (state is GetUserByIdResult && state.isSuccess) {
+              final data = state.user;
               return IconButton(
-                onPressed: () => _onAttendancePressed(currentUser: state.user),
+                onPressed: () {
+                  if (widget.isUpdate) {
+                    _onSaveToCloud(userId: data?.uid ?? "-");
+                  } else {
+                    _onAttendancePressed(currentUser: data);
+                  }
+                },
                 icon: const Icon(
                   Icons.radio_button_checked,
                   color: Colors.white,
@@ -153,7 +164,7 @@ class _CaptureButtonState extends State<CaptureButton> {
               );
             }
             return IconButton(
-              onPressed: () => _onRegisterPressed(),
+              onPressed: () => _onSaveToCloud(),
               icon: const Icon(
                 Icons.radio_button_checked,
                 color: Colors.white,

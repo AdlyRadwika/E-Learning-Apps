@@ -35,3 +35,15 @@ class GetPhotoProfileURLEvent extends UserCloudEvent {
     required this.file,
   });
 }
+
+class UpdatePhotoProfileEvent extends UserCloudEvent {
+  final String uid;
+  final String imageUrl;
+  final List imageData;
+
+  UpdatePhotoProfileEvent({
+    required this.uid,
+    required this.imageUrl,
+    required this.imageData,
+  });
+}

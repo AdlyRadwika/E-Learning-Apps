@@ -15,10 +15,12 @@ import 'package:flutter/material.dart';
 class FaceRecognitionV2Page extends StatefulWidget {
   static const route = '/face-recognition-v2';
 
-  const FaceRecognitionV2Page({Key? key, this.isAttendance = false})
+  const FaceRecognitionV2Page(
+      {Key? key, this.isAttendance = false, this.isUpdate = false})
       : super(key: key);
 
   final bool isAttendance;
+  final bool isUpdate;
 
   @override
   FaceRecognitionV2PageState createState() => FaceRecognitionV2PageState();
@@ -203,13 +205,18 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
           children: [
             body,
             CameraHeader(
-              widget.isAttendance ? "Face Recognition" : "Register",
+              widget.isAttendance
+                  ? "Face Recognition"
+                  : widget.isUpdate
+                      ? "Update Photo Profile"
+                      : "Register",
               onBackPressed: _onBackPressed,
             )
           ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: CaptureButton(
+          isUpdate: widget.isUpdate,
           onPressed: onShot,
           isAttendance: widget.isAttendance,
           reload: _reload,

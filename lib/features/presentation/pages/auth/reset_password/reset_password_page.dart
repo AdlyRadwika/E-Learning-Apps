@@ -1,6 +1,6 @@
 import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
-import 'package:final_project/features/presentation/pages/auth/reset_password/widgets/custom_dialog.dart';
+import 'package:final_project/features/presentation/widgets/custom_dialog.dart';
 import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,14 +16,12 @@ class ResetPasswordPage extends StatefulWidget {
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   late TextEditingController emailC;
-  late TextEditingController passC;
 
   @override
   void initState() {
     super.initState();
 
     emailC = TextEditingController();
-    passC = TextEditingController();
   }
 
   @override
@@ -31,7 +29,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     super.dispose();
 
     emailC.dispose();
-    passC.dispose();
   }
 
   @override

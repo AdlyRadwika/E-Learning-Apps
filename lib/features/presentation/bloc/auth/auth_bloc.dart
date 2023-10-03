@@ -3,6 +3,7 @@ import 'package:final_project/features/domain/usecases/auth/login.dart';
 import 'package:final_project/features/domain/usecases/auth/logout.dart';
 import 'package:final_project/features/domain/usecases/auth/register.dart';
 import 'package:final_project/features/domain/usecases/auth/reset_password.dart';
+import 'package:final_project/features/domain/usecases/auth/update_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 part 'auth_event.dart';
@@ -13,12 +14,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RegisterUseCase registerUseCase;
   final LogoutUseCase logoutUseCase;
   final ResetPasswordUseCase resetPasswordUseCase;
+  final UpdatePasswordUseCase updatePasswordUseCase;
 
   AuthBloc({
     required this.loginUseCase,
     required this.registerUseCase,
     required this.logoutUseCase,
     required this.resetPasswordUseCase,
+    required this.updatePasswordUseCase,
   }) : super(AuthInitial()) {
     on<LoginEvent>((event, emit) async {
       emit(LoginLoading());
@@ -59,6 +62,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(result.fold(
           (l) => ResetPasswordResult(isSuccess: false, message: l.message),
           (r) => ResetPasswordResult(isSuccess: true)));
+    });
+    on<UpdatePasswordEvent>((event, emit) async {
+      emit(UpdatePasswordLoading());
+
+      final result = await updatePasswordUseCase.execute(
+        email: event.email,
+        oldPass: event.oldPass,
+        newPass: event.newPass,
+      );
+
+      emit(result.fold(
+          (l) => UpdatePasswordResult(isSuccess: false, message: l.message),
+          (r) => UpdatePasswordResult(isSuccess: true)));
     });
   }
 }

@@ -10,6 +10,10 @@ abstract class FirebaseAuthRemote {
   Future<void> login({required String email, required String password});
   Future<void> logout();
   Future<void> resetPassword({required String email});
+  Future<void> updatePassword(
+      {required String email,
+      required String oldPass,
+      required String newPass});
 }
 
 class FirebaseAuthRemoteImpl implements FirebaseAuthRemote {
@@ -70,6 +74,29 @@ class FirebaseAuthRemoteImpl implements FirebaseAuthRemote {
   Future<void> resetPassword({required String email}) async {
     try {
       await auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw ServerException(e.message ?? "Unknown exception (firebase)");
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<void> updatePassword({
+    required String email,
+    required String oldPass,
+    required String newPass,
+  }) async {
+    try {
+      final credential =
+          EmailAuthProvider.credential(email: email, password: oldPass);
+      await auth.currentUser
+          ?.reauthenticateWithCredential(credential)
+          .then((value) async {
+        await auth.currentUser
+            ?.updatePassword(newPass)
+            .catchError((e) => throw ServerException(e));
+      }).catchError((e) => throw ServerException(e));
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? "Unknown exception (firebase)");
     } catch (e) {

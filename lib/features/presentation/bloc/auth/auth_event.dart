@@ -27,6 +27,19 @@ class LogoutEvent extends AuthEvent {}
 class ResetPasswordEvent extends AuthEvent {
   final String email;
 
-  ResetPasswordEvent({required this.email,});
+  ResetPasswordEvent({
+    required this.email,
+  });
 }
 
+class UpdatePasswordEvent extends AuthEvent {
+  final String email;
+  final String oldPass;
+  final String newPass;
+
+  UpdatePasswordEvent({
+    required this.email,
+    required this.oldPass,
+    required this.newPass,
+  });
+}

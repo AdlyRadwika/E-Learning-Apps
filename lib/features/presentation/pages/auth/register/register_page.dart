@@ -149,6 +149,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     Navigator.pushNamed(context, FaceRecognitionV2Page.route, arguments: {
       "isAttendance": false,
+      "isUpdate": false,
     });
   }
 }

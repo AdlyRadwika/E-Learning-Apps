@@ -52,11 +52,27 @@ class FirebaseAuthRepositoryImpl implements FirebaseAuthRepository {
       return Left(UnexpectedFailure(e.toString()));
     }
   }
-  
+
   @override
   Future<Either<Failure, void>> resetPassword({required String email}) async {
     try {
       final result = await remoteDataSource.resetPassword(email: email);
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message.toString()));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updatePassword(
+      {required String email,
+      required String oldPass,
+      required String newPass}) async {
+    try {
+      final result = await remoteDataSource.updatePassword(
+          email: email, oldPass: oldPass, newPass: newPass);
       return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message.toString()));

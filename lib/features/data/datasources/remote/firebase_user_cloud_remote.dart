@@ -19,6 +19,8 @@ abstract class FirebaseUserCloudRemote {
   Future<String> getPhotoProfileUrl({
     required File file,
   });
+  Future<void> updatePhotoProfile(
+      {required String imageUrl, required String uid, required List imageData});
 }
 
 class FirebaseUserCloudRemoteImpl implements FirebaseUserCloudRemote {
@@ -81,6 +83,22 @@ class FirebaseUserCloudRemoteImpl implements FirebaseUserCloudRemote {
           .putFile(file)
           .whenComplete(() {});
       final result = uploadTask.ref.getDownloadURL();
+      return result;
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? "Unknown Firebase Exception");
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<void> updatePhotoProfile(
+      {required String imageUrl, required String uid, required List imageData}) async {
+    try {
+      final result = await _userCollection.doc(uid).update({
+        'image_url': imageUrl,
+        'image_data': imageData,
+      }).catchError((error) => throw ServerException(error.toString()));
       return result;
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? "Unknown Firebase Exception");
