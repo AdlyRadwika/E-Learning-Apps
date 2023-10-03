@@ -43,7 +43,6 @@ class _SignUpSheetWidgetState extends State<SignUpSheetWidget> {
                   if (state is GetPhotoProfileURLResult && state.isSuccess) {
                     setState(() {
                       _imageUrl = state.url;
-                      print('_imageUrl: $_imageUrl');
                     });
                     context.read<AuthBloc>().add(RegisterEvent(
                         email: widget.registerForm["email"],
@@ -61,7 +60,6 @@ class _SignUpSheetWidgetState extends State<SignUpSheetWidget> {
                 listener: (context, state) {
                   if (state is RegisterResult && state.isSuccess) {
                     final user = state.user;
-                    print('_imageUrl when registerresult: $_imageUrl');
                     context.read<UserCloudBloc>().add(InsertUserEvent(
                           uid: user?.uid ?? "-",
                           email: widget.registerForm["email"],

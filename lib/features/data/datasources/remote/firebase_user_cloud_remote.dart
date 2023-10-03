@@ -81,7 +81,6 @@ class FirebaseUserCloudRemoteImpl implements FirebaseUserCloudRemote {
           .putFile(file)
           .whenComplete(() {});
       final result = uploadTask.ref.getDownloadURL();
-      print("url: $result");
       return result;
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? "Unknown Firebase Exception");
