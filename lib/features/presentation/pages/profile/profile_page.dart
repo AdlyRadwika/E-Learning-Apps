@@ -1,9 +1,9 @@
 import 'package:final_project/common/consts/asset_conts.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
-import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/features/presentation/pages/auth/update_password/update_password_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
+import 'package:final_project/features/presentation/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -116,11 +116,12 @@ class ProfilePage extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: ElevatedButton(
             onPressed: () {
-              context.read<AuthBloc>().add(LogoutEvent());
-              Navigator.pushNamedAndRemoveUntil(
+              showResultDialog(
                 context,
-                LoginPage.route,
-                (route) => false,
+                isSuccess: true,
+                showCancelBtn: true,
+                labelContent: 'Are you sure you want to logout?',
+                onPressed: () => context.read<AuthBloc>().add(LogoutEvent()),
               );
             },
             child: const Text('Logout')),

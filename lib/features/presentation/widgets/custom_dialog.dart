@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 Future<void> showResultDialog(
   BuildContext context, {
   required bool isSuccess,
+  VoidCallback? onPressed,
+  bool showCancelBtn = false,
   String routeName = LoginPage.route,
   required String labelContent,
 }) {
@@ -12,6 +14,8 @@ Future<void> showResultDialog(
     context: context,
     builder: (context) {
       return _ResultDialog(
+        onPressed: onPressed,
+        showCancelBtn: showCancelBtn,
         isSuccess: isSuccess,
         labelContent: labelContent,
         routeName: routeName,
@@ -22,23 +26,30 @@ Future<void> showResultDialog(
 
 class _ResultDialog extends StatelessWidget {
   final bool isSuccess;
+  final VoidCallback? onPressed;
+  final bool showCancelBtn;
   final String labelContent;
   final String routeName;
 
   const _ResultDialog({
     required this.isSuccess,
-    required this.labelContent, required this.routeName,
+    required this.labelContent,
+    required this.routeName,
+    required this.showCancelBtn,
+    required this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      title: Text(
-        isSuccess ? 'Success!' : 'Failed!',
-        style: theme.textTheme.labelLarge,
-        textScaleFactor: 1.1,
-      ),
+      title: showCancelBtn
+          ? const SizedBox.shrink()
+          : Text(
+              isSuccess ? 'Success!' : 'Failed!',
+              style: theme.textTheme.labelLarge,
+              textScaleFactor: 1.1,
+            ),
       content: Wrap(
         children: [
           Center(
@@ -58,7 +69,7 @@ class _ResultDialog extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                TextButton(
+                OutlinedButton(
                   onPressed: () {
                     isSuccess
                         ? Navigator.pushNamedAndRemoveUntil(
@@ -67,12 +78,24 @@ class _ResultDialog extends StatelessWidget {
                             (route) => false,
                           )
                         : Navigator.pop(context);
+                    if (onPressed != null) {
+                      onPressed!();
+                    }
                   },
                   style: TextButton.styleFrom(
                     textStyle: theme.textTheme.titleSmall,
                   ),
                   child: const Text('Confirm'),
                 ),
+                if (showCancelBtn) ...[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: TextButton.styleFrom(
+                      textStyle: theme.textTheme.titleSmall,
+                    ),
+                    child: const Text('Cancel'),
+                  ),
+                ],
               ],
             ),
           ),
