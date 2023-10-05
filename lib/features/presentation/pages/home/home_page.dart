@@ -1,5 +1,6 @@
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
+import 'package:final_project/features/presentation/pages/home/widgets/appbar_content.dart';
 import 'package:final_project/features/presentation/pages/profile/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  static const _navbarItems = [
+    BottomNavigationBarItem(
+      icon: Icon(Icons.home),
+      label: 'Home',
+      tooltip: 'Home',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.class_),
+      label: 'Class',
+      tooltip: 'Class',
+    ),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.inbox), label: 'Inbox', tooltip: 'Inbox'),
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -30,18 +46,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: BlocBuilder<UserCloudBloc, UserCloudState>(
-          builder: (context, state) {
-            if (state is GetUserByIdResult && state.isSuccess) {
-              final data = state.user;
-              return Text('Home - ${data?.role ?? "-"}');
-            }
-            if (state is GetUserByIdResult && !state.isSuccess) {
-              return const Text('Home - No Role');
-            }
-            return const Text('Home');
-          },
-        ),
+        title: const AppBarContent(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -65,6 +70,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(items: _navbarItems),
     );
   }
 }
