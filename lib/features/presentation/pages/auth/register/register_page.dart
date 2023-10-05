@@ -1,3 +1,4 @@
+import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/features/domain/entities/register/register_form.dart';
 import 'package:final_project/features/presentation/pages/auth/register/widgets/custom_dropdown_widget.dart';
@@ -57,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
         appBar: AppBar(
           title: const Text('Register'),
         ),
-        body: Center(
+        body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Form(
@@ -75,6 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 10,
                   ),
                   CustomTextFormField(
+                    keyboardType: TextInputType.emailAddress,
                     icon: Icons.alternate_email,
                     controller: emailC,
                     label: 'Email',
@@ -115,7 +117,6 @@ class _RegisterPageState extends State<RegisterPage> {
               },
               child: const Text('Register')),
         ),
-        // ),
       ),
     );
   }
@@ -127,6 +128,11 @@ class _RegisterPageState extends State<RegisterPage> {
     final role = roleC.text.trim().toLowerCase();
 
     if (_formKey.currentState!.validate()) {
+      if (role.isEmpty) {
+        context.showErrorSnackBar(message: 'Role should not be empty!');
+        return;
+      }
+
       final user = RegisterData(
           password: confirmPass, name: userName, role: role, email: email);
 

@@ -123,13 +123,20 @@ class _SignUpSheetWidgetState extends State<SignUpSheetWidget> {
                 },
               ),
             ],
-            child: OutlinedButton(
-              onPressed: () async {
-                context.read<UserCloudBloc>().add(GetPhotoProfileURLEvent(
-                      file: widget.image,
-                    ));
-              },
-              child: const Text('Continue'),
+            child: Column(
+              children: [
+                OutlinedButton(
+                  onPressed: () async {
+                    context.read<UserCloudBloc>().add(GetPhotoProfileURLEvent(
+                          file: widget.image,
+                        ));
+                  },
+                  child: const Text('Continue'),
+                ),
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Cancel')),
+              ],
             ),
           ),
         ],

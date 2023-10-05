@@ -93,10 +93,8 @@ class FirebaseAuthRemoteImpl implements FirebaseAuthRemote {
       await auth.currentUser
           ?.reauthenticateWithCredential(credential)
           .then((value) async {
-        await auth.currentUser
-            ?.updatePassword(newPass)
-            .catchError((e) => throw ServerException(e));
-      }).catchError((e) => throw ServerException(e));
+        await auth.currentUser?.updatePassword(newPass);
+      });
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message ?? "Unknown exception (firebase)");
     } catch (e) {

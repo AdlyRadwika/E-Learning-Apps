@@ -9,6 +9,7 @@ class CustomTextFormField extends StatefulWidget {
   final String valueComparison;
   final bool isPassword;
   final bool isReadOnly;
+  final bool isDone;
   final Function(String value)? onChanged;
 
   const CustomTextFormField({
@@ -21,6 +22,7 @@ class CustomTextFormField extends StatefulWidget {
     this.valueComparison = "",
     this.onChanged,
     this.isReadOnly = false,
+    this.isDone = false,
   });
 
   @override
@@ -71,6 +73,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             ]
           : [],
       keyboardType: widget.keyboardType,
+      textInputAction:
+          widget.isDone ? TextInputAction.done : TextInputAction.next,
       obscureText: widget.isPassword
           ? _isObsecure
               ? true
