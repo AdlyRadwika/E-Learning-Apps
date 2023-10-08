@@ -5,10 +5,13 @@ import 'package:final_project/features/presentation/pages/auth/update_password/u
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/features/presentation/pages/profile/profile_page.dart';
+import 'package:final_project/features/presentation/pages/splash/splash_page.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic>? controller(RouteSettings settings) {
   switch (settings.name) {
+    case SplashPage.route:
+      return MaterialPageRoute(builder: (context) => const SplashPage());
     case HomePage.route:
       return MaterialPageRoute(builder: (context) => const HomePage());
     case LoginPage.route:

@@ -1,10 +1,14 @@
 import 'package:final_project/common/extensions/snackbar.dart';
+import 'package:final_project/common/services/secure_storage_service.dart';
+import 'package:final_project/features/domain/entities/user/user.dart' as app;
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/pages/auth/login/widgets/navigate_rich_text_widget.dart';
 import 'package:final_project/features/presentation/pages/auth/register/register_page.dart';
 import 'package:final_project/features/presentation/pages/auth/reset_password/reset_password_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
+import 'package:final_project/injection.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +22,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final auth = FirebaseAuth.instance;
+
+  final _storageService = locator.get<SecureStorageService>();
+
   final _formKey = GlobalKey<FormState>();
   late TextEditingController emailC;
   late TextEditingController passC;
@@ -123,9 +131,19 @@ class _LoginPageState extends State<LoginPage> {
   void _login() {
     final email = emailC.text.trim();
     final pass = passC.text.trim();
-    
+
     if (_formKey.currentState!.validate()) {
       context.read<AuthBloc>().add(LoginEvent(email: email, password: pass));
+      final user = app.User(
+          name: '-',
+          email: email,
+          imageUrl: '-',
+          imageData: [],
+          role: '-',
+          updatedAt: '-',
+          createdAt: '-',
+          uid: auth.currentUser?.uid ?? "-");
+      _storageService.saveUserData(user: user);
     }
   }
 }

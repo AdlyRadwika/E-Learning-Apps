@@ -1,7 +1,7 @@
 import 'package:final_project/common/util/theme.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
-import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
+import 'package:final_project/features/presentation/pages/splash/splash_page.dart';
 import 'package:final_project/firebase_options.dart';
 import 'package:final_project/injection.dart' as di;
 import 'package:flutter/foundation.dart';
@@ -48,7 +48,7 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
       child: MaterialApp(
         theme: themeData,
         onGenerateRoute: route.controller,
-        home: const LoginPage(),
+        home: const SplashPage(),
       ),
     );
   }

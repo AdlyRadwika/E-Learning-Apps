@@ -1,16 +1,25 @@
 import 'package:final_project/common/consts/asset_conts.dart';
+import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/auth/update_password/update_password_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
 import 'package:final_project/features/presentation/widgets/custom_dialog.dart';
+import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   static const route = '/profile';
 
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final _storageService = locator<SecureStorageService>();
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +130,10 @@ class ProfilePage extends StatelessWidget {
                 isSuccess: true,
                 showCancelBtn: true,
                 labelContent: 'Are you sure you want to logout?',
-                onPressed: () => context.read<AuthBloc>().add(LogoutEvent()),
+                onPressed: () {
+                  context.read<AuthBloc>().add(LogoutEvent());
+                  _storageService.deleteUserData();
+                },
               );
             },
             child: const Text('Logout')),
