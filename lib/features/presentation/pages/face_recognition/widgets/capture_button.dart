@@ -6,7 +6,6 @@ import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/features/domain/entities/user/user.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/sign_up_sheet.dart';
-import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -72,11 +71,7 @@ class _CaptureButtonState extends State<CaptureButton> {
         );
       },
     ).then((value) {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        HomePage.route,
-        (route) => false,
-      );
+      Navigator.pop(context);
     });
   }
 

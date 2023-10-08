@@ -1,3 +1,5 @@
+import 'package:final_project/features/presentation/pages/class/index/widgets/class_button.dart';
+import 'package:final_project/features/presentation/pages/class/index/widgets/class_item.dart';
 import 'package:flutter/material.dart';
 
 class ClassIndexPage extends StatelessWidget {
@@ -8,18 +10,14 @@ class ClassIndexPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          height: 150,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: Colors.lightBlue[200],
-          ),
-          child: const Center(
-            child: Text('Class 1'),
-          ),
-        ),
-      ),
+      body: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, crossAxisSpacing: 10.0, mainAxisSpacing: 10.0),
+          itemCount: 3,
+          itemBuilder: (context, index) {
+            return const ClassItem();
+          }),
+      floatingActionButton: const ActionButton(),
     );
   }
 }
