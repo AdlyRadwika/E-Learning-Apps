@@ -58,6 +58,11 @@ class SecureStorageService {
     return data["uid"] ?? "-";
   }
 
+  Future<String> getRole() async {
+    final data = await getUserData();
+    return data["role"] ?? "-";
+  }
+
   void deleteUserData() {
     storage.delete(key: _userKey);
   }
