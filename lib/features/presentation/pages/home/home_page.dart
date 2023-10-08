@@ -1,8 +1,7 @@
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
+import 'package:final_project/features/presentation/pages/class/index/class_index_page.dart';
 import 'package:final_project/features/presentation/pages/home/widgets/appbar_content.dart';
-import 'package:final_project/features/presentation/pages/home/widgets/calendar_widget.dart';
-import 'package:final_project/features/presentation/pages/home/widgets/grade_widget.dart';
-import 'package:final_project/features/presentation/pages/profile/profile_page.dart';
+import 'package:final_project/features/presentation/pages/home/widgets/home_content.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +33,24 @@ class _HomePageState extends State<HomePage> {
         icon: Icon(Icons.inbox), label: 'Inbox', tooltip: 'Inbox'),
   ];
 
+  static const _navbarPage = [
+    HomeContent(),
+    ClassIndexPage(),
+    Scaffold(
+      body: Center(
+        child: Text('Coming soon'),
+      ),
+    )
+  ];
+
+  int _currentIndex = 0;
+
+  void _onTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -51,25 +68,10 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            ElevatedButton.icon(
-                onPressed: () =>
-                    Navigator.pushNamed(context, ProfilePage.route),
-                icon: const Icon(Icons.edit),
-                label: const Text('Configure Your Profile')),
-            const SizedBox(
-              height: 20,
-            ),
-            const GradeWidget(),
-            const SizedBox(
-              height: 20,
-            ),
-            const CalendarWidget()
-          ],
-        ),
+        child: _navbarPage.elementAt(_currentIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(items: _navbarItems),
+      bottomNavigationBar: BottomNavigationBar(
+          onTap: _onTapped, currentIndex: _currentIndex, items: _navbarItems),
     );
   }
 }
