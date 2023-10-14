@@ -33,7 +33,10 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
-    _getData(context);
+    Future.delayed(
+      const Duration(seconds: 3),
+      () => _getData(context),
+    );
   }
 
   @override
