@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AssignmentInfo extends StatelessWidget {
+  final bool isTeacher;
+
   const AssignmentInfo({
     super.key,
+    required this.isTeacher,
   });
 
   @override
@@ -35,17 +38,20 @@ class AssignmentInfo extends StatelessWidget {
                 ),
               ],
             ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: Colors.grey, borderRadius: BorderRadius.circular(10)),
-              child: Text(
-                'Unsubmitted',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.white,
-                ),
-              ),
-            ),
+            isTeacher
+                ? const SizedBox.shrink()
+                : Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text(
+                      'Unsubmitted',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
           ],
         ),
         const Divider(),

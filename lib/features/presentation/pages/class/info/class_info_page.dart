@@ -18,7 +18,7 @@ class ClassInfoPage extends StatelessWidget {
             floating: false,
             pinned: true,
             snap: false,
-            expandedHeight: 350,
+            expandedHeight: 380,
             title: Text('Class 1 Info'),
             flexibleSpace: FlexibleSpaceBar(
               background: Padding(

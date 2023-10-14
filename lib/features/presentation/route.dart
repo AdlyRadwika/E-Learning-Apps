@@ -4,7 +4,9 @@ import 'package:final_project/features/presentation/pages/auth/reset_password/re
 import 'package:final_project/features/presentation/pages/auth/update_password/update_password_page.dart';
 import 'package:final_project/features/presentation/pages/class/action_result/action_result_page.dart';
 import 'package:final_project/features/presentation/pages/class/announcements/announcements_page.dart';
+import 'package:final_project/features/presentation/pages/class/announcements/post_announcement_page.dart';
 import 'package:final_project/features/presentation/pages/class/assignment_detail/assignment_detail_page.dart';
+import 'package:final_project/features/presentation/pages/class/assignments/add_assignment_page.dart';
 import 'package:final_project/features/presentation/pages/class/assignments/assignments_page.dart';
 import 'package:final_project/features/presentation/pages/class/attendance/attendance_page.dart';
 import 'package:final_project/features/presentation/pages/class/detail/class_detail.dart';
@@ -58,6 +60,12 @@ Route<dynamic>? controller(RouteSettings settings) {
     case AssignmentDetailPage.route:
       return MaterialPageRoute(
           builder: (context) => const AssignmentDetailPage());
+    case PostAnnouncementPage.route:
+      return MaterialPageRoute(
+          builder: (context) => const PostAnnouncementPage());
+    case AddAssignmentPage.route:
+      return MaterialPageRoute(
+          builder: (context) => const AddAssignmentPage());
     default:
       return null;
   }

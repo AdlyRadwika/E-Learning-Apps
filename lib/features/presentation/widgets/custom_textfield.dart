@@ -10,6 +10,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool isPassword;
   final bool isReadOnly;
   final bool isDone;
+  final int maxLines;
   final Function(String value)? onChanged;
 
   const CustomTextFormField({
@@ -22,7 +23,7 @@ class CustomTextFormField extends StatefulWidget {
     this.valueComparison = "",
     this.onChanged,
     this.isReadOnly = false,
-    this.isDone = false,
+    this.isDone = false, this.maxLines = 1,
   });
 
   @override
@@ -66,6 +67,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         return null;
       },
       onChanged: widget.onChanged,
+      maxLines: widget.maxLines,
       inputFormatters: widget.keyboardType ==
               const TextInputType.numberWithOptions(decimal: false)
           ? [

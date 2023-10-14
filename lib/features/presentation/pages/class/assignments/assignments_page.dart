@@ -1,3 +1,4 @@
+import 'package:final_project/features/presentation/pages/class/widgets/add_assignment_widget.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/assignment_item.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,9 @@ class AssignmentsPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: CustomScrollView(
           slivers: [
+            const SliverToBoxAdapter(
+              child: AddAssignmentWidget(),
+            ),
             SliverList.separated(
               itemCount: 10,
               itemBuilder: (context, index) => const AssignmentItem(),

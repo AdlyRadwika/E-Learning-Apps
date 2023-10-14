@@ -1,5 +1,6 @@
 import 'package:final_project/features/presentation/pages/class/announcements/announcements_page.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/announcement_item.dart';
+import 'package:final_project/features/presentation/pages/class/widgets/post_announcement_widget.dart';
 import 'package:flutter/material.dart';
 
 class AnnouncementSection extends StatelessWidget {
@@ -25,17 +26,8 @@ class AnnouncementSection extends StatelessWidget {
                 child: const Text('See More')),
           ],
         ),
-        SizedBox(
-          height: 300,
-          child: ListView.separated(
-              itemCount: 3,
-              separatorBuilder: (context, index) => const SizedBox(
-                    height: 10,
-                  ),
-              itemBuilder: (context, index) {
-                return const AnnoucementItem();
-              }),
-        )
+        const PostAnnouncementWidget(),
+        const AnnoucementItem()
       ],
     );
   }

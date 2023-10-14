@@ -1,4 +1,6 @@
+import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ClassInfoContent extends StatelessWidget {
   const ClassInfoContent({
@@ -11,9 +13,21 @@ class ClassInfoContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Code: ABCDEF',
-          style: theme.textTheme.headlineSmall,
+        Row(
+          children: [
+            Text(
+              'Code: ABCDEF',
+              style: theme.textTheme.headlineSmall,
+            ),
+            IconButton(
+                onPressed: () {
+                  Clipboard.setData(const ClipboardData(text: "ABCDEF"))
+                      .then((value) => context.showSnackBar(
+                            message: 'Class Code copied to your clipboard.',
+                          ));
+                },
+                icon: const Icon(Icons.copy))
+          ],
         ),
         Text(
           'Created at ${DateTime.now().toString()}',

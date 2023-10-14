@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AttendanceItem extends StatelessWidget {
-  const AttendanceItem({
+class StudentAttendanceItem extends StatelessWidget {
+  const StudentAttendanceItem({
     super.key,
   });
 
@@ -9,8 +9,8 @@ class AttendanceItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.check),
-        title: const Text('Attendance 1'),
+        leading: const Icon(Icons.person),
+        title: const Text('Student 1'),
         subtitle: Text(DateTime.now().toString()),
       ),
     );

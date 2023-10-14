@@ -1,4 +1,5 @@
 import 'package:final_project/features/presentation/pages/class/widgets/announcement_item.dart';
+import 'package:final_project/features/presentation/pages/class/widgets/post_announcement_widget.dart';
 import 'package:flutter/material.dart';
 
 class AnnouncementsPage extends StatelessWidget {
@@ -16,6 +17,9 @@ class AnnouncementsPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: CustomScrollView(
           slivers: [
+            const SliverToBoxAdapter(
+              child: PostAnnouncementWidget(),
+            ),
             SliverList.separated(
               itemCount: 10,
               itemBuilder: (context, index) => const AnnoucementItem(),
