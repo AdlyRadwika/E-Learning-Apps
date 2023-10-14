@@ -1,11 +1,11 @@
-import 'package:final_project/features/presentation/pages/class/detail/widgets/announcement_item.dart';
+import 'package:final_project/features/presentation/pages/class/announcements/announcements_page.dart';
+import 'package:final_project/features/presentation/pages/class/widgets/announcement_item.dart';
 import 'package:flutter/material.dart';
 
 class AnnouncementSection extends StatelessWidget {
   const AnnouncementSection({
     super.key,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,10 @@ class AnnouncementSection extends StatelessWidget {
               'Announcement',
               style: theme.textTheme.titleLarge,
             ),
-            GestureDetector(child: const Text('See More')),
+            GestureDetector(
+                onTap: () =>
+                    Navigator.pushNamed(context, AnnouncementsPage.route),
+                child: const Text('See More')),
           ],
         ),
         SizedBox(

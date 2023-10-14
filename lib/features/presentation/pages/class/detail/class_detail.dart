@@ -1,6 +1,7 @@
+import 'package:final_project/features/presentation/pages/class/assignments/assignments_page.dart';
 import 'package:final_project/features/presentation/pages/class/attendance/attendance_page.dart';
 import 'package:final_project/features/presentation/pages/class/detail/widgets/annoucement_section.dart';
-import 'package:final_project/features/presentation/pages/class/detail/widgets/assignment_item.dart';
+import 'package:final_project/features/presentation/pages/class/widgets/assignment_item.dart';
 import 'package:final_project/features/presentation/pages/class/info/class_info_page.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +37,9 @@ class ClassDetailPage extends StatelessWidget {
                     'Assignments',
                     style: theme.textTheme.titleLarge,
                   ),
-                  GestureDetector(child: const Text('See More')),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, AssignmentsPage.route),
+                    child: const Text('See More')),
                 ],
               ),
             ),

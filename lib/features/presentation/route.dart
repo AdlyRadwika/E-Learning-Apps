@@ -3,6 +3,9 @@ import 'package:final_project/features/presentation/pages/auth/register/register
 import 'package:final_project/features/presentation/pages/auth/reset_password/reset_password_page.dart';
 import 'package:final_project/features/presentation/pages/auth/update_password/update_password_page.dart';
 import 'package:final_project/features/presentation/pages/class/action_result/action_result_page.dart';
+import 'package:final_project/features/presentation/pages/class/announcements/announcements_page.dart';
+import 'package:final_project/features/presentation/pages/class/assignment_detail/assignment_detail_page.dart';
+import 'package:final_project/features/presentation/pages/class/assignments/assignments_page.dart';
 import 'package:final_project/features/presentation/pages/class/attendance/attendance_page.dart';
 import 'package:final_project/features/presentation/pages/class/detail/class_detail.dart';
 import 'package:final_project/features/presentation/pages/class/index/class_index_page.dart';
@@ -48,6 +51,13 @@ Route<dynamic>? controller(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const AttendancePage());
     case ClassInfoPage.route:
       return MaterialPageRoute(builder: (context) => const ClassInfoPage());
+    case AnnouncementsPage.route:
+      return MaterialPageRoute(builder: (context) => const AnnouncementsPage());
+    case AssignmentsPage.route:
+      return MaterialPageRoute(builder: (context) => const AssignmentsPage());
+    case AssignmentDetailPage.route:
+      return MaterialPageRoute(
+          builder: (context) => const AssignmentDetailPage());
     default:
       return null;
   }
