@@ -1,0 +1,40 @@
+import 'package:bloc/bloc.dart';
+import 'package:final_project/features/domain/entities/class/class.dart';
+import 'package:final_project/features/domain/usecases/class_cloud/create_class.dart';
+import 'package:final_project/features/domain/usecases/class_cloud/get_classes_by_id.dart';
+
+part 'class_cloud_event.dart';
+part 'class_cloud_state.dart';
+
+class ClassCloudBloc extends Bloc<ClassCloudEvent, ClassCloudState> {
+  final CreateClassUseCase createClassUseCase;
+  final GetClassesByIdUseCase getClassesByIdUseCase;
+
+  ClassCloudBloc({
+    required this.createClassUseCase,
+    required this.getClassesByIdUseCase,
+  }) : super(ClassCloudInitial()) {
+    on<CreateClassEvent>((event, emit) async {
+      emit(CreateClassLoading());
+
+      final result = await createClassUseCase.execute(
+          code: event.code,
+          title: event.title,
+          description: event.description,
+          teacherId: event.teacherId);
+
+      emit(result.fold(
+          (l) => CreateClassResult(isSuccess: false, message: l.message),
+          (r) => CreateClassResult(isSuccess: true)));
+    });
+    on<GetClassesByIdEvent>((event, emit) async {
+      emit(GetClassesByIdLoading());
+
+      final result = await getClassesByIdUseCase.execute(uid: event.uid);
+
+      emit(result.fold(
+          (l) => GetClassesByIdResult(isSuccess: false, message: l.message),
+          (r) => GetClassesByIdResult(isSuccess: true, classes: r)));
+    });
+  }
+}

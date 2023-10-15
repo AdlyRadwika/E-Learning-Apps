@@ -1,6 +1,12 @@
+import 'package:final_project/common/extensions/snackbar.dart';
+import 'package:final_project/common/services/secure_storage_service.dart';
+import 'package:final_project/common/services/uuid_service.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/action_result/widgets/action_form.dart';
 import 'package:final_project/features/presentation/pages/class/action_result/widgets/action_result_appbar.dart';
+import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ActionResultPage extends StatefulWidget {
   static const route = '/class-action';
@@ -12,6 +18,9 @@ class ActionResultPage extends StatefulWidget {
 }
 
 class _ActionResultPageState extends State<ActionResultPage> {
+  final _storageService = locator<SecureStorageService>();
+  final _uuidService = locator<UuidService>();
+
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _titleC;
@@ -55,10 +64,46 @@ class _ActionResultPageState extends State<ActionResultPage> {
         ),
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: ElevatedButton(
-              onPressed: () => print, child: const Text("Submit")),
+          child: BlocListener<ClassCloudBloc, ClassCloudState>(
+            listener: (context, state) {
+              if (state is CreateClassResult && state.isSuccess) {
+                context.showSnackBar(
+                    message: 'Created class sucessfully!',
+                    backgroundColor: Colors.green);
+              } else if (state is CreateClassResult && !state.isSuccess) {
+                context.showErrorSnackBar(
+                  message: state.message,
+                );
+              }
+            },
+            child: ElevatedButton(
+                onPressed: () => _submit(), child: const Text("Submit")),
+          ),
         ),
       ),
     );
+  }
+
+  Future<void> _submit() async {
+    final title = _titleC.text.trim();
+    final description = _descriptionC.text.trim();
+    final teacherId = await _storageService.getUid();
+    final code = _uuidService.generateClassCode();
+    final codeInput = _classCodeC.text.trim();
+    final role = await _storageService.getRole();
+
+    if (_formKey.currentState!.validate()) {
+      if (!mounted) return;
+      if (role == 'teacher') {
+        context.read<ClassCloudBloc>().add(CreateClassEvent(
+            code: code,
+            title: title,
+            description: description,
+            teacherId: teacherId));
+      } else {
+        context.showSnackBar(
+            message: 'Class with the code $codeInput is not exist!');
+      }
+    }
   }
 }

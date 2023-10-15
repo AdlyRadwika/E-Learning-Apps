@@ -1,5 +1,6 @@
 import 'package:final_project/common/util/theme.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/splash/splash_page.dart';
 import 'package:final_project/firebase_options.dart';
@@ -44,6 +45,8 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
         BlocProvider<AuthBloc>(create: (context) => di.locator<AuthBloc>()),
         BlocProvider<UserCloudBloc>(
             create: (context) => di.locator<UserCloudBloc>()),
+        BlocProvider<ClassCloudBloc>(
+            create: (context) => di.locator<ClassCloudBloc>()),
       ],
       child: MaterialApp(
         theme: themeData,

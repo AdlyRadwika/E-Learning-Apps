@@ -1,10 +1,14 @@
 import 'package:final_project/common/extensions/snackbar.dart';
+import 'package:final_project/features/domain/entities/class/class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ClassInfoContent extends StatelessWidget {
+  final Class? data;
+
   const ClassInfoContent({
     super.key,
+    required this.data,
   });
 
   @override
@@ -16,12 +20,12 @@ class ClassInfoContent extends StatelessWidget {
         Row(
           children: [
             Text(
-              'Code: ABCDEF',
+              'Code: ${data?.code ?? "ERROR"}',
               style: theme.textTheme.headlineSmall,
             ),
             IconButton(
                 onPressed: () {
-                  Clipboard.setData(const ClipboardData(text: "ABCDEF"))
+                  Clipboard.setData(ClipboardData(text: data?.code ?? 'ERROR'))
                       .then((value) => context.showSnackBar(
                             message: 'Class Code copied to your clipboard.',
                           ));
@@ -30,13 +34,13 @@ class ClassInfoContent extends StatelessWidget {
           ],
         ),
         Text(
-          'Created at ${DateTime.now().toString()}',
+          'Created at ${data?.createdAt ?? DateTime.now().toString()}',
           style: theme.textTheme.bodyLarge?.copyWith(
             color: Colors.grey,
           ),
         ),
         const Divider(),
-        const Text(
+        Text(data?.description ??
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
       ],
     );

@@ -48,11 +48,18 @@ Route<dynamic>? controller(RouteSettings settings) {
     case ActionResultPage.route:
       return MaterialPageRoute(builder: (context) => const ActionResultPage());
     case ClassDetailPage.route:
-      return MaterialPageRoute(builder: (context) => const ClassDetailPage());
+    Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(builder: (context) => ClassDetailPage(
+        data: args['data'],
+      ));
     case AttendancePage.route:
       return MaterialPageRoute(builder: (context) => const AttendancePage());
     case ClassInfoPage.route:
-      return MaterialPageRoute(builder: (context) => const ClassInfoPage());
+        Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+
+      return MaterialPageRoute(builder: (context) => ClassInfoPage(
+        data: args['data'],
+      ));
     case AnnouncementsPage.route:
       return MaterialPageRoute(builder: (context) => const AnnouncementsPage());
     case AssignmentsPage.route:

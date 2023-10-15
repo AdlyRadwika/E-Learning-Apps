@@ -1,3 +1,4 @@
+import 'package:final_project/features/domain/entities/class/class.dart';
 import 'package:final_project/features/presentation/pages/class/assignments/assignments_page.dart';
 import 'package:final_project/features/presentation/pages/class/attendance/attendance_page.dart';
 import 'package:final_project/features/presentation/pages/class/detail/widgets/annoucement_section.dart';
@@ -9,7 +10,9 @@ import 'package:flutter/material.dart';
 class ClassDetailPage extends StatelessWidget {
   static const route = '/class-detail';
 
-  const ClassDetailPage({super.key});
+  const ClassDetailPage({super.key, required this.data});
+
+  final Class? data;
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +21,13 @@ class ClassDetailPage extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Class 1'),
+          title: Text(data?.title ?? 'Unknown Class'),
           actions: [
             IconButton(
                 tooltip: 'Class Info',
-                onPressed: () =>
-                    Navigator.pushNamed(context, ClassInfoPage.route),
+                onPressed: () => Navigator.pushNamed(
+                    context, ClassInfoPage.route,
+                    arguments: {'data': data}),
                 icon: const Icon(Icons.info_outline))
           ],
         ),

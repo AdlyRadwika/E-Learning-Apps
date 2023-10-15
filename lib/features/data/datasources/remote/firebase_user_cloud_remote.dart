@@ -24,9 +24,6 @@ abstract class FirebaseUserCloudRemote {
 }
 
 class FirebaseUserCloudRemoteImpl implements FirebaseUserCloudRemote {
-  final studentRef = 'student';
-  final teacherRef = 'teacher';
-
   final _userCollection = FirebaseFirestore.instance
       .collection('users')
       .withConverter<UserModel>(
