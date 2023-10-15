@@ -41,6 +41,11 @@ class _ClassIndexPageState extends State<ClassIndexPage> {
         }
         if (state is GetClassesByIdResult && state.isSuccess) {
           final data = state.classes;
+          if (data?.isEmpty == true) {
+            return const Center(
+              child: Text("You currently have no classes"),
+            );
+          }
           return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -62,11 +67,15 @@ class _ClassIndexPageState extends State<ClassIndexPage> {
                   onPressed: () => _getData(), child: const Text('Try Again'))
             ],
           );
-        } else {
-          return const Center(
-            child: Text("You currently have no classes"),
-          );
         }
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Something went wrong."),
+            ElevatedButton(
+                onPressed: () => _getData(), child: const Text('Try Again'))
+          ],
+        );
       }),
       floatingActionButton: const ActionButton(),
     );

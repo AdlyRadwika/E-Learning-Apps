@@ -21,15 +21,13 @@ class ClassInfoPage extends StatelessWidget {
             floating: false,
             pinned: true,
             snap: false,
-            expandedHeight: 380,
             title: Text('${data?.title ?? "Unknown Class"} Info'),
-            flexibleSpace: FlexibleSpaceBar(
-              background: Padding(
-                padding:
-                    const EdgeInsets.only(top: 80.0, left: 15.0, right: 15.0),
-                child: ClassInfoContent(
-                  data: data,
-                ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: ClassInfoContent(
+                data: data,
               ),
             ),
           ),
