@@ -41,3 +41,19 @@ class GetEnrolledClassesByIdEvent extends ClassCloudEvent {
     required this.uid,
   });
 }
+
+class GetClassTeacherEvent extends ClassCloudEvent {
+  final String classCode;
+
+  GetClassTeacherEvent({
+    required this.classCode,
+  });
+}
+
+class GetClassStudentsEvent extends ClassCloudEvent {
+  final String classCode;
+
+  GetClassStudentsEvent({
+    required this.classCode,
+  });
+}

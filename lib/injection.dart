@@ -18,6 +18,8 @@ import 'package:final_project/features/domain/usecases/auth/register.dart';
 import 'package:final_project/features/domain/usecases/auth/reset_password.dart';
 import 'package:final_project/features/domain/usecases/auth/update_password.dart';
 import 'package:final_project/features/domain/usecases/class_cloud/create_class.dart';
+import 'package:final_project/features/domain/usecases/class_cloud/get_class_students.dart';
+import 'package:final_project/features/domain/usecases/class_cloud/get_class_teacher.dart';
 import 'package:final_project/features/domain/usecases/class_cloud/get_classes_by_id.dart';
 import 'package:final_project/features/domain/usecases/class_cloud/get_enrolled_classes_by_id.dart';
 import 'package:final_project/features/domain/usecases/class_cloud/join_class.dart';
@@ -47,6 +49,8 @@ void init() {
         insertUserDataUseCase: locator(),
       ));
   locator.registerFactory<ClassCloudBloc>(() => ClassCloudBloc(
+        getClassStudentsUseCase: locator(),
+        getClassTeacherUseCase: locator(),
         joinClassUseCase: locator(),
         getEnrolledClassesByIdUseCase: locator(),
         createClassUseCase: locator(),
@@ -77,6 +81,10 @@ void init() {
       () => JoinClassUseCase(locator()));
   locator.registerLazySingleton<GetEnrolledClassesByIdUseCase>(
       () => GetEnrolledClassesByIdUseCase(locator()));
+  locator.registerLazySingleton<GetClassTeacherUseCase>(
+      () => GetClassTeacherUseCase(locator()));
+  locator.registerLazySingleton<GetClassStudentsUseCase>(
+      () => GetClassStudentsUseCase(locator()));
 
   // Repository
   locator.registerLazySingleton<FirebaseAuthRepository>(

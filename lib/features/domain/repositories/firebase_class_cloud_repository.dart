@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:final_project/common/error/failure.dart';
 import 'package:final_project/features/domain/entities/class/class.dart';
+import 'package:final_project/features/domain/entities/class/class_user.dart';
 import 'package:final_project/features/domain/entities/class/enrolled_class.dart';
 
 abstract class FirebaseClassCloudRepository {
@@ -15,4 +16,6 @@ abstract class FirebaseClassCloudRepository {
   Future<Either<Failure, List<EnrolledClass>>> getEnrolledClassesByUid({
     required String userId,
   });
+  Future<Either<Failure, ClassUser>> getClassTeacher({required String classCode});
+  Future<Either<Failure, List<ClassUser>>> getClassStudents({required String classCode});
 }

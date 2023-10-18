@@ -49,3 +49,31 @@ class GetEnrolledClassesByIdResult extends ClassCloudState {
     this.classes,
   });
 }
+
+class GetClassTeacherLoading extends ClassCloudState {}
+
+class GetClassTeacherResult extends ClassCloudState {
+  final String message;
+  final bool isSuccess;
+  final ClassUser? teacher;
+
+  GetClassTeacherResult({
+    this.message = '',
+    required this.isSuccess,
+    this.teacher,
+  });
+}
+
+class GetClassStudentsLoading extends ClassCloudState {}
+
+class GetClassStudentsResult extends ClassCloudState {
+  final String message;
+  final bool isSuccess;
+  final List<ClassUser>? students;
+
+  GetClassStudentsResult({
+    this.message = '',
+    required this.isSuccess,
+    this.students,
+  });
+}

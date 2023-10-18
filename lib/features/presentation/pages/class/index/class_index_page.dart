@@ -23,11 +23,11 @@ class _ClassIndexPageState extends State<ClassIndexPage> {
   Future<void> _getData() async {
     final uid = await _storageService.getUid();
     if (!mounted) return;
-    final provider = context.read<ClassCloudBloc>();
+    final bloc = context.read<ClassCloudBloc>();
     if (!mounted) return;
     BoolUtil.isTeacher(role: await _storageService.getRole())
-        ? provider.add(GetClassesByIdEvent(uid: uid))
-        : provider.add(GetEnrolledClassesByIdEvent(uid: uid));
+        ? bloc.add(GetClassesByIdEvent(uid: uid))
+        : bloc.add(GetEnrolledClassesByIdEvent(uid: uid));
   }
 
   @override

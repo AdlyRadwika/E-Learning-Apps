@@ -104,6 +104,7 @@ class _ActionResultPageState extends State<ActionResultPage> {
     if (_formKey.currentState!.validate()) {
       if (!mounted) return;
       if (role == 'teacher') {
+        print('classCode: $code');
         context.read<ClassCloudBloc>().add(CreateClassEvent(
             code: code,
             title: title,
