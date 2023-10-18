@@ -1,22 +1,22 @@
 import 'package:final_project/common/extensions/snackbar.dart';
-import 'package:final_project/features/domain/entities/class/class.dart';
-import 'package:final_project/features/presentation/pages/class/detail/class_detail.dart';
+import 'package:final_project/features/domain/entities/class/enrolled_class.dart';
+import 'package:final_project/features/presentation/pages/class/detail/enrolled_class_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ClassItem extends StatefulWidget {
-  final Class? data;
+class EnrolledClassItem extends StatefulWidget {
+  final EnrolledClass? data;
 
-  const ClassItem({
+  const EnrolledClassItem({
     super.key,
     required this.data,
   });
 
   @override
-  State<ClassItem> createState() => _ClassItemState();
+  State<EnrolledClassItem> createState() => _EnrolledClassItemState();
 }
 
-class _ClassItemState extends State<ClassItem> {
+class _EnrolledClassItemState extends State<EnrolledClassItem> {
   final FocusNode _buttonFocusNode = FocusNode(debugLabel: 'Class Options');
 
   void _copyClassCode() {
@@ -56,7 +56,8 @@ class _ClassItemState extends State<ClassItem> {
                 borderRadius: BorderRadius.circular(10.0),
                 onLongPress: () => _onMenuAnchorAction(controller),
                 onDoubleTap: () => _onMenuAnchorAction(controller),
-                onTap: () => Navigator.pushNamed(context, ClassDetailPage.route,
+                onTap: () => Navigator.pushNamed(
+                    context, EnrolledClassDetailPage.route,
                     arguments: {
                       'data': widget.data,
                     }),

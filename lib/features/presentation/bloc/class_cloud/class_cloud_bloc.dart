@@ -1,18 +1,25 @@
 import 'package:bloc/bloc.dart';
 import 'package:final_project/features/domain/entities/class/class.dart';
+import 'package:final_project/features/domain/entities/class/enrolled_class.dart';
 import 'package:final_project/features/domain/usecases/class_cloud/create_class.dart';
 import 'package:final_project/features/domain/usecases/class_cloud/get_classes_by_id.dart';
+import 'package:final_project/features/domain/usecases/class_cloud/get_enrolled_classes_by_id.dart';
+import 'package:final_project/features/domain/usecases/class_cloud/join_class.dart';
 
 part 'class_cloud_event.dart';
 part 'class_cloud_state.dart';
 
 class ClassCloudBloc extends Bloc<ClassCloudEvent, ClassCloudState> {
   final CreateClassUseCase createClassUseCase;
+  final JoinClassUseCase joinClassUseCase;
   final GetClassesByIdUseCase getClassesByIdUseCase;
+  final GetEnrolledClassesByIdUseCase getEnrolledClassesByIdUseCase;
 
   ClassCloudBloc({
     required this.createClassUseCase,
+    required this.joinClassUseCase,
     required this.getClassesByIdUseCase,
+    required this.getEnrolledClassesByIdUseCase,
   }) : super(ClassCloudInitial()) {
     on<CreateClassEvent>((event, emit) async {
       emit(CreateClassLoading());
@@ -27,6 +34,16 @@ class ClassCloudBloc extends Bloc<ClassCloudEvent, ClassCloudState> {
           (l) => CreateClassResult(isSuccess: false, message: l.message),
           (r) => CreateClassResult(isSuccess: true)));
     });
+    on<JoinClassEvent>((event, emit) async {
+      emit(JoinClassLoading());
+
+      final result =
+          await joinClassUseCase.execute(code: event.code, uid: event.uid);
+
+      emit(result.fold(
+          (l) => JoinClassResult(isSuccess: false, message: l.message),
+          (r) => JoinClassResult(isSuccess: true)));
+    });
     on<GetClassesByIdEvent>((event, emit) async {
       emit(GetClassesByIdLoading());
 
@@ -35,6 +52,17 @@ class ClassCloudBloc extends Bloc<ClassCloudEvent, ClassCloudState> {
       emit(result.fold(
           (l) => GetClassesByIdResult(isSuccess: false, message: l.message),
           (r) => GetClassesByIdResult(isSuccess: true, classes: r)));
+    });
+    on<GetEnrolledClassesByIdEvent>((event, emit) async {
+      emit(GetEnrolledClassesByIdLoading());
+
+      final result =
+          await getEnrolledClassesByIdUseCase.execute(uid: event.uid);
+
+      emit(result.fold(
+          (l) => GetEnrolledClassesByIdResult(
+              isSuccess: false, message: l.message),
+          (r) => GetEnrolledClassesByIdResult(isSuccess: true, classes: r)));
     });
   }
 }

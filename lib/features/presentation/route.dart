@@ -10,8 +10,10 @@ import 'package:final_project/features/presentation/pages/class/assignments/add_
 import 'package:final_project/features/presentation/pages/class/assignments/assignments_page.dart';
 import 'package:final_project/features/presentation/pages/class/attendance/attendance_page.dart';
 import 'package:final_project/features/presentation/pages/class/detail/class_detail.dart';
+import 'package:final_project/features/presentation/pages/class/detail/enrolled_class_detail.dart';
 import 'package:final_project/features/presentation/pages/class/index/class_index_page.dart';
 import 'package:final_project/features/presentation/pages/class/info/class_info_page.dart';
+import 'package:final_project/features/presentation/pages/class/info/enrolled_class_info_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/features/presentation/pages/profile/profile_page.dart';
@@ -48,18 +50,31 @@ Route<dynamic>? controller(RouteSettings settings) {
     case ActionResultPage.route:
       return MaterialPageRoute(builder: (context) => const ActionResultPage());
     case ClassDetailPage.route:
-    Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
-      return MaterialPageRoute(builder: (context) => ClassDetailPage(
-        data: args['data'],
-      ));
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => ClassDetailPage(
+                data: args['data'],
+              ));
+    case EnrolledClassDetailPage.route:
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => EnrolledClassDetailPage(
+                data: args['data'],
+              ));
     case AttendancePage.route:
       return MaterialPageRoute(builder: (context) => const AttendancePage());
     case ClassInfoPage.route:
-        Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
-
-      return MaterialPageRoute(builder: (context) => ClassInfoPage(
-        data: args['data'],
-      ));
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => ClassInfoPage(
+                data: args['data'],
+              ));
+    case EnrolledClassInfoPage.route:
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => EnrolledClassInfoPage(
+                data: args['data'],
+              ));
     case AnnouncementsPage.route:
       return MaterialPageRoute(builder: (context) => const AnnouncementsPage());
     case AssignmentsPage.route:
@@ -71,8 +86,7 @@ Route<dynamic>? controller(RouteSettings settings) {
       return MaterialPageRoute(
           builder: (context) => const PostAnnouncementPage());
     case AddAssignmentPage.route:
-      return MaterialPageRoute(
-          builder: (context) => const AddAssignmentPage());
+      return MaterialPageRoute(builder: (context) => const AddAssignmentPage());
     default:
       return null;
   }

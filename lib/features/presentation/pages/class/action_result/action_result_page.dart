@@ -68,9 +68,18 @@ class _ActionResultPageState extends State<ActionResultPage> {
             listener: (context, state) {
               if (state is CreateClassResult && state.isSuccess) {
                 context.showSnackBar(
-                    message: 'Created class sucessfully!',
+                    message: 'Created class successfully!',
                     backgroundColor: Colors.green);
               } else if (state is CreateClassResult && !state.isSuccess) {
+                context.showErrorSnackBar(
+                  message: state.message,
+                );
+              }
+              if (state is JoinClassResult && state.isSuccess) {
+                context.showSnackBar(
+                    message: 'Joined the class successfully!',
+                    backgroundColor: Colors.green);
+              } else if (state is JoinClassResult && !state.isSuccess) {
                 context.showErrorSnackBar(
                   message: state.message,
                 );
@@ -87,7 +96,7 @@ class _ActionResultPageState extends State<ActionResultPage> {
   Future<void> _submit() async {
     final title = _titleC.text.trim();
     final description = _descriptionC.text.trim();
-    final teacherId = await _storageService.getUid();
+    final uid = await _storageService.getUid();
     final code = _uuidService.generateClassCode();
     final codeInput = _classCodeC.text.trim();
     final role = await _storageService.getRole();
@@ -99,10 +108,12 @@ class _ActionResultPageState extends State<ActionResultPage> {
             code: code,
             title: title,
             description: description,
-            teacherId: teacherId));
+            teacherId: uid));
       } else {
-        context.showSnackBar(
-            message: 'Class with the code $codeInput is not exist!');
+        context.read<ClassCloudBloc>().add(JoinClassEvent(
+              code: codeInput,
+              uid: uid,
+            ));
       }
     }
   }
