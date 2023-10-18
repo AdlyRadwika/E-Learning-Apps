@@ -38,14 +38,26 @@ class FirebaseClassCloudRemoteImpl implements FirebaseClassCloudRemote {
       required String description,
       required String teacherId}) async {
     try {
-      final data = ClassModel(
-          title: title,
-          description: description,
-          teacherId: teacherId,
-          updatedAt: DateTime.now().toIso8601String(),
-          createdAt: DateTime.now().toIso8601String(),
-          code: code);
-      await _classesCollection.doc(code).set(data);
+      return FirebaseFirestore.instance.runTransaction((transaction) async {
+        final data = ClassModel(
+            title: title,
+            description: description,
+            teacherId: teacherId,
+            updatedAt: DateTime.now().toIso8601String(),
+            createdAt: DateTime.now().toIso8601String(),
+            code: code);
+        final existingClassList = await _classesCollection
+            .where(
+              'title',
+              isEqualTo: title,
+            )
+            .get();
+        final existingClass = existingClassList.docs.first.data();
+        if (existingClass.title == title) {
+          throw Exception("There is already a class with the same title!");
+        }
+        await _classesCollection.doc(code).set(data);
+      }).catchError((error) => throw ServerException(error.toString()));
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? "Unknown Firebase Exception");
     } catch (e) {
