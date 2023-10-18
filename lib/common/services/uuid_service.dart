@@ -15,4 +15,9 @@ class UuidService {
     final value = uuid.v4().substring(0, 6).toUpperCase();
     return value;
   }
+
+  String generateAnnouncementId() {
+    final value = uuid.v4();
+    return value;
+  }
 }

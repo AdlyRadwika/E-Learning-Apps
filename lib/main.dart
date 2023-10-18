@@ -1,4 +1,5 @@
 import 'package:final_project/common/util/theme.dart';
+import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
@@ -47,6 +48,8 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
             create: (context) => di.locator<UserCloudBloc>()),
         BlocProvider<ClassCloudBloc>(
             create: (context) => di.locator<ClassCloudBloc>()),
+        BlocProvider<AnnouncementCloudBloc>(
+            create: (context) => di.locator<AnnouncementCloudBloc>()),
       ],
       child: MaterialApp(
         theme: themeData,
