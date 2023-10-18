@@ -36,7 +36,7 @@ class GetAnnouncementsByUidLoading extends AnnouncementCloudState {}
 class GetAnnouncementsByUidResult extends AnnouncementCloudState {
   final String message;
   final bool isSuccess;
-  final List<Announcement>? announcements;
+  final List<AnnouncementContent>? announcements;
 
   GetAnnouncementsByUidResult({
     this.message = '',

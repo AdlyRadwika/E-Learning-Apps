@@ -1,11 +1,12 @@
 import 'package:final_project/features/presentation/pages/class/announcements/announcements_page.dart';
-import 'package:final_project/features/presentation/pages/class/widgets/announcement_item.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/post_announcement_widget.dart';
 import 'package:flutter/material.dart';
 
 class AnnouncementSection extends StatelessWidget {
+  final String classCode;
+
   const AnnouncementSection({
-    super.key,
+    super.key, required this.classCode,
   });
 
   @override
@@ -22,12 +23,15 @@ class AnnouncementSection extends StatelessWidget {
             ),
             GestureDetector(
                 onTap: () =>
-                    Navigator.pushNamed(context, AnnouncementsPage.route),
+                    Navigator.pushNamed(context, AnnouncementsPage.route, arguments: {
+                      'classCode': classCode,
+                    }),
                 child: const Text('See More')),
           ],
         ),
-        const PostAnnouncementWidget(),
-        const AnnoucementItem()
+        PostAnnouncementWidget(
+          classCode: classCode,
+        ),
       ],
     );
   }

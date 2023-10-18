@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:final_project/features/domain/entities/announcement/announcement.dart';
+import 'package:final_project/features/domain/entities/announcement/announcement_content.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/delete_announcement.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/get_announcements_by_uid.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/insert_announcement.dart';

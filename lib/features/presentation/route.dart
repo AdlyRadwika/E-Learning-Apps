@@ -76,15 +76,25 @@ Route<dynamic>? controller(RouteSettings settings) {
                 data: args['data'],
               ));
     case AnnouncementsPage.route:
-      return MaterialPageRoute(builder: (context) => const AnnouncementsPage());
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => AnnouncementsPage(
+                classCode: args['classCode'],
+              ));
     case AssignmentsPage.route:
       return MaterialPageRoute(builder: (context) => const AssignmentsPage());
     case AssignmentDetailPage.route:
       return MaterialPageRoute(
           builder: (context) => const AssignmentDetailPage());
     case PostAnnouncementPage.route:
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
-          builder: (context) => const PostAnnouncementPage());
+          builder: (context) => PostAnnouncementPage(
+                isUpdate: args['isUpdate'],
+                announcementId: args['announcementId'],
+                contentText: args['contentText'],
+                classCode: args['classCode'],
+              ));
     case AddAssignmentPage.route:
       return MaterialPageRoute(builder: (context) => const AddAssignmentPage());
     default:

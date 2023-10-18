@@ -106,6 +106,8 @@ class _ClassIndexPageState extends State<ClassIndexPage> {
             ],
           );
         }
+        // return const Center(
+        //     child: Text("You haven't enrolled to a class yet."));
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:final_project/common/error/failure.dart';
-import 'package:final_project/features/domain/entities/announcement/announcement.dart';
+import 'package:final_project/features/domain/entities/announcement/announcement_content.dart';
 
 abstract class FirebaseAnnouncementCloudRepository {
   Future<Either<Failure, void>> insertAnnouncement({
@@ -16,7 +16,7 @@ abstract class FirebaseAnnouncementCloudRepository {
   Future<Either<Failure, void>> deleteAnnouncement({
     required String announcementId,
   });
-  Future<Either<Failure, List<Announcement>>> getAnnouncementsByUid({
+  Future<Either<Failure, List<AnnouncementContent>>> getAnnouncementsByUid({
     required String uid,
   });
 }

@@ -4,6 +4,7 @@ import 'package:final_project/features/presentation/pages/class/attendance/atten
 import 'package:final_project/features/presentation/pages/class/detail/widgets/annoucement_section.dart';
 import 'package:final_project/features/presentation/pages/class/info/enrolled_class_info_page.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/add_assignment_widget.dart';
+import 'package:final_project/features/presentation/pages/class/widgets/announcement_list.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/assignment_item.dart';
 import 'package:flutter/material.dart';
 
@@ -35,11 +36,16 @@ class EnrolledClassDetailPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: CustomScrollView(
             slivers: [
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                   child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: AnnouncementSection(),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: AnnouncementSection(
+                  classCode: data?.code ?? "-",
+                ),
               )),
+              const AnnouncementListWidget(
+                shouldLimit: true,
+              ),
               SliverToBoxAdapter(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

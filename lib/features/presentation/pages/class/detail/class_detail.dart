@@ -1,18 +1,45 @@
+import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/features/domain/entities/class/class.dart';
+import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/assignments/assignments_page.dart';
 import 'package:final_project/features/presentation/pages/class/attendance/attendance_page.dart';
 import 'package:final_project/features/presentation/pages/class/detail/widgets/annoucement_section.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/add_assignment_widget.dart';
+import 'package:final_project/features/presentation/pages/class/widgets/announcement_list.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/assignment_item.dart';
 import 'package:final_project/features/presentation/pages/class/info/class_info_page.dart';
+import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ClassDetailPage extends StatelessWidget {
+class ClassDetailPage extends StatefulWidget {
   static const route = '/class-detail';
 
   const ClassDetailPage({super.key, required this.data});
 
   final Class? data;
+
+  @override
+  State<ClassDetailPage> createState() => _ClassDetailPageState();
+}
+
+class _ClassDetailPageState extends State<ClassDetailPage> {
+  final _storageService = locator<SecureStorageService>();
+
+  Future<void> _getData() async {
+    final uid = await _storageService.getUid();
+    if (!mounted) return;
+    context
+        .read<AnnouncementCloudBloc>()
+        .add(GetAnnouncementsByUidEvent(uid: uid));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +48,13 @@ class ClassDetailPage extends StatelessWidget {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(data?.title ?? 'Unknown Class'),
+          title: Text(widget.data?.title ?? 'Unknown Class'),
           actions: [
             IconButton(
                 tooltip: 'Class Info',
                 onPressed: () => Navigator.pushNamed(
                     context, ClassInfoPage.route,
-                    arguments: {'data': data}),
+                    arguments: {'data': widget.data}),
                 icon: const Icon(Icons.info_outline))
           ],
         ),
@@ -35,11 +62,12 @@ class ClassDetailPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: CustomScrollView(
             slivers: [
-              const SliverToBoxAdapter(
-                  child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: AnnouncementSection(),
+              SliverToBoxAdapter(child: AnnouncementSection(
+                classCode: widget.data?.code ?? "-",
               )),
+              const AnnouncementListWidget(
+                shouldLimit: true,
+              ),
               SliverToBoxAdapter(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

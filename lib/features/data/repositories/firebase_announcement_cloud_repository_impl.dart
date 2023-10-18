@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:final_project/common/error/exception.dart';
 import 'package:final_project/common/error/failure.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_announcement_cloud_remote.dart';
-import 'package:final_project/features/domain/entities/announcement/announcement.dart';
+import 'package:final_project/features/domain/entities/announcement/announcement_content.dart';
 import 'package:final_project/features/domain/repositories/firebase_announcement_cloud_repository.dart';
 
 class FirebaseAnnouncementCloudRepositoryImpl
@@ -26,7 +26,7 @@ class FirebaseAnnouncementCloudRepositoryImpl
   }
 
   @override
-  Future<Either<Failure, List<Announcement>>> getAnnouncementsByUid(
+  Future<Either<Failure, List<AnnouncementContent>>> getAnnouncementsByUid(
       {required String uid}) async {
     try {
       final result = await remoteDataSource.getAnnouncementsByUid(uid: uid);

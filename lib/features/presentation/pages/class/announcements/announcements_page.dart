@@ -1,11 +1,12 @@
-import 'package:final_project/features/presentation/pages/class/widgets/announcement_item.dart';
+import 'package:final_project/features/presentation/pages/class/widgets/announcement_list.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/post_announcement_widget.dart';
 import 'package:flutter/material.dart';
 
 class AnnouncementsPage extends StatelessWidget {
   static const route = '/class-announcements';
 
-  const AnnouncementsPage({super.key});
+  final String classCode;
+  const AnnouncementsPage({super.key, required this.classCode});
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +18,13 @@ class AnnouncementsPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: CustomScrollView(
           slivers: [
-            const SliverToBoxAdapter(
-              child: PostAnnouncementWidget(),
-            ),
-            SliverList.separated(
-              itemCount: 10,
-              itemBuilder: (context, index) => const AnnoucementItem(),
-              separatorBuilder: (context, index) => const SizedBox(
-                height: 10,
+            SliverToBoxAdapter(
+              child: PostAnnouncementWidget(
+                classCode: classCode,
               ),
+            ),
+            const AnnouncementListWidget(
+              shouldLimit: false,
             ),
           ],
         ),
