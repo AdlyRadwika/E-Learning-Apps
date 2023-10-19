@@ -55,45 +55,52 @@ class _EnrolledClassDetailPageState extends State<EnrolledClassDetailPage> {
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                  child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: AnnouncementSection(
-                  classCode: widget.data?.code ?? "-",
+          child: RefreshIndicator(
+            onRefresh: () {
+              return Future.sync(() {
+                _getData();
+              });
+            },
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                    child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: AnnouncementSection(
+                    classCode: widget.data?.code ?? "-",
+                  ),
+                )),
+                const AnnouncementListWidget(
+                  shouldLimit: true,
                 ),
-              )),
-              const AnnouncementListWidget(
-                shouldLimit: true,
-              ),
-              SliverToBoxAdapter(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Assignments',
-                      style: theme.textTheme.titleLarge,
-                    ),
-                    GestureDetector(
-                        onTap: () =>
-                            Navigator.pushNamed(context, AssignmentsPage.route),
-                        child: const Text('See More')),
-                  ],
-                ),
-              ),
-              const SliverToBoxAdapter(
-                child: AddAssignmentWidget(),
-              ),
-              SliverList.separated(
-                  separatorBuilder: (context, index) => const SizedBox(
-                        height: 10,
+                SliverToBoxAdapter(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Assignments',
+                        style: theme.textTheme.titleLarge,
                       ),
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return const AssignmentItem();
-                  })
-            ],
+                      GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                              context, AssignmentsPage.route),
+                          child: const Text('See More')),
+                    ],
+                  ),
+                ),
+                const SliverToBoxAdapter(
+                  child: AddAssignmentWidget(),
+                ),
+                SliverList.separated(
+                    separatorBuilder: (context, index) => const SizedBox(
+                          height: 10,
+                        ),
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      return const AssignmentItem();
+                    })
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(

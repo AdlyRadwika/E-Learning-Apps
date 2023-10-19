@@ -54,42 +54,50 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                  child: AnnouncementSection(
-                classCode: widget.data?.code ?? "-",
-              )),
-              const AnnouncementListWidget(
-                shouldLimit: true,
-              ),
-              SliverToBoxAdapter(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Assignments',
-                      style: theme.textTheme.titleLarge,
-                    ),
-                    GestureDetector(
-                        onTap: () =>
-                            Navigator.pushNamed(context, AssignmentsPage.route),
-                        child: const Text('See More')),
-                  ],
+          child: RefreshIndicator(
+            onRefresh: () {
+              return Future.sync(() {
+                _getData();
+              });
+            },
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                SliverToBoxAdapter(
+                    child: AnnouncementSection(
+                  classCode: widget.data?.code ?? "-",
+                )),
+                const AnnouncementListWidget(
+                  shouldLimit: true,
                 ),
-              ),
-              const SliverToBoxAdapter(
-                child: AddAssignmentWidget(),
-              ),
-              SliverList.separated(
-                  separatorBuilder: (context, index) => const SizedBox(
-                        height: 10,
+                SliverToBoxAdapter(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Assignments',
+                        style: theme.textTheme.titleLarge,
                       ),
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return const AssignmentItem();
-                  })
-            ],
+                      GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                              context, AssignmentsPage.route),
+                          child: const Text('See More')),
+                    ],
+                  ),
+                ),
+                const SliverToBoxAdapter(
+                  child: AddAssignmentWidget(),
+                ),
+                SliverList.separated(
+                    separatorBuilder: (context, index) => const SizedBox(
+                          height: 10,
+                        ),
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      return const AssignmentItem();
+                    })
+              ],
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
