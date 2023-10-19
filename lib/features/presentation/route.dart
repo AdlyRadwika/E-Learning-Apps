@@ -82,10 +82,17 @@ Route<dynamic>? controller(RouteSettings settings) {
                 classCode: args['classCode'],
               ));
     case AssignmentsPage.route:
-      return MaterialPageRoute(builder: (context) => const AssignmentsPage());
-    case AssignmentDetailPage.route:
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
-          builder: (context) => const AssignmentDetailPage());
+          builder: (context) => AssignmentsPage(
+                classCode: args['classCode'],
+              ));
+    case AssignmentDetailPage.route:
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => AssignmentDetailPage(
+                data: args['data'],
+              ));
     case PostAnnouncementPage.route:
       Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
@@ -96,7 +103,13 @@ Route<dynamic>? controller(RouteSettings settings) {
                 classCode: args['classCode'],
               ));
     case AddAssignmentPage.route:
-      return MaterialPageRoute(builder: (context) => const AddAssignmentPage());
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => AddAssignmentPage(
+                classCode: args['classCode'],
+                data: args['data'],
+                isEdit: args['isEdit'],
+              ));
     default:
       return null;
   }

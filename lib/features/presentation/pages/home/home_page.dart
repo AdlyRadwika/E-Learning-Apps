@@ -1,3 +1,4 @@
+import 'package:final_project/common/util/user_config.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/index/class_index_page.dart';
 import 'package:final_project/features/presentation/pages/home/widgets/appbar_content.dart';
@@ -51,13 +52,19 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _getData() {
+    context
+        .read<UserCloudBloc>()
+        .add(GetUserByIdEvent(uid: auth.currentUser?.uid ?? "-"));
+
+    UserConfigUtil.uid = auth.currentUser?.uid ?? "-";
+  }
+
   @override
   void initState() {
     super.initState();
 
-    context
-        .read<UserCloudBloc>()
-        .add(GetUserByIdEvent(uid: auth.currentUser?.uid ?? "-"));
+    _getData();
   }
 
   @override

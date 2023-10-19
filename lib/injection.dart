@@ -4,14 +4,17 @@ import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/common/services/uuid_service.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_announcement_cloud_remote.dart';
+import 'package:final_project/features/data/datasources/remote/firebase_assignment_cloud_remote.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_auth_remote.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_class_cloud_remote.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_user_cloud_remote.dart';
 import 'package:final_project/features/data/repositories/firebase_announcement_cloud_repository_impl.dart';
+import 'package:final_project/features/data/repositories/firebase_assignment_cloud_repository_impl.dart';
 import 'package:final_project/features/data/repositories/firebase_auth_repository_impl.dart';
 import 'package:final_project/features/data/repositories/firebase_class_cloud_repository_impl.dart';
 import 'package:final_project/features/data/repositories/firebase_user_cloud_repository_impl.dart';
 import 'package:final_project/features/domain/repositories/firebase_announcement_cloud_repository.dart';
+import 'package:final_project/features/domain/repositories/firebase_assignment_cloud_repository.dart';
 import 'package:final_project/features/domain/repositories/firebase_auth_repository.dart';
 import 'package:final_project/features/domain/repositories/firebase_class_cloud_repository.dart';
 import 'package:final_project/features/domain/repositories/firebase_user_cloud_repository.dart';
@@ -19,6 +22,10 @@ import 'package:final_project/features/domain/usecases/announcement_cloud/delete
 import 'package:final_project/features/domain/usecases/announcement_cloud/get_announcements_by_class.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/insert_announcement.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/update_announcement.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/delete_assignment.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/get_assignments_by_class.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/insert_assignment.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/update_assignment.dart';
 import 'package:final_project/features/domain/usecases/auth/login.dart';
 import 'package:final_project/features/domain/usecases/auth/logout.dart';
 import 'package:final_project/features/domain/usecases/auth/register.dart';
@@ -36,6 +43,8 @@ import 'package:final_project/features/domain/usecases/user_cloud/insert_user_da
 import 'package:final_project/features/domain/usecases/user_cloud/update_photo_profile.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/assignment_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_assignment/get_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
@@ -69,10 +78,10 @@ void init() {
         getClassesByIdUseCase: locator(),
       ));
   locator.registerFactory<GetClassTeacherBloc>(() => GetClassTeacherBloc(
-    getClassTeacherUseCase: locator(),
+        getClassTeacherUseCase: locator(),
       ));
   locator.registerFactory<GetClassStudentsBloc>(() => GetClassStudentsBloc(
-    getClassStudentsUseCase: locator(),
+        getClassStudentsUseCase: locator(),
       ));
   locator.registerFactory<AnnouncementCloudBloc>(() => AnnouncementCloudBloc(
         deleteUseCase: locator(),
@@ -80,7 +89,15 @@ void init() {
         updateUseCase: locator(),
       ));
   locator.registerFactory<GetAnnouncementsBloc>(() => GetAnnouncementsBloc(
-    getAnnouncementsUseCase: locator(),
+        getAnnouncementsUseCase: locator(),
+      ));
+  locator.registerFactory<AssignmentCloudBloc>(() => AssignmentCloudBloc(
+        deleteUseCase: locator(),
+        insertUseCase: locator(),
+        updateUseCase: locator(),
+      ));
+  locator.registerFactory<GetAssignmentsBloc>(() => GetAssignmentsBloc(
+        getAssignmentsUseCase: locator(),
       ));
 
   // Usecases
@@ -120,6 +137,14 @@ void init() {
       () => DeleteAnnouncementUseCase(locator()));
   locator.registerLazySingleton<GetAnnouncementsByClassUseCase>(
       () => GetAnnouncementsByClassUseCase(locator()));
+  locator.registerLazySingleton<InsertAssignmentUseCase>(
+      () => InsertAssignmentUseCase(locator()));
+  locator.registerLazySingleton<UpdateAssignmentUseCase>(
+      () => UpdateAssignmentUseCase(locator()));
+  locator.registerLazySingleton<DeleteAssignmentUseCase>(
+      () => DeleteAssignmentUseCase(locator()));
+  locator.registerLazySingleton<GetAssignmentsByClassUseCase>(
+      () => GetAssignmentsByClassUseCase(locator()));
 
   // Repository
   locator.registerLazySingleton<FirebaseAuthRepository>(
@@ -130,6 +155,8 @@ void init() {
       () => FirebaseClassCloudRepositoryImpl(locator()));
   locator.registerLazySingleton<FirebaseAnnouncementCloudRepository>(() =>
       FirebaseAnnouncementCloudRepositoryImpl(remoteDataSource: locator()));
+  locator.registerLazySingleton<FirebaseAssignmentCloudRepository>(() =>
+      FirebaseAssignmentCloudRepositoryImpl(remoteDataSource: locator()));
 
   // Data source
   locator.registerLazySingleton<FirebaseAuthRemote>(
@@ -140,6 +167,8 @@ void init() {
       () => FirebaseClassCloudRemoteImpl());
   locator.registerLazySingleton<FirebaseAnnouncementCloudRemote>(
       () => FirebaseAnnouncementCloudRemoteImpl());
+  locator.registerLazySingleton<FirebaseAssignmentCloudRemote>(
+      () => FirebaseAssignmentCloudRemoteImpl());
 
   // External
   locator.registerLazySingleton<CameraService>(() => CameraService());

@@ -115,7 +115,7 @@ class _PostAnnouncementPageState extends State<PostAnnouncementPage> {
 
   Future<void> _submit() async {
     final content = _postC.text.trim();
-    final announcementId = _uuidService.generateAnnouncementId();
+    final announcementId = _uuidService.generateUuidV4();
     final teacherId = await _storageService.getUid();
     final classCode = widget.classCode.trim();
 

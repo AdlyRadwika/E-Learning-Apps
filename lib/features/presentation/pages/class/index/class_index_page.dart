@@ -61,7 +61,7 @@ class _ClassIndexPageState extends State<ClassIndexPage> {
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: Text("Loading..."));
+                return const Center(child: CircularProgressIndicator());
               }
 
               return GridView.builder(
@@ -107,7 +107,7 @@ class _ClassIndexPageState extends State<ClassIndexPage> {
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: Text("Loading..."));
+                return const Center(child: CircularProgressIndicator());
               }
 
               return GridView.builder(

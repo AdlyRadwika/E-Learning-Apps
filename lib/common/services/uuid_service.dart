@@ -16,7 +16,7 @@ class UuidService {
     return value;
   }
 
-  String generateAnnouncementId() {
+  String generateUuidV4() {
     final value = uuid.v4();
     return value;
   }

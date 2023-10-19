@@ -1,6 +1,7 @@
 import 'package:final_project/common/consts/asset_conts.dart';
 import 'package:final_project/common/extensions/strings.dart';
 import 'package:final_project/common/services/secure_storage_service.dart';
+import 'package:final_project/common/util/user_config.dart';
 import 'package:final_project/features/domain/entities/user/user.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/injection.dart';
@@ -26,6 +27,7 @@ class _AppBarContentState extends State<AppBarContent> {
         if (state is GetUserByIdResult && state.isSuccess) {
           final data = state.user;
           _storageService.saveUserData(user: data);
+          UserConfigUtil.role = data?.role ?? "-";
           return _UserGreetings(data: data);
         }
         return const _UserGreetings(data: null);

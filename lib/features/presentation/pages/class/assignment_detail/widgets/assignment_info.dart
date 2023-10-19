@@ -1,11 +1,13 @@
+import 'package:final_project/features/domain/entities/assignment/assignment.dart';
 import 'package:flutter/material.dart';
 
 class AssignmentInfo extends StatelessWidget {
   final bool isTeacher;
+  final Assignment? data;
 
   const AssignmentInfo({
     super.key,
-    required this.isTeacher,
+    required this.isTeacher, required this.data,
   });
 
   @override
@@ -21,17 +23,11 @@ class AssignmentInfo extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Assignment 1',
+                  data?.title ?? "Unknown Title",
                   style: theme.textTheme.titleLarge,
                 ),
                 Text(
-                  'Due ${DateTime.now().toString()}',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey,
-                  ),
-                ),
-                Text(
-                  'Assigned by Teacher 1',
+                  'Due ${data?.deadline ?? "-"}',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: Colors.grey,
                   ),
@@ -55,7 +51,7 @@ class AssignmentInfo extends StatelessWidget {
           ],
         ),
         const Divider(),
-        const Text(
+        Text(data?.description ??
             "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."),
       ],
     );

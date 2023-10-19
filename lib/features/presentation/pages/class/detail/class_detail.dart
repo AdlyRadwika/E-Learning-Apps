@@ -1,12 +1,13 @@
 import 'package:final_project/features/domain/entities/class/class.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_assignment/get_assignment_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/assignments/assignments_page.dart';
 import 'package:final_project/features/presentation/pages/class/attendance/attendance_page.dart';
 import 'package:final_project/features/presentation/pages/class/detail/widgets/annoucement_section.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/add_assignment_widget.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/announcement_list.dart';
-import 'package:final_project/features/presentation/pages/class/widgets/assignment_item.dart';
 import 'package:final_project/features/presentation/pages/class/info/class_info_page.dart';
+import 'package:final_project/features/presentation/pages/class/widgets/assignment_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,6 +27,9 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
     context
         .read<GetAnnouncementsBloc>()
         .add(GetAnnouncementsByClassEvent(classCode: widget.data?.code ?? "-"));
+    context
+        .read<GetAssignmentsBloc>()
+        .add(GetAssignmentsByClassEvent(classCode: widget.data?.code ?? "-"));
   }
 
   @override
@@ -80,22 +84,24 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
                       ),
                       GestureDetector(
                           onTap: () => Navigator.pushNamed(
-                              context, AssignmentsPage.route),
+                              context, AssignmentsPage.route, arguments: {
+                                'classCode': widget.data?.code ?? "-"
+                              }),
                           child: const Text('See More')),
                     ],
                   ),
                 ),
-                const SliverToBoxAdapter(
-                  child: AddAssignmentWidget(),
+                SliverToBoxAdapter(
+                  child: AddAssignmentWidget(
+                    classCode: widget.data?.code ?? "-",
+                    data: null,
+                    isEdit: false,
+                  ),
                 ),
-                SliverList.separated(
-                    separatorBuilder: (context, index) => const SizedBox(
-                          height: 10,
-                        ),
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return const AssignmentItem();
-                    })
+                AssignmentListWidget(
+                  shouldLimit: true,
+                  classCode: widget.data?.code ?? "-",
+                ),
               ],
             ),
           ),

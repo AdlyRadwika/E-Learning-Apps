@@ -1,6 +1,8 @@
 import 'package:final_project/common/util/theme.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/assignment_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_assignment/get_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
@@ -62,6 +64,10 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
             create: (context) => di.locator<AnnouncementCloudBloc>()),
         BlocProvider<GetAnnouncementsBloc>(
             create: (context) => di.locator<GetAnnouncementsBloc>()),
+        BlocProvider<AssignmentCloudBloc>(
+            create: (context) => di.locator<AssignmentCloudBloc>()),
+        BlocProvider<GetAssignmentsBloc>(
+            create: (context) => di.locator<GetAssignmentsBloc>()),
       ],
       child: MaterialApp(
         theme: themeData,
