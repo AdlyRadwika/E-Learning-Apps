@@ -1,6 +1,5 @@
-import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/features/domain/entities/class/class.dart';
-import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/assignments/assignments_page.dart';
 import 'package:final_project/features/presentation/pages/class/attendance/attendance_page.dart';
 import 'package:final_project/features/presentation/pages/class/detail/widgets/annoucement_section.dart';
@@ -8,7 +7,6 @@ import 'package:final_project/features/presentation/pages/class/widgets/add_assi
 import 'package:final_project/features/presentation/pages/class/widgets/announcement_list.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/assignment_item.dart';
 import 'package:final_project/features/presentation/pages/class/info/class_info_page.dart';
-import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,14 +22,10 @@ class ClassDetailPage extends StatefulWidget {
 }
 
 class _ClassDetailPageState extends State<ClassDetailPage> {
-  final _storageService = locator<SecureStorageService>();
-
-  Future<void> _getData() async {
-    final uid = await _storageService.getUid();
-    if (!mounted) return;
+  void _getData() {
     context
-        .read<AnnouncementCloudBloc>()
-        .add(GetAnnouncementsByUidEvent(uid: uid));
+        .read<GetAnnouncementsBloc>()
+        .add(GetAnnouncementsByClassEvent(classCode: widget.data?.code ?? "-"));
   }
 
   @override
@@ -62,7 +56,8 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: CustomScrollView(
             slivers: [
-              SliverToBoxAdapter(child: AnnouncementSection(
+              SliverToBoxAdapter(
+                  child: AnnouncementSection(
                 classCode: widget.data?.code ?? "-",
               )),
               const AnnouncementListWidget(

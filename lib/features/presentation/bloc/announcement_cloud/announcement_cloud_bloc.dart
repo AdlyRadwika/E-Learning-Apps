@@ -1,7 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:final_project/features/domain/entities/announcement/announcement_content.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/delete_announcement.dart';
-import 'package:final_project/features/domain/usecases/announcement_cloud/get_announcements_by_uid.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/insert_announcement.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/update_announcement.dart';
 
@@ -13,13 +11,11 @@ class AnnouncementCloudBloc
   final InsertAnnouncementUseCase insertUseCase;
   final DeleteAnnouncementUseCase deleteUseCase;
   final UpdateAnnouncementUseCase updateUseCase;
-  final GetAnnouncementsByUidUseCase getAnnouncementsUseCase;
 
   AnnouncementCloudBloc({
     required this.insertUseCase,
     required this.deleteUseCase,
     required this.updateUseCase,
-    required this.getAnnouncementsUseCase,
   }) : super(AnnouncementCloudInitial()) {
     on<InsertAnnouncementEvent>((event, emit) async {
       emit(InsertAnnouncementLoading());
@@ -52,17 +48,6 @@ class AnnouncementCloudBloc
       emit(result.fold(
           (l) => UpdateAnnouncementResult(isSuccess: false, message: l.message),
           (r) => UpdateAnnouncementResult(isSuccess: true)));
-    });
-    on<GetAnnouncementsByUidEvent>((event, emit) async {
-      emit(GetAnnouncementsByUidLoading());
-
-      final result = await getAnnouncementsUseCase.execute(uid: event.uid);
-
-      emit(result.fold(
-          (l) =>
-              GetAnnouncementsByUidResult(isSuccess: false, message: l.message),
-          (r) =>
-              GetAnnouncementsByUidResult(isSuccess: true, announcements: r)));
     });
   }
 }

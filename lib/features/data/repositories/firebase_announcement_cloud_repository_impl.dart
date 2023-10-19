@@ -26,10 +26,11 @@ class FirebaseAnnouncementCloudRepositoryImpl
   }
 
   @override
-  Future<Either<Failure, List<AnnouncementContent>>> getAnnouncementsByUid(
-      {required String uid}) async {
+  Future<Either<Failure, List<AnnouncementContent>>> getAnnouncementsByClass(
+      {required String classCode}) async {
     try {
-      final result = await remoteDataSource.getAnnouncementsByUid(uid: uid);
+      final result =
+          await remoteDataSource.getAnnouncementsByClass(classCode: classCode);
       return Right(result.map((e) => e.toEntity()).toList());
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message.toString()));

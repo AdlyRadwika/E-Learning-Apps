@@ -7,7 +7,8 @@ class PostAnnouncementWidget extends StatelessWidget {
   final String classCode;
 
   const PostAnnouncementWidget({
-    super.key, required this.classCode,
+    super.key,
+    required this.classCode,
   });
 
   @override
@@ -23,13 +24,14 @@ class PostAnnouncementWidget extends StatelessWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 15.0),
         child: ElevatedButton.icon(
-            onPressed: () =>
-                Navigator.pushNamed(context, PostAnnouncementPage.route, arguments: {
-                  'classCode': classCode,
-                  'contentText': '',
-                  'isUpdate': false,
-                  'announcementId': '-'
-                }),
+            onPressed: () => Navigator.pushNamed(
+                    context, PostAnnouncementPage.route,
+                    arguments: {
+                      'classCode': classCode,
+                      'contentText': '',
+                      'isUpdate': false,
+                      'announcementId': '-'
+                    }),
             icon: const Icon(Icons.announcement),
             label: const Text('Post Announcement')),
       );

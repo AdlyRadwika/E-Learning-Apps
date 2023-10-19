@@ -1,4 +1,4 @@
-import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/get_class_students/get_class_students_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/info/widgets/student_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +10,7 @@ class StudentSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ClassCloudBloc, ClassCloudState>(
+    return BlocBuilder<GetClassStudentsBloc, GetClassStudentsState>(
         builder: (context, state) {
       if (state is GetClassStudentsLoading) {
         return const SliverToBoxAdapter(
@@ -20,14 +20,22 @@ class StudentSectionWidget extends StatelessWidget {
         );
       }
       if (state is GetClassStudentsResult && state.isSuccess) {
+        final students = state.students;
+        if (students?.isEmpty == true) {
+          return const SliverToBoxAdapter(
+            child: Center(
+              child: Text('There are no students yet.'),
+            ),
+          );
+        }
         return SliverPadding(
           padding: const EdgeInsets.symmetric(
             horizontal: 15.0,
           ),
           sliver: SliverList.separated(
-            itemCount: state.students?.length,
+            itemCount: students?.length,
             itemBuilder: (context, index) {
-              final data = state.students?[index];
+              final data = students?[index];
               return StudentItem(
                 data: data,
               );
@@ -61,7 +69,7 @@ class StudentSectionWidget extends StatelessWidget {
           horizontal: 15.0,
         ),
         sliver: SliverToBoxAdapter(
-          child: Center(child: Text('There are no students yet.')),
+          child: Center(child: Text('Something went wrong.')),
         ),
       );
     });

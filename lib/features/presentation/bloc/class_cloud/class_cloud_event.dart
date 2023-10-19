@@ -25,35 +25,3 @@ class JoinClassEvent extends ClassCloudEvent {
     required this.uid,
   });
 }
-
-class GetClassesByIdEvent extends ClassCloudEvent {
-  final String uid;
-
-  GetClassesByIdEvent({
-    required this.uid,
-  });
-}
-
-class GetEnrolledClassesByIdEvent extends ClassCloudEvent {
-  final String uid;
-
-  GetEnrolledClassesByIdEvent({
-    required this.uid,
-  });
-}
-
-class GetClassTeacherEvent extends ClassCloudEvent {
-  final String classCode;
-
-  GetClassTeacherEvent({
-    required this.classCode,
-  });
-}
-
-class GetClassStudentsEvent extends ClassCloudEvent {
-  final String classCode;
-
-  GetClassStudentsEvent({
-    required this.classCode,
-  });
-}

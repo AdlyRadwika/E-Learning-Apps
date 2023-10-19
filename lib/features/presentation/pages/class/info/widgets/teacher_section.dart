@@ -1,5 +1,5 @@
 import 'package:final_project/common/consts/asset_conts.dart';
-import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/get_class_teacher/get_class_teacher_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,7 +18,8 @@ class TeacherSection extends StatelessWidget {
           'Teacher',
           style: theme.textTheme.titleLarge,
         ),
-        BlocBuilder<ClassCloudBloc, ClassCloudState>(builder: (context, state) {
+        BlocBuilder<GetClassTeacherBloc, GetClassTeacherState>(
+            builder: (context, state) {
           if (state is GetClassTeacherLoading) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -39,7 +40,7 @@ class TeacherSection extends StatelessWidget {
                   style: theme.textTheme.labelLarge,
                 ),
                 subtitle: Text(
-                    'Joined at ${data?.joinedAt ?? DateTime.now().toIso8601String()}'),
+                    'Joined at ${data?.joinedAt ?? DateTime.now().toString()}'),
               ),
             );
           }

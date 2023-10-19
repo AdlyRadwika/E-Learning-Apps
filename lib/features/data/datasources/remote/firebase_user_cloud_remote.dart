@@ -47,8 +47,8 @@ class FirebaseUserCloudRemoteImpl implements FirebaseUserCloudRemote {
           imageUrl: imageUrl,
           imageData: imageData,
           role: role,
-          updatedAt: DateTime.now().toIso8601String(),
-          createdAt: DateTime.now().toIso8601String(),
+          updatedAt: '',
+          createdAt: DateTime.now().toString(),
           uid: uid);
       await _userCollection.doc(uid).set(data);
     } on FirebaseException catch (e) {
@@ -90,7 +90,9 @@ class FirebaseUserCloudRemoteImpl implements FirebaseUserCloudRemote {
 
   @override
   Future<void> updatePhotoProfile(
-      {required String imageUrl, required String uid, required List imageData}) async {
+      {required String imageUrl,
+      required String uid,
+      required List imageData}) async {
     try {
       final result = await _userCollection.doc(uid).update({
         'image_url': imageUrl,

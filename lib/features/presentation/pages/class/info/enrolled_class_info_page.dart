@@ -1,5 +1,6 @@
 import 'package:final_project/features/domain/entities/class/enrolled_class.dart';
-import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/get_class_students/get_class_students_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/get_class_teacher/get_class_teacher_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/info/widgets/enrolled_class_info_content.dart';
 import 'package:final_project/features/presentation/pages/class/info/widgets/student_section.dart';
 import 'package:final_project/features/presentation/pages/class/info/widgets/teacher_section.dart';
@@ -23,9 +24,8 @@ class _EnrolledClassInfoPageState extends State<EnrolledClassInfoPage> {
     super.initState();
 
     final classCode = widget.data?.code;
-    context.read<ClassCloudBloc>()
-      ..add(GetClassTeacherEvent(classCode: classCode ?? "-"))
-      ..add(GetClassStudentsEvent(classCode: classCode ?? "-"));
+    context.read<GetClassTeacherBloc>().add(FetchTeacherEvent(classCode: classCode ?? "-"));
+    context.read<GetClassStudentsBloc>().add(FetchStudentsEvent(classCode: classCode ?? "-"));
   }
 
   @override

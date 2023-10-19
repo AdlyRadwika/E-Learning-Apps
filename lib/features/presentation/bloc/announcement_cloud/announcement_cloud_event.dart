@@ -16,14 +16,6 @@ class InsertAnnouncementEvent extends AnnouncementCloudEvent {
   });
 }
 
-class GetAnnouncementsByUidEvent extends AnnouncementCloudEvent {
-  final String uid;
-
-  GetAnnouncementsByUidEvent({
-    required this.uid,
-  });
-}
-
 class UpdateAnnouncementEvent extends AnnouncementCloudEvent {
   final String id;
   final String content;

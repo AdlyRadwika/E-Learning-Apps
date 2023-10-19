@@ -30,17 +30,3 @@ class DeleteAnnouncementResult extends AnnouncementCloudState {
 
   DeleteAnnouncementResult({this.message = '', required this.isSuccess});
 }
-
-class GetAnnouncementsByUidLoading extends AnnouncementCloudState {}
-
-class GetAnnouncementsByUidResult extends AnnouncementCloudState {
-  final String message;
-  final bool isSuccess;
-  final List<AnnouncementContent>? announcements;
-
-  GetAnnouncementsByUidResult({
-    this.message = '',
-    required this.isSuccess,
-    this.announcements,
-  });
-}

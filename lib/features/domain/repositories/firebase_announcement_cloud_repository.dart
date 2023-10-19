@@ -16,7 +16,7 @@ abstract class FirebaseAnnouncementCloudRepository {
   Future<Either<Failure, void>> deleteAnnouncement({
     required String announcementId,
   });
-  Future<Either<Failure, List<AnnouncementContent>>> getAnnouncementsByUid({
-    required String uid,
+  Future<Either<Failure, List<AnnouncementContent>>> getAnnouncementsByClass({
+    required String classCode,
   });
 }

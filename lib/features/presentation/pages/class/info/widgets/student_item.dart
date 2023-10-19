@@ -25,8 +25,8 @@ class StudentItem extends StatelessWidget {
           data?.name ?? "Unknown",
           style: theme.textTheme.labelLarge,
         ),
-        subtitle: Text(
-            'Joined at ${data?.joinedAt ?? DateTime.now().toIso8601String()}'),
+        subtitle:
+            Text('Joined at ${data?.joinedAt ?? DateTime.now().toString()}'),
       ),
     );
   }

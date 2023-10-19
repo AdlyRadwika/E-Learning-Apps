@@ -1,6 +1,6 @@
 import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/common/util/bool_util.dart';
-import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/index/widgets/class_button.dart';
 import 'package:final_project/features/presentation/pages/class/index/widgets/class_item.dart';
 import 'package:final_project/features/presentation/pages/class/index/widgets/enrolled_class_item.dart';
@@ -23,7 +23,7 @@ class _ClassIndexPageState extends State<ClassIndexPage> {
   Future<void> _getData() async {
     final uid = await _storageService.getUid();
     if (!mounted) return;
-    final bloc = context.read<ClassCloudBloc>();
+    final bloc = context.read<ClassIndexBloc>();
     if (!mounted) return;
     BoolUtil.isTeacher(role: await _storageService.getRole())
         ? bloc.add(GetClassesByIdEvent(uid: uid))
@@ -40,29 +40,43 @@ class _ClassIndexPageState extends State<ClassIndexPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<ClassCloudBloc, ClassCloudState>(
+      body: BlocBuilder<ClassIndexBloc, ClassIndexState>(
           builder: (context, state) {
         if (state is GetEnrolledClassesByIdLoading) {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is GetEnrolledClassesByIdResult && state.isSuccess) {
-          final data = state.classes;
-          if (data?.isEmpty == true) {
-            return const Center(
-              child: Text("You currently have no classes"),
-            );
-          }
-          return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 10.0),
-              itemCount: data?.length,
-              itemBuilder: (context, index) {
-                return EnrolledClassItem(
-                  data: data?[index],
+          return StreamBuilder(
+            stream: state.classesStream,
+            builder: (context, snapshot) {
+              final docs = snapshot.data?.docs;
+              if (docs?.isEmpty == true) {
+                return const Center(
+                  child: Text("You currently have no classes"),
                 );
-              });
+              }
+
+              if (snapshot.hasError) {
+                return const Center(child: Text('Something went wrong'));
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: Text("Loading..."));
+              }
+
+              return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0),
+                  itemCount: docs?.length ?? 1,
+                  itemBuilder: (context, index) {
+                    var data =
+                        docs?.map((item) => item.data().toEntity()).toList();
+                    return EnrolledClassItem(data: data?[index]);
+                  });
+            },
+          );
         }
         if (state is GetEnrolledClassesByIdResult && !state.isSuccess) {
           return Column(
@@ -78,23 +92,37 @@ class _ClassIndexPageState extends State<ClassIndexPage> {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is GetClassesByIdResult && state.isSuccess) {
-          final data = state.classes;
-          if (data?.isEmpty == true) {
-            return const Center(
-              child: Text("You currently have no classes"),
-            );
-          }
-          return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10.0,
-                  mainAxisSpacing: 10.0),
-              itemCount: data?.length,
-              itemBuilder: (context, index) {
-                return ClassItem(
-                  data: data?[index],
+          return StreamBuilder(
+            stream: state.classesStream,
+            builder: (context, snapshot) {
+              final docs = snapshot.data?.docs;
+              if (docs?.isEmpty == true) {
+                return const Center(
+                  child: Text("You currently have no classes"),
                 );
-              });
+              }
+
+              if (snapshot.hasError) {
+                return const Center(child: Text('Something went wrong'));
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: Text("Loading..."));
+              }
+
+              return GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0),
+                  itemCount: docs?.length ?? 1,
+                  itemBuilder: (context, index) {
+                    var data =
+                        docs?.map((item) => item.data().toEntity()).toList();
+                    return ClassItem(data: data?[index]);
+                  });
+            },
+          );
         }
         if (state is GetClassesByIdResult && !state.isSuccess) {
           return Column(
@@ -106,8 +134,6 @@ class _ClassIndexPageState extends State<ClassIndexPage> {
             ],
           );
         }
-        // return const Center(
-        //     child: Text("You haven't enrolled to a class yet."));
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

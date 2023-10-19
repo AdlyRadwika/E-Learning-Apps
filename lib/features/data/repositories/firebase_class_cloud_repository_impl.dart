@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:final_project/common/error/exception.dart';
 import 'package:final_project/common/error/failure.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_class_cloud_remote.dart';
-import 'package:final_project/features/domain/entities/class/class.dart';
+import 'package:final_project/features/data/models/class/class_model.dart';
+import 'package:final_project/features/data/models/class/enrolled_class_model.dart';
 import 'package:final_project/features/domain/entities/class/class_user.dart';
-import 'package:final_project/features/domain/entities/class/enrolled_class.dart';
 import 'package:final_project/features/domain/repositories/firebase_class_cloud_repository.dart';
 
 class FirebaseClassCloudRepositoryImpl implements FirebaseClassCloudRepository {
@@ -33,11 +34,11 @@ class FirebaseClassCloudRepositoryImpl implements FirebaseClassCloudRepository {
   }
 
   @override
-  Future<Either<Failure, List<Class>>> getClassesByUid(
+  Future<Either<Failure, Stream<QuerySnapshot<ClassModel>>>> getClassesByUid(
       {required String userId}) async {
     try {
       final result = await remote.getClassesByUid(userId: userId);
-      return Right(result.map((e) => e.toEntity()).toList());
+      return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message.toString()));
     } catch (e) {
@@ -46,11 +47,11 @@ class FirebaseClassCloudRepositoryImpl implements FirebaseClassCloudRepository {
   }
 
   @override
-  Future<Either<Failure, List<EnrolledClass>>> getEnrolledClassesByUid(
+  Future<Either<Failure, Stream<QuerySnapshot<EnrolledClassModel>>>> getEnrolledClassesByUid(
       {required String userId}) async {
     try {
       final result = await remote.getEnrolledClassesByUid(userId: userId);
-      return Right(result.map((e) => e.toEntity()).toList());
+      return Right(result);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message.toString()));
     } catch (e) {

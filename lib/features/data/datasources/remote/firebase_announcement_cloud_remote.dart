@@ -18,8 +18,8 @@ abstract class FirebaseAnnouncementCloudRemote {
   Future<void> deleteAnnouncement({
     required String announcementId,
   });
-  Future<List<AnnouncementContentModel>> getAnnouncementsByUid({
-    required String uid,
+  Future<List<AnnouncementContentModel>> getAnnouncementsByClass({
+    required String classCode,
   });
 }
 
@@ -38,12 +38,12 @@ class FirebaseAnnouncementCloudRemoteImpl
           toFirestore: (value, _) => value.toJson());
 
   @override
-  Future<List<AnnouncementContentModel>> getAnnouncementsByUid(
-      {required String uid}) async {
+  Future<List<AnnouncementContentModel>> getAnnouncementsByClass(
+      {required String classCode}) async {
     try {
       return FirebaseFirestore.instance.runTransaction((transaction) async {
         final querySnapshot = await _announcementCollection
-            .where('teacher_id', isEqualTo: uid)
+            .where('class_code', isEqualTo: classCode)
             .get();
 
         List<AnnouncementModel> announcements = [];
@@ -67,7 +67,7 @@ class FirebaseAnnouncementCloudRemoteImpl
               id: announcement.id,
               content: announcement.content,
               updatedAt: announcement.updatedAt,
-              createdAt: announcement.updatedAt,
+              createdAt: announcement.createdAt,
               owner: AnnouncementOwnerModel(
                   uid: announcement.teacherId,
                   name: userData.name,
@@ -76,7 +76,12 @@ class FirebaseAnnouncementCloudRemoteImpl
 
           result.add(data);
         }
-        return result;
+
+        return result
+          ..sort(
+            (a, b) => DateTime.parse(b.createdAt)
+                .compareTo(DateTime.parse(a.createdAt)),
+          );
       });
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? "Unknown Firebase Exception");
@@ -97,7 +102,7 @@ class FirebaseAnnouncementCloudRemoteImpl
           content: content,
           teacherId: teacherId,
           updatedAt: "",
-          createdAt: DateTime.now().toIso8601String(),
+          createdAt: DateTime.now().toString(),
           classCode: classCode);
       await _announcementCollection.doc(announcementId).set(data);
     } on FirebaseException catch (e) {
@@ -113,6 +118,7 @@ class FirebaseAnnouncementCloudRemoteImpl
     try {
       final result = await _announcementCollection.doc(announcementId).update({
         'content': content,
+        'updated_at': DateTime.now().toString(),
       }).catchError((error) => throw ServerException(error.toString()));
       return result;
     } on FirebaseException catch (e) {

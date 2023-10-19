@@ -1,8 +1,11 @@
 import 'package:final_project/common/consts/asset_conts.dart';
 import 'package:final_project/common/util/bool_util.dart';
 import 'package:final_project/features/domain/entities/announcement/announcement_content.dart';
+import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/announcements/post_announcement_page.dart';
+import 'package:final_project/features/presentation/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,7 +42,19 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
   }
 
   void _onDelete() {
-    // final data = widget.data;
+    showResultDialog(
+      context,
+      isSuccess: false,
+      showCancelBtn: true,
+      labelContent: 'Are you sure you want to delete this announcement?',
+      onPressed: () {
+        context
+            .read<AnnouncementCloudBloc>()
+            .add(DeleteAnnouncementEvent(id: widget.data?.id ?? "-"));
+        context.read<GetAnnouncementsBloc>().add(GetAnnouncementsByClassEvent(
+            classCode: widget.data?.classCode ?? "-"));
+      },
+    );
   }
 
   @override
@@ -111,12 +126,12 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
                                 )),
                           ],
                           builder: (context, controller, _) {
-                            return IconButton(
-                                onPressed: () =>
-                                    BoolUtil.isTeacher(role: role ?? "-")
-                                        ? _onMenuAnchorAction(controller)
-                                        : null,
-                                icon: const Icon(Icons.menu));
+                            return BoolUtil.isTeacher(role: role ?? "-")
+                                ? IconButton(
+                                    onPressed: () =>
+                                        _onMenuAnchorAction(controller),
+                                    icon: const Icon(Icons.menu))
+                                : const SizedBox.shrink();
                           });
                     }
                     return const SizedBox.shrink();

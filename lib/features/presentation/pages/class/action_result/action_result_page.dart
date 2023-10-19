@@ -67,6 +67,7 @@ class _ActionResultPageState extends State<ActionResultPage> {
           child: BlocListener<ClassCloudBloc, ClassCloudState>(
             listener: (context, state) {
               if (state is CreateClassResult && state.isSuccess) {
+                Navigator.pop(context);
                 context.showSnackBar(
                     message: 'Created class successfully!',
                     backgroundColor: Colors.green);
@@ -76,6 +77,7 @@ class _ActionResultPageState extends State<ActionResultPage> {
                 );
               }
               if (state is JoinClassResult && state.isSuccess) {
+                Navigator.pop(context);
                 context.showSnackBar(
                     message: 'Joined the class successfully!',
                     backgroundColor: Colors.green);

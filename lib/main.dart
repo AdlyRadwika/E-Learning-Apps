@@ -1,7 +1,11 @@
 import 'package:final_project/common/util/theme.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/get_class_students/get_class_students_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/get_class_teacher/get_class_teacher_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/splash/splash_page.dart';
 import 'package:final_project/firebase_options.dart';
@@ -48,8 +52,16 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
             create: (context) => di.locator<UserCloudBloc>()),
         BlocProvider<ClassCloudBloc>(
             create: (context) => di.locator<ClassCloudBloc>()),
+        BlocProvider<ClassIndexBloc>(
+            create: (context) => di.locator<ClassIndexBloc>()),
+        BlocProvider<GetClassTeacherBloc>(
+            create: (context) => di.locator<GetClassTeacherBloc>()),
+        BlocProvider<GetClassStudentsBloc>(
+            create: (context) => di.locator<GetClassStudentsBloc>()),
         BlocProvider<AnnouncementCloudBloc>(
             create: (context) => di.locator<AnnouncementCloudBloc>()),
+        BlocProvider<GetAnnouncementsBloc>(
+            create: (context) => di.locator<GetAnnouncementsBloc>()),
       ],
       child: MaterialApp(
         theme: themeData,

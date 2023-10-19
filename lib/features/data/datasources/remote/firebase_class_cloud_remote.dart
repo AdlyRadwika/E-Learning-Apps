@@ -13,9 +13,10 @@ abstract class FirebaseClassCloudRemote {
     required String description,
     required String teacherId,
   });
-  Future<List<ClassModel>> getClassesByUid({required String userId});
+  Future<Stream<QuerySnapshot<ClassModel>>> getClassesByUid(
+      {required String userId});
   Future<void> joinClass({required String code, required String uid});
-  Future<List<EnrolledClassModel>> getEnrolledClassesByUid({
+  Future<Stream<QuerySnapshot<EnrolledClassModel>>> getEnrolledClassesByUid({
     required String userId,
   });
   Future<ClassUserModel> getClassTeacher({
@@ -56,8 +57,8 @@ class FirebaseClassCloudRemoteImpl implements FirebaseClassCloudRemote {
             title: title,
             description: description,
             teacherId: teacherId,
-            updatedAt: DateTime.now().toIso8601String(),
-            createdAt: DateTime.now().toIso8601String(),
+            updatedAt: '',
+            createdAt: DateTime.now().toString(),
             code: code);
 
         final existingClassList = await _classesCollection
@@ -83,16 +84,12 @@ class FirebaseClassCloudRemoteImpl implements FirebaseClassCloudRemote {
   }
 
   @override
-  Future<List<ClassModel>> getClassesByUid({required String userId}) async {
+  Future<Stream<QuerySnapshot<ClassModel>>> getClassesByUid(
+      {required String userId}) async {
     try {
-      final querySnapshot =
-          await _classesCollection.where('teacher_id', isEqualTo: userId).get();
-      List<ClassModel> result = [];
-      for (var docSnapshot in querySnapshot.docs) {
-        final data = docSnapshot.data();
-        result.add(data);
-      }
-      return result;
+      final streamQuerySnapshot =
+          _classesCollection.where('teacher_id', isEqualTo: userId).snapshots();
+      return streamQuerySnapshot;
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? "Unknown Firebase Exception");
     } catch (e) {
@@ -101,21 +98,16 @@ class FirebaseClassCloudRemoteImpl implements FirebaseClassCloudRemote {
   }
 
   @override
-  Future<List<EnrolledClassModel>> getEnrolledClassesByUid(
+  Future<Stream<QuerySnapshot<EnrolledClassModel>>> getEnrolledClassesByUid(
       {required String userId}) async {
     try {
-      final querySnapshot = await _enrolledClassCollection
+      final streamQuerySnapshot = _enrolledClassCollection
           .where(
             'student_id',
             isEqualTo: userId,
           )
-          .get();
-      List<EnrolledClassModel> result = [];
-      for (var docSnapshot in querySnapshot.docs) {
-        final data = docSnapshot.data();
-        result.add(data);
-      }
-      return result;
+          .snapshots();
+      return streamQuerySnapshot;
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? "Unknown Firebase Exception");
     } catch (e) {
@@ -138,7 +130,7 @@ class FirebaseClassCloudRemoteImpl implements FirebaseClassCloudRemote {
           code: code,
           studentId: uid,
           updatedAt: '',
-          createdAt: DateTime.now().toIso8601String(),
+          createdAt: DateTime.now().toString(),
         );
 
         final existingClassList = await _enrolledClassCollection

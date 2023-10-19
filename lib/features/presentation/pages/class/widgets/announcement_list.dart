@@ -1,4 +1,4 @@
-import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/announcement_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,9 +13,9 @@ class AnnouncementListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AnnouncementCloudBloc, AnnouncementCloudState>(
+    return BlocBuilder<GetAnnouncementsBloc, GetAnnouncementsState>(
         builder: (context, state) {
-      if (state is GetAnnouncementsByUidLoading) {
+      if (state is GetAnnouncementsByClassLoading) {
         return const SliverPadding(
           padding: EdgeInsets.symmetric(vertical: 10),
           sliver: SliverToBoxAdapter(
@@ -25,7 +25,7 @@ class AnnouncementListWidget extends StatelessWidget {
           ),
         );
       }
-      if (state is GetAnnouncementsByUidResult && state.isSuccess) {
+      if (state is GetAnnouncementsByClassResult && state.isSuccess) {
         final announcements = state.announcements;
         if (announcements?.isEmpty == true) {
           return const SliverPadding(
@@ -54,7 +54,7 @@ class AnnouncementListWidget extends StatelessWidget {
               }),
         );
       }
-      if (state is GetAnnouncementsByUidResult && !state.isSuccess) {
+      if (state is GetAnnouncementsByClassResult && !state.isSuccess) {
         return SliverPadding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           sliver: SliverList.separated(
@@ -73,7 +73,7 @@ class AnnouncementListWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 10),
         sliver: SliverToBoxAdapter(
           child: Center(
-            child: Text('Something went wrong.'),
+            child: Text("There is no announcements yet."),
           ),
         ),
       );

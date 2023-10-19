@@ -2,6 +2,7 @@ import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/common/services/uuid_service.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,8 @@ class _PostAnnouncementPageState extends State<PostAnnouncementPage> {
             listener: (context, state) {
               if (state is InsertAnnouncementResult && state.isSuccess) {
                 Navigator.pop(context);
+                context.read<GetAnnouncementsBloc>().add(
+                    GetAnnouncementsByClassEvent(classCode: widget.classCode));
                 context.showSnackBar(
                     message: 'You have posted a new announcement!',
                     backgroundColor: Colors.green);
@@ -90,6 +93,8 @@ class _PostAnnouncementPageState extends State<PostAnnouncementPage> {
               }
               if (state is UpdateAnnouncementResult && state.isSuccess) {
                 Navigator.pop(context);
+                context.read<GetAnnouncementsBloc>().add(
+                    GetAnnouncementsByClassEvent(classCode: widget.classCode));
                 context.showSnackBar(
                     message: 'You have successfully updated the announcement!',
                     backgroundColor: Colors.green);

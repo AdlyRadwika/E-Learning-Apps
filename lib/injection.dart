@@ -16,7 +16,7 @@ import 'package:final_project/features/domain/repositories/firebase_auth_reposit
 import 'package:final_project/features/domain/repositories/firebase_class_cloud_repository.dart';
 import 'package:final_project/features/domain/repositories/firebase_user_cloud_repository.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/delete_announcement.dart';
-import 'package:final_project/features/domain/usecases/announcement_cloud/get_announcements_by_uid.dart';
+import 'package:final_project/features/domain/usecases/announcement_cloud/get_announcements_by_class.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/insert_announcement.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/update_announcement.dart';
 import 'package:final_project/features/domain/usecases/auth/login.dart';
@@ -35,8 +35,12 @@ import 'package:final_project/features/domain/usecases/user_cloud/get_user_by_id
 import 'package:final_project/features/domain/usecases/user_cloud/insert_user_data.dart';
 import 'package:final_project/features/domain/usecases/user_cloud/update_photo_profile.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/get_class_students/get_class_students_bloc.dart';
+import 'package:final_project/features/presentation/bloc/class_cloud/get_class_teacher/get_class_teacher_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -57,18 +61,26 @@ void init() {
         insertUserDataUseCase: locator(),
       ));
   locator.registerFactory<ClassCloudBloc>(() => ClassCloudBloc(
-        getClassStudentsUseCase: locator(),
-        getClassTeacherUseCase: locator(),
         joinClassUseCase: locator(),
-        getEnrolledClassesByIdUseCase: locator(),
         createClassUseCase: locator(),
+      ));
+  locator.registerFactory<ClassIndexBloc>(() => ClassIndexBloc(
+        getEnrolledClassesByIdUseCase: locator(),
         getClassesByIdUseCase: locator(),
+      ));
+  locator.registerFactory<GetClassTeacherBloc>(() => GetClassTeacherBloc(
+    getClassTeacherUseCase: locator(),
+      ));
+  locator.registerFactory<GetClassStudentsBloc>(() => GetClassStudentsBloc(
+    getClassStudentsUseCase: locator(),
       ));
   locator.registerFactory<AnnouncementCloudBloc>(() => AnnouncementCloudBloc(
         deleteUseCase: locator(),
-        getAnnouncementsUseCase: locator(),
         insertUseCase: locator(),
         updateUseCase: locator(),
+      ));
+  locator.registerFactory<GetAnnouncementsBloc>(() => GetAnnouncementsBloc(
+    getAnnouncementsUseCase: locator(),
       ));
 
   // Usecases
@@ -106,8 +118,8 @@ void init() {
       () => UpdateAnnouncementUseCase(locator()));
   locator.registerLazySingleton<DeleteAnnouncementUseCase>(
       () => DeleteAnnouncementUseCase(locator()));
-  locator.registerLazySingleton<GetAnnouncementsByUidUseCase>(
-      () => GetAnnouncementsByUidUseCase(locator()));
+  locator.registerLazySingleton<GetAnnouncementsByClassUseCase>(
+      () => GetAnnouncementsByClassUseCase(locator()));
 
   // Repository
   locator.registerLazySingleton<FirebaseAuthRepository>(
