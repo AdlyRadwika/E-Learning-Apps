@@ -24,8 +24,11 @@ import 'package:final_project/features/domain/usecases/announcement_cloud/insert
 import 'package:final_project/features/domain/usecases/announcement_cloud/update_announcement.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/delete_assignment.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/get_assignments_by_class.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/get_submission_file.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/get_submission_status.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/insert_assignment.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/update_assignment.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/upload_submission.dart';
 import 'package:final_project/features/domain/usecases/auth/login.dart';
 import 'package:final_project/features/domain/usecases/auth/logout.dart';
 import 'package:final_project/features/domain/usecases/auth/register.dart';
@@ -45,6 +48,8 @@ import 'package:final_project/features/presentation/bloc/announcement_cloud/anno
 import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/assignment_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_assignment/get_assignment_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submission_status/get_submission_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/upload_submission/upload_submission_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
@@ -99,6 +104,13 @@ void init() {
   locator.registerFactory<GetAssignmentsBloc>(() => GetAssignmentsBloc(
         getAssignmentsUseCase: locator(),
       ));
+  locator.registerFactory<UploadSubmissionBloc>(() => UploadSubmissionBloc(
+        getSubmissionFileUseCase: locator(),
+        uploadSubmissionUseCase: locator(),
+      ));
+  locator.registerFactory<GetSubmissionsBloc>(() => GetSubmissionsBloc(
+        getSubmissionsUseCase: locator(),
+      ));
 
   // Usecases
   locator.registerLazySingleton<LoginUseCase>(() => LoginUseCase(locator()));
@@ -145,6 +157,12 @@ void init() {
       () => DeleteAssignmentUseCase(locator()));
   locator.registerLazySingleton<GetAssignmentsByClassUseCase>(
       () => GetAssignmentsByClassUseCase(locator()));
+  locator.registerLazySingleton<GetSubmissionFileUseCase>(
+      () => GetSubmissionFileUseCase(locator()));
+  locator.registerLazySingleton<GetSubmissionStatusUseCase>(
+      () => GetSubmissionStatusUseCase(locator()));
+  locator.registerLazySingleton<UploadSubmissionUseCase>(
+      () => UploadSubmissionUseCase(locator()));
 
   // Repository
   locator.registerLazySingleton<FirebaseAuthRepository>(
@@ -155,8 +173,8 @@ void init() {
       () => FirebaseClassCloudRepositoryImpl(locator()));
   locator.registerLazySingleton<FirebaseAnnouncementCloudRepository>(() =>
       FirebaseAnnouncementCloudRepositoryImpl(remoteDataSource: locator()));
-  locator.registerLazySingleton<FirebaseAssignmentCloudRepository>(() =>
-      FirebaseAssignmentCloudRepositoryImpl(remoteDataSource: locator()));
+  locator.registerLazySingleton<FirebaseAssignmentCloudRepository>(
+      () => FirebaseAssignmentCloudRepositoryImpl(remoteDataSource: locator()));
 
   // Data source
   locator.registerLazySingleton<FirebaseAuthRemote>(

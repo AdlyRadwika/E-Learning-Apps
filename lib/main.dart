@@ -3,6 +3,8 @@ import 'package:final_project/features/presentation/bloc/announcement_cloud/anno
 import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/assignment_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_assignment/get_assignment_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submission_status/get_submission_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/upload_submission/upload_submission_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
@@ -68,6 +70,10 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
             create: (context) => di.locator<AssignmentCloudBloc>()),
         BlocProvider<GetAssignmentsBloc>(
             create: (context) => di.locator<GetAssignmentsBloc>()),
+        BlocProvider<GetSubmissionsBloc>(
+            create: (context) => di.locator<GetSubmissionsBloc>()),
+        BlocProvider<UploadSubmissionBloc>(
+            create: (context) => di.locator<UploadSubmissionBloc>()),
       ],
       child: MaterialApp(
         theme: themeData,
