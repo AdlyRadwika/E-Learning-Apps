@@ -1,4 +1,5 @@
 import 'package:final_project/common/consts/asset_conts.dart';
+import 'package:final_project/common/util/date_util.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/get_class_teacher/get_class_teacher_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +41,7 @@ class TeacherSection extends StatelessWidget {
                   style: theme.textTheme.labelLarge,
                 ),
                 subtitle: Text(
-                    'Joined at ${data?.joinedAt ?? DateTime.now().toString()}'),
+                    'Joined at ${DateUtil.formatDate(data?.joinedAt ?? DateTime.now().toString())}'),
               ),
             );
           }
@@ -52,7 +53,8 @@ class TeacherSection extends StatelessWidget {
                   'Unknown Teacher',
                   style: theme.textTheme.labelLarge,
                 ),
-                subtitle: Text('Joined at ${DateTime.now().toString()}'),
+                subtitle: Text(
+                    'Joined at ${DateUtil.formatDate(DateTime.now().toString())}'),
               ),
             );
           }

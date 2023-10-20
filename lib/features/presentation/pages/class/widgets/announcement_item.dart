@@ -1,5 +1,6 @@
 import 'package:final_project/common/consts/asset_conts.dart';
 import 'package:final_project/common/util/bool_util.dart';
+import 'package:final_project/common/util/date_util.dart';
 import 'package:final_project/features/domain/entities/announcement/announcement_content.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
@@ -67,7 +68,8 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final owner = widget.data?.owner;
+    final data = widget.data;
+    final owner = data?.owner;
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
@@ -98,7 +100,8 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
                         Text(owner?.name ?? 'Teacher',
                             style: theme.textTheme.labelLarge),
                         Text(
-                          DateTime.now().toString(),
+                          DateUtil.formatDate(
+                              data?.createdAt ?? DateTime.now().toString()),
                           style: theme.textTheme.bodyMedium
                               ?.copyWith(color: Colors.grey[600]),
                         ),
@@ -130,7 +133,7 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
                                 ? IconButton(
                                     onPressed: () =>
                                         _onMenuAnchorAction(controller),
-                                    icon: const Icon(Icons.menu))
+                                    icon: const Icon(Icons.more_vert))
                                 : const SizedBox.shrink();
                           });
                     }
@@ -141,7 +144,7 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
             ),
             const Divider(),
             Text(
-              widget.data?.content ??
+              data?.content ??
                   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",
             )
           ],

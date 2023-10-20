@@ -73,7 +73,11 @@ class AssignmentListWidget extends StatelessWidget {
                       shouldLimit ? docs?.length.clamp(0, 3) : docs?.length,
                   itemBuilder: (context, index) {
                     final data =
-                        docs?.map((item) => item.data().toEntity()).toList();
+                        docs?.map((item) => item.data().toEntity()).toList()
+                          ?..sort(
+                            (a, b) => DateTime.parse(b.createdAt)
+                                .compareTo(DateTime.parse(a.createdAt)),
+                          );
                     return AssignmentItem(
                       data: data?[index],
                     );

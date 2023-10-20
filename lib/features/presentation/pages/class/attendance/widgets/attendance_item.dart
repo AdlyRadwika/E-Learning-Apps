@@ -1,3 +1,4 @@
+import 'package:final_project/common/util/date_util.dart';
 import 'package:flutter/material.dart';
 
 class AttendanceItem extends StatelessWidget {
@@ -11,7 +12,7 @@ class AttendanceItem extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.check),
         title: const Text('Attendance 1'),
-        subtitle: Text(DateTime.now().toString()),
+        subtitle: Text(DateUtil.formatDate(DateTime.now().toString())),
       ),
     );
   }

@@ -55,7 +55,7 @@ class _PostAnnouncementPageState extends State<PostAnnouncementPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Post Announcement'),
+          title: Text(widget.isUpdate ? 'Update Announcement' : 'Post Announcement'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(15),

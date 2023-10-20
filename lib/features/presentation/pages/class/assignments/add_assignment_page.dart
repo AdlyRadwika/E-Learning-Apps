@@ -16,7 +16,10 @@ class AddAssignmentPage extends StatefulWidget {
   final Assignment? data;
 
   const AddAssignmentPage(
-      {super.key, required this.isEdit, required this.data, required this.classCode});
+      {super.key,
+      required this.isEdit,
+      required this.data,
+      required this.classCode});
 
   @override
   State<AddAssignmentPage> createState() => _AddAssignmentPageState();
@@ -30,6 +33,21 @@ class _AddAssignmentPageState extends State<AddAssignmentPage> {
   late TextEditingController _titleC;
   late TextEditingController _descriptionC;
   late TextEditingController _deadlineC;
+
+  Future<void> _pickDate() async {
+    final currentDate = DateTime.now();
+    final newDate = await showDatePicker(
+        context: context,
+        initialDate: currentDate,
+        firstDate: currentDate,
+        lastDate: DateTime(currentDate.year + 1));
+
+    if (newDate == null) return;
+
+    setState(() {
+      _deadlineC.value = TextEditingValue(text: newDate.toString());
+    });
+  }
 
   @override
   void initState() {
@@ -56,7 +74,7 @@ class _AddAssignmentPageState extends State<AddAssignmentPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Add Assignment'),
+          title: Text(widget.isEdit ? 'Update Assignment' : 'Add Assignment'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(15),
@@ -82,9 +100,11 @@ class _AddAssignmentPageState extends State<AddAssignmentPage> {
                   height: 10,
                 ),
                 CustomTextFormField(
+                  isReadOnly: true,
                   controller: _deadlineC,
                   label: 'Assignment Deadline',
                   icon: Icons.date_range,
+                  onTap: () => _pickDate(),
                 ),
               ],
             ),

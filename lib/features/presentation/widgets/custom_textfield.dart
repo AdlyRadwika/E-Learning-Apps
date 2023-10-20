@@ -12,6 +12,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool isDone;
   final int maxLines;
   final Function(String value)? onChanged;
+  final Function()? onTap;
 
   const CustomTextFormField({
     super.key,
@@ -23,7 +24,7 @@ class CustomTextFormField extends StatefulWidget {
     this.valueComparison = "",
     this.onChanged,
     this.isReadOnly = false,
-    this.isDone = false, this.maxLines = 1,
+    this.isDone = false, this.maxLines = 1, this.onTap,
   });
 
   @override
@@ -66,6 +67,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         }
         return null;
       },
+      onTap: widget.onTap,
       onChanged: widget.onChanged,
       maxLines: widget.maxLines,
       inputFormatters: widget.keyboardType ==

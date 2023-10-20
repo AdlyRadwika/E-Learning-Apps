@@ -1,4 +1,5 @@
 import 'package:final_project/common/util/bool_util.dart';
+import 'package:final_project/common/util/date_util.dart';
 import 'package:final_project/common/util/user_config.dart';
 import 'package:final_project/features/domain/entities/assignment/assignment.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/assignment_cloud_bloc.dart';
@@ -22,6 +23,7 @@ class AssignmentItem extends StatefulWidget {
 
 class _AssignmentItemState extends State<AssignmentItem> {
   final FocusNode _buttonFocusNode = FocusNode(debugLabel: 'Class Options');
+
   void _onMenuAnchorAction(MenuController controller) {
     if (controller.isOpen) {
       controller.close();
@@ -87,12 +89,17 @@ class _AssignmentItemState extends State<AssignmentItem> {
                 builder: (context, controller, _) {
                   return IconButton(
                       onPressed: () => _onMenuAnchorAction(controller),
-                      icon: const Icon(Icons.menu));
+                      icon: const Icon(Icons.more_vert));
                 })
             : const SizedBox.shrink(),
         leading: const Icon(Icons.assignment),
-        title: Text(widget.data?.title ?? "Unknown Assignment"),
-        subtitle: Text('Due ${widget.data?.deadline ?? "-"}'),
+        title: Text(
+          widget.data?.title ?? "Unknown Assignment",
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Text(
+            'Due ${DateUtil.formatDate(widget.data?.deadline ?? DateTime.now().toString())}'),
       ),
     );
   }

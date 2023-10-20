@@ -1,4 +1,5 @@
 import 'package:final_project/common/extensions/snackbar.dart';
+import 'package:final_project/common/util/date_util.dart';
 import 'package:final_project/features/domain/entities/class/class.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +35,7 @@ class ClassInfoContent extends StatelessWidget {
           ],
         ),
         Text(
-          'Created at ${data?.createdAt ?? DateTime.now().toString()}',
+          'Created at ${DateUtil.formatDate(data?.createdAt ?? DateTime.now().toString())}',
           style: theme.textTheme.bodyLarge?.copyWith(
             color: Colors.grey,
           ),
