@@ -12,6 +12,7 @@ dependencies:
   cloud_firestore: ^4.9.2
   dartz: ^0.10.1
   equatable: ^2.0.5
+  file_picker: ^6.0.0
   firebase_auth: ^4.9.0
   firebase_core: ^2.15.1
   firebase_crashlytics: ^3.3.5
@@ -30,6 +31,7 @@ dependencies:
   sliding_up_panel2: ^3.3.0+1
   sqflite: ^2.0.2
   tflite_flutter: ^0.10.1
+  url_launcher: ^6.1.14
   uuid: ^4.1.0
 
 dev_dependencies:

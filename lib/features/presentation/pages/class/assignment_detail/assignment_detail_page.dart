@@ -1,4 +1,6 @@
+import 'package:final_project/common/util/user_config.dart';
 import 'package:final_project/features/domain/entities/assignment/assignment.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submission_status/get_submission_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/assignment_detail/widgets/assignment_info.dart';
 import 'package:final_project/features/presentation/pages/class/assignment_detail/widgets/submission_content.dart';
@@ -6,12 +8,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 
-class AssignmentDetailPage extends StatelessWidget {
+class AssignmentDetailPage extends StatefulWidget {
   static const route = '/assignment-detail';
 
   final Assignment? data;
 
   const AssignmentDetailPage({super.key, required this.data});
+
+  @override
+  State<AssignmentDetailPage> createState() => _AssignmentDetailPageState();
+}
+
+class _AssignmentDetailPageState extends State<AssignmentDetailPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    context.read<GetSubmissionsBloc>().add(GetSubmissionsStatusEvent(
+        assignmentId: widget.data?.id ?? "-", studentId: UserConfigUtil.uid));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +42,7 @@ class AssignmentDetailPage extends StatelessWidget {
             return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: AssignmentInfo(
-                  data: data,
+                  data: widget.data,
                   isTeacher: true,
                 ));
           }
@@ -43,10 +58,12 @@ class AssignmentDetailPage extends StatelessWidget {
             topLeft: Radius.circular(30.0),
             topRight: Radius.circular(30.0),
           ),
-          panelBuilder: () => const SubmissionContent(),
+          panelBuilder: () => SubmissionContent(
+            data: widget.data,
+          ),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: AssignmentInfo(isTeacher: false, data: data),
+            child: AssignmentInfo(isTeacher: false, data: widget.data),
           ),
         );
       }),

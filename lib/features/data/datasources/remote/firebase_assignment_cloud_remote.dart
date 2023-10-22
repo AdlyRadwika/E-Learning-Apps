@@ -50,8 +50,20 @@ class FirebaseAssignmentCloudRemoteImpl
   @override
   Future<void> deleteAssignment({required String assignmentId}) async {
     try {
-      //TODO: tambah delete submission juga
+      final batch = FirebaseFirestore.instance.batch();
+
       await _assignmentCollection.doc(assignmentId).delete();
+
+      await _submissionCollection
+          .where('assignment_id', isEqualTo: assignmentId)
+          .get()
+          .then((querySnapshot) {
+        for (var document in querySnapshot.docs) {
+          batch.delete(document.reference);
+        }
+      });
+
+      return batch.commit();
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? "Unknown Firebase Exception");
     } catch (e) {

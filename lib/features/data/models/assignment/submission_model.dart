@@ -24,7 +24,7 @@ class SubmissionModel {
         id: json["id"],
         fileUrl: json["file_url"],
         fileName: json["file_name"],
-        studentId: json["teacher_id"],
+        studentId: json["student_id"],
         updatedAt: json["updated_at"],
         createdAt: json["created_at"],
       );
@@ -34,7 +34,7 @@ class SubmissionModel {
         "assignment_id": assignmentId,
         "file_url": fileUrl,
         "file_name": fileName,
-        "teacher_id": studentId,
+        "student_id": studentId,
         "updated_at": updatedAt,
         "created_at": createdAt,
       };
