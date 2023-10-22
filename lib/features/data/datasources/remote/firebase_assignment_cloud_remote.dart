@@ -121,8 +121,10 @@ class FirebaseAssignmentCloudRemoteImpl
       required String assignmentId}) async {
     try {
       final fileName = file.name;
-      final uploadTask =
-          await _fileStorage.child(fileName).putFile(file).whenComplete(() {});
+      final uploadTask = await _fileStorage
+          .child("$fileName-${file.hashCode}")
+          .putFile(file)
+          .whenComplete(() {});
       final fileUrl = await uploadTask.ref.getDownloadURL();
 
       final data = SubmissionModel(

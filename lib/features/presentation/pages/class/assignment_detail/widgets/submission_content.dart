@@ -131,7 +131,7 @@ class SubmittedContent extends StatelessWidget {
   }
 }
 
-class UnsubmittedContent extends StatelessWidget {
+class UnsubmittedContent extends StatefulWidget {
   final ThemeData theme;
   final Submission? data;
   final Function(File file) onUpload;
@@ -145,6 +145,25 @@ class UnsubmittedContent extends StatelessWidget {
       this.submissionFile,
       required this.onSubmit,
       required this.data});
+
+  @override
+  State<UnsubmittedContent> createState() => _UnsubmittedContentState();
+}
+
+class _UnsubmittedContentState extends State<UnsubmittedContent> {
+  bool _isDeadline() {
+    final currentDay = DateTime.now().day;
+    final deadlineDay =
+        DateTime.tryParse(widget.data?.createdAt ?? DateTime.now().toString())
+                ?.day ??
+            0;
+
+    if (currentDay <= deadlineDay) {
+      return false;
+    }
+
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,46 +180,74 @@ class UnsubmittedContent extends StatelessWidget {
         ),
         Text(
           'Submission',
-          style: theme.textTheme.titleLarge,
+          style: widget.theme.textTheme.titleLarge,
         ),
         const Text("It seems that you haven't submitted the assignment yet."),
         const SizedBox(
           height: 40,
         ),
-        AttachmentWidget(data: data, theme: theme, onUpload: onUpload),
-        const SizedBox(
-          height: 30,
-        ),
-        BlocListener<UploadSubmissionBloc, UploadSubmissionState>(
-            listener: (context, state) {
-              if (state is GetSubmissionFileResult && state.isSuccess) {
-                final data = state.data;
+        _isDeadline()
+            ? Container(
+                height: 150,
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10), color: Colors.red),
+                child: const Center(
+                  child: Text(
+                    'You can no longer submit this assignment since it was already past the deadline.',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )
+            : Column(
+                children: [
+                  AttachmentWidget(
+                      data: widget.data,
+                      theme: widget.theme,
+                      onUpload: widget.onUpload),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  BlocListener<UploadSubmissionBloc, UploadSubmissionState>(
+                      listener: (context, state) {
+                        if (state is GetSubmissionFileResult &&
+                            state.isSuccess) {
+                          final data = state.data;
 
-                if (data == null) {
-                  context.showErrorSnackBar(
-                      message:
-                          'There is something wrong with the submission file.');
-                  return;
-                }
+                          if (data == null) {
+                            context.showErrorSnackBar(
+                                message:
+                                    'There is something wrong with the submission file.');
+                            return;
+                          }
 
-                context
-                    .read<UploadSubmissionBloc>()
-                    .add(UploadEvent(data: state.data!));
-              } else if (state is GetSubmissionFileResult && !state.isSuccess) {
-                context.showErrorSnackBar(message: state.message);
-              }
+                          context
+                              .read<UploadSubmissionBloc>()
+                              .add(UploadEvent(data: state.data!));
+                        } else if (state is GetSubmissionFileResult &&
+                            !state.isSuccess) {
+                          context.showErrorSnackBar(message: state.message);
+                        }
 
-              if (state is UploadStateResult && state.isSuccess) {
-                context.showSnackBar(
-                    message: 'You have uploaded your assignment!',
-                    backgroundColor: Colors.green);
-              } else if (state is UploadStateResult && !state.isSuccess) {
-                context.showErrorSnackBar(message: state.message);
-              }
-            },
-            child: ElevatedButton(
-                onPressed: submissionFile == null ? null : () => onSubmit(),
-                child: const Text('Submit')))
+                        if (state is UploadStateResult && state.isSuccess) {
+                          context.showSnackBar(
+                              message: 'You have uploaded your assignment!',
+                              backgroundColor: Colors.green);
+                        } else if (state is UploadStateResult &&
+                            !state.isSuccess) {
+                          context.showErrorSnackBar(message: state.message);
+                        }
+                      },
+                      child: ElevatedButton(
+                          onPressed: widget.submissionFile == null
+                              ? null
+                              : () => widget.onSubmit(),
+                          child: const Text('Submit'))),
+                ],
+              )
       ],
     );
   }
