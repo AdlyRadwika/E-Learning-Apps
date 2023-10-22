@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:final_project/common/extensions/file.dart';
 import 'package:final_project/common/extensions/snackbar.dart';
+import 'package:final_project/common/extensions/strings.dart';
 import 'package:final_project/features/domain/entities/assignment/submission.dart';
 import 'package:final_project/features/presentation/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
@@ -96,22 +97,20 @@ class _AttachmentWidgetState extends State<AttachmentWidget> {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: widget.data != null
-                ? Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.attach_file, color: Colors.white),
-                        const SizedBox(
-                          width: 10,
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.attach_file, color: Colors.white),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        '${widget.data?.fileName.truncateTo(15) ?? "..."} .pdf',
+                        style: const TextStyle(
+                          color: Colors.white,
                         ),
-                        Text(
-                          widget.data?.fileName ?? "...",
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ),
+                      )
+                    ],
                   )
                 : UnsubmittedAttachment(
                     isLoading: _isLoading,
@@ -159,7 +158,7 @@ class UnsubmittedAttachment extends StatelessWidget {
                         width: 10,
                       ),
                       Text(
-                        _attachmentFile?.name ?? "...",
+                        '${_attachmentFile?.name.truncateTo(15) ?? "..."} .pdf',
                         style: const TextStyle(
                           color: Colors.white,
                         ),

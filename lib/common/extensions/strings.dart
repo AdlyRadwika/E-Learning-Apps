@@ -10,4 +10,7 @@ extension StringExtension on String {
     }
     return "Good night, $this";
   }
+
+    String truncateTo(int maxLength) =>
+      (length <= maxLength) ? this : '${substring(0, maxLength)}...';
 }
