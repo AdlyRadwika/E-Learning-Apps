@@ -73,7 +73,7 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        color: Colors.grey[300],
+        color: Colors.blue[100],
       ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -88,7 +88,7 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
                     CircleAvatar(
                       backgroundImage: NetworkImage(
                           owner?.imageUrl ?? AssetConts.imageUserDefault),
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.white,
                       radius: 20.0,
                     ),
                     const SizedBox(
@@ -142,7 +142,9 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
                 ),
               ],
             ),
-            const Divider(),
+            const Divider(
+              color: Colors.white,
+            ),
             Text(
               data?.content ??
                   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. ",

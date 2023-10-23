@@ -84,7 +84,7 @@ class _AttachmentWidgetState extends State<AttachmentWidget> {
     return Container(
       height: 150,
       decoration: BoxDecoration(
-        color: widget.theme.colorScheme.primary,
+        color: Colors.blue[600],
         borderRadius: BorderRadius.circular(10),
       ),
       child: Material(
