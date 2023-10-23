@@ -1,3 +1,4 @@
+import 'package:final_project/common/util/switch_theme_util.dart';
 import 'package:final_project/common/util/theme.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/announcement_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
@@ -16,6 +17,7 @@ import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_b
 import 'package:final_project/features/presentation/pages/splash/splash_page.dart';
 import 'package:final_project/firebase_options.dart';
 import 'package:final_project/injection.dart' as di;
+import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -81,10 +83,17 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
         BlocProvider<GetUnsubmittedAssignmentsBloc>(
             create: (context) => di.locator<GetUnsubmittedAssignmentsBloc>()),
       ],
-      child: MaterialApp(
-        theme: themeData,
-        onGenerateRoute: route.controller,
-        home: const SplashPage(),
+      child: ChangeNotifierProvider(
+        create: (_) => di.locator<SwitchThemeProvider>(),
+        builder: (context, child) {
+          return MaterialApp(
+            theme: ThemeUtil.lightTheme,
+            darkTheme: ThemeUtil.darkTheme,
+            themeMode: context.watch<SwitchThemeProvider>().themeMode,
+            onGenerateRoute: route.controller,
+            home: const SplashPage(),
+          );
+        },
       ),
     );
   }

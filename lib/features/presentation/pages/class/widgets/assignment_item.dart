@@ -99,7 +99,7 @@ class _AssignmentItemState extends State<AssignmentItem> {
           overflow: TextOverflow.ellipsis,
         ),
         subtitle: Text(
-            'Due ${DateUtil.formatDate(widget.data?.deadline ?? DateTime.now().toString())}'),
+            'Submit before ${DateUtil.formatDate(widget.data?.deadline ?? DateTime.now().toString())}'),
       ),
     );
   }

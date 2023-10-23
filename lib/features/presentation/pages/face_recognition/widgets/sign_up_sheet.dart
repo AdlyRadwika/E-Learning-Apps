@@ -63,7 +63,7 @@ class _SignUpSheetWidgetState extends State<SignUpSheetWidget> {
                     }
                   } else if (state is GetPhotoProfileURLResult &&
                       !state.isSuccess) {
-                    context.showErrorSnackBar(message: state.message);
+                    context.showErrorSnackBar(context, message: state.message);
                     Navigator.pop(context);
                   }
                 },
@@ -83,7 +83,7 @@ class _SignUpSheetWidgetState extends State<SignUpSheetWidget> {
                           imageUrl: _imageUrl,
                         ));
                   } else if (state is RegisterResult && !state.isSuccess) {
-                    context.showErrorSnackBar(message: state.message);
+                    context.showErrorSnackBar(context, message: state.message);
                     Navigator.pop(context);
                   }
                 },
@@ -91,9 +91,9 @@ class _SignUpSheetWidgetState extends State<SignUpSheetWidget> {
               BlocListener<UserCloudBloc, UserCloudState>(
                 listener: (context, state) {
                   if (state is InsertUserResult && state.isSuccess) {
-                    context.showSnackBar(
-                        message: 'User Data inserted!',
-                        backgroundColor: Colors.green);
+                    context.showSuccessSnackBar(
+                      message: 'User Data inserted!',
+                    );
                     widget.storageService.deleteRegisterData();
                     Navigator.pushNamedAndRemoveUntil(
                       context,
@@ -101,14 +101,14 @@ class _SignUpSheetWidgetState extends State<SignUpSheetWidget> {
                       (route) => false,
                     );
                   } else if (state is InsertUserResult && !state.isSuccess) {
-                    context.showErrorSnackBar(message: state.message);
+                    context.showErrorSnackBar(context, message: state.message);
                     Navigator.pop(context);
                   }
                   if (widget.isUpdate) {
                     if (state is UpdatePhotoProfileResult && state.isSuccess) {
-                      context.showSnackBar(
-                          message: 'Your photo profile has been updated!',
-                          backgroundColor: Colors.green);
+                      context.showSuccessSnackBar(
+                        message: 'Your photo profile has been updated!',
+                      );
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         HomePage.route,
@@ -116,7 +116,8 @@ class _SignUpSheetWidgetState extends State<SignUpSheetWidget> {
                       );
                     } else if (state is UpdatePhotoProfileResult &&
                         !state.isSuccess) {
-                      context.showErrorSnackBar(message: state.message);
+                      context.showErrorSnackBar(context,
+                          message: state.message);
                       Navigator.pop(context);
                     }
                   }

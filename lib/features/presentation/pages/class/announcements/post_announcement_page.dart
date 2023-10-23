@@ -55,7 +55,8 @@ class _PostAnnouncementPageState extends State<PostAnnouncementPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.isUpdate ? 'Update Announcement' : 'Post Announcement'),
+          title: Text(
+              widget.isUpdate ? 'Update Announcement' : 'Post Announcement'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(15),
@@ -82,12 +83,13 @@ class _PostAnnouncementPageState extends State<PostAnnouncementPage> {
                 Navigator.pop(context);
                 context.read<GetAnnouncementsBloc>().add(
                     GetAnnouncementsByClassEvent(classCode: widget.classCode));
-                context.showSnackBar(
+                context.showSuccessSnackBar(
                     message: 'You have posted a new announcement!',
-                    backgroundColor: Colors.green);
+                    );
               } else if (state is InsertAnnouncementResult &&
                   !state.isSuccess) {
                 context.showErrorSnackBar(
+                  context,
                   message: state.message,
                 );
               }
@@ -95,12 +97,13 @@ class _PostAnnouncementPageState extends State<PostAnnouncementPage> {
                 Navigator.pop(context);
                 context.read<GetAnnouncementsBloc>().add(
                     GetAnnouncementsByClassEvent(classCode: widget.classCode));
-                context.showSnackBar(
+                context.showSuccessSnackBar(
                     message: 'You have successfully updated the announcement!',
-                    backgroundColor: Colors.green);
+                    );
               } else if (state is UpdateAnnouncementResult &&
                   !state.isSuccess) {
                 context.showErrorSnackBar(
+                  context,
                   message: state.message,
                 );
               }

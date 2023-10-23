@@ -68,21 +68,23 @@ class _ActionResultPageState extends State<ActionResultPage> {
             listener: (context, state) {
               if (state is CreateClassResult && state.isSuccess) {
                 Navigator.pop(context);
-                context.showSnackBar(
+                context.showSuccessSnackBar(
                     message: 'Created class successfully!',
-                    backgroundColor: Colors.green);
+                    );
               } else if (state is CreateClassResult && !state.isSuccess) {
                 context.showErrorSnackBar(
+                  context,
                   message: state.message,
                 );
               }
               if (state is JoinClassResult && state.isSuccess) {
                 Navigator.pop(context);
-                context.showSnackBar(
+                context.showSuccessSnackBar(
                     message: 'Joined the class successfully!',
-                    backgroundColor: Colors.green);
+                    );
               } else if (state is JoinClassResult && !state.isSuccess) {
                 context.showErrorSnackBar(
+                  context,
                   message: state.message,
                 );
               }

@@ -3,6 +3,7 @@ import 'package:final_project/common/services/face_detector_service.dart';
 import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/common/services/uuid_service.dart';
+import 'package:final_project/common/util/switch_theme_util.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_announcement_cloud_remote.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_assignment_cloud_remote.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_auth_remote.dart';
@@ -218,4 +219,6 @@ void init() {
     return UuidServiceInit.getService();
   });
   locator.registerLazySingleton<UuidService>(() => UuidService(locator()));
+  locator.registerLazySingleton<SwitchThemeProvider>(
+      () => SwitchThemeProvider(locator()));
 }

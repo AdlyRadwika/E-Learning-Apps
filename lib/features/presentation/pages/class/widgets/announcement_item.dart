@@ -73,7 +73,7 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        color: Colors.blue[100],
+        color: theme.colorScheme.primaryContainer,
       ),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -142,8 +142,8 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
                 ),
               ],
             ),
-            const Divider(
-              color: Colors.white,
+            Divider(
+              color: theme.colorScheme.onPrimaryContainer,
             ),
             Text(
               data?.content ??

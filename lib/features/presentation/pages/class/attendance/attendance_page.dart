@@ -12,30 +12,52 @@ class AttendancePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Class 1 Attendance'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        child: BlocBuilder<UserCloudBloc, UserCloudState>(
-            builder: (context, state) {
-          return ListView.separated(
-            itemBuilder: (context, index) {
-              if (state is GetUserByIdResult && state.isSuccess) {
-                final data = state.user;
-                if (data?.role == 'teacher') {
-                  return const StudentAttendanceItem();
-                }
-              }
-              return const AttendanceItem();
-            },
-            separatorBuilder: (context, index) => const SizedBox(
-              height: 10,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Today',
+                  style: theme.textTheme.titleLarge,
+                ),
+                IconButton(onPressed: () => print, icon: const Icon(Icons.sort))
+              ],
             ),
-            itemCount: 3,
-          );
-        }),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: BlocBuilder<UserCloudBloc, UserCloudState>(
+                  builder: (context, state) {
+                return ListView.separated(
+                  itemBuilder: (context, index) {
+                    if (state is GetUserByIdResult && state.isSuccess) {
+                      final data = state.user;
+                      if (data?.role == 'teacher') {
+                        return const StudentAttendanceItem();
+                      }
+                    }
+                    return const AttendanceItem();
+                  },
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 10,
+                  ),
+                  itemCount: 15,
+                );
+              }),
+            ),
+          ),
+        ],
       ),
       floatingActionButton:
           BlocBuilder<UserCloudBloc, UserCloudState>(builder: (context, state) {

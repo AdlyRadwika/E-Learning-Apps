@@ -5,9 +5,11 @@ import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_b
 import 'package:final_project/features/presentation/pages/auth/update_password/update_password_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
 import 'package:final_project/features/presentation/widgets/custom_dialog.dart';
+import 'package:final_project/common/util/switch_theme_util.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class ProfilePage extends StatefulWidget {
   static const route = '/profile';
@@ -20,6 +22,54 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _storageService = locator<SecureStorageService>();
+
+  Future<void> _showThemeDialog() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(
+            'Choose theme',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          content: Consumer<SwitchThemeProvider>(
+            builder: (context, value, _) {
+              return Wrap(
+                children: [
+                  ListTile(
+                    onTap: () => value.changeTheme(ThemeMode.system),
+                    leading: Icon(value.themeMode == ThemeMode.system
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_off),
+                    title: const Text('System'),
+                  ),
+                  ListTile(
+                    onTap: () => value.changeTheme(ThemeMode.light),
+                    leading: Icon(value.themeMode == ThemeMode.light
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_off),
+                    title: const Text('Light'),
+                  ),
+                  ListTile(
+                    onTap: () => value.changeTheme(ThemeMode.dark),
+                    leading: Icon(value.themeMode == ThemeMode.dark
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_off),
+                    title: const Text('Dark'),
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Confirm'))
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,6 +164,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.pushNamed(context, UpdatePasswordPage.route),
                     title: const Text('Edit Password'),
                     trailing: const Icon(Icons.arrow_forward_ios),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Card(
+                  child: ListTile(
+                    onTap: () => _showThemeDialog(),
+                    title: const Text('Edit Theme'),
                   ),
                 ),
               ],

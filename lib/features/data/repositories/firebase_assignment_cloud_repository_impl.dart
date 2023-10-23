@@ -141,10 +141,8 @@ class FirebaseAssignmentCloudRepositoryImpl
           assignmentId: assignmentId);
       return Right(result.map((e) => e.toEntity()).toList());
     } on ServerException catch (e) {
-      print(e.toString());
       return Left(ServerFailure(e.message.toString()));
     } catch (e) {
-      print(e.toString());
       return Left(UnexpectedFailure(e.toString()));
     }
   }

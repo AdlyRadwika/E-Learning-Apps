@@ -24,8 +24,12 @@ class _EnrolledClassInfoPageState extends State<EnrolledClassInfoPage> {
     super.initState();
 
     final classCode = widget.data?.code;
-    context.read<GetClassTeacherBloc>().add(FetchTeacherEvent(classCode: classCode ?? "-"));
-    context.read<GetClassStudentsBloc>().add(FetchStudentsEvent(classCode: classCode ?? "-"));
+    context
+        .read<GetClassTeacherBloc>()
+        .add(FetchTeacherEvent(classCode: classCode ?? "-"));
+    context
+        .read<GetClassStudentsBloc>()
+        .add(FetchStudentsEvent(classCode: classCode ?? "-"));
   }
 
   @override

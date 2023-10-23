@@ -29,7 +29,7 @@ class AssignmentInfo extends StatelessWidget {
                 style: theme.textTheme.titleLarge,
               ),
               Text(
-                'Due ${DateUtil.formatDate(data?.deadline ?? DateTime.now().toString())}',
+                'Submit before ${DateUtil.formatDate(data?.deadline ?? DateTime.now().toString())}',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: Colors.grey,
                 ),

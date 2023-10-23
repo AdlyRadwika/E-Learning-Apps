@@ -62,7 +62,7 @@ class _AttachmentWidgetState extends State<AttachmentWidget> {
         });
       } else {
         if (!mounted) return;
-        context.showErrorSnackBar(
+        context.showErrorSnackBar(context,
             message: 'The maximum size of the file is 1MB!');
       }
     }
@@ -74,17 +74,18 @@ class _AttachmentWidgetState extends State<AttachmentWidget> {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       if (!mounted) return;
-      context.showErrorSnackBar(
+      context.showErrorSnackBar(context,
           message: "Your submission file couldn't be opened.");
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       height: 150,
       decoration: BoxDecoration(
-        color: Colors.blue[600],
+        color: theme.colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Material(
@@ -100,14 +101,15 @@ class _AttachmentWidgetState extends State<AttachmentWidget> {
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.attach_file, color: Colors.white),
+                      Icon(Icons.attach_file,
+                          color: theme.colorScheme.onSecondaryContainer),
                       const SizedBox(
                         width: 10,
                       ),
                       Text(
                         '${widget.data?.fileName.truncateTo(15) ?? "..."} .pdf',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSecondaryContainer,
                         ),
                       )
                     ],
@@ -138,29 +140,31 @@ class UnsubmittedAttachment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
         child: _isLoading
-            ? const CircularProgressIndicator(
-                color: Colors.white,
+            ? CircularProgressIndicator(
+                color: theme.colorScheme.onSecondaryContainer,
               )
             : _attachmentFile == null
                 ? Text(
                     'Add an attachment here',
                     style: widget.theme.textTheme.bodyLarge?.copyWith(
-                      color: Colors.white,
+                      color: theme.colorScheme.onSecondaryContainer,
                     ),
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.attach_file, color: Colors.white),
+                      Icon(Icons.attach_file,
+                          color: theme.colorScheme.onSecondaryContainer),
                       const SizedBox(
                         width: 10,
                       ),
                       Text(
                         '${_attachmentFile?.name.truncateTo(15) ?? "..."} .pdf',
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: theme.colorScheme.onSecondaryContainer,
                         ),
                       )
                     ],

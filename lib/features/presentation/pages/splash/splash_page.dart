@@ -1,8 +1,10 @@
 import 'package:final_project/common/services/secure_storage_service.dart';
+import 'package:final_project/common/util/switch_theme_util.dart';
 import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SplashPage extends StatefulWidget {
   static const route = '/splash';
@@ -18,6 +20,9 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _getData(BuildContext context) async {
     final uid = await _storageService.getUid();
+    if (mounted) {
+      context.read<SwitchThemeProvider>().initTheme();
+    }
     if (mounted) {
       if (uid.isEmpty || uid == "-") {
         Navigator.pushNamedAndRemoveUntil(

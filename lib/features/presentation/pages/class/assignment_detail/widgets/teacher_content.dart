@@ -27,7 +27,7 @@ class _TeacherContentState extends State<TeacherContent> {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       if (!mounted) return;
-      context.showErrorSnackBar(
+      context.showErrorSnackBar(context,
           message: "Your submission file couldn't be opened.");
     }
   }

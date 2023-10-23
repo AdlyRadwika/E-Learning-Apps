@@ -73,7 +73,8 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                               'Your request for reset password has been sent to email.');
                     } else if (state is ResetPasswordResult &&
                         !state.isSuccess) {
-                      context.showErrorSnackBar(message: state.message);
+                      context.showErrorSnackBar(context,
+                          message: state.message);
                     }
                   },
                   child: ElevatedButton(

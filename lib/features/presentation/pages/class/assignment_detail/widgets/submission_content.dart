@@ -169,6 +169,7 @@ class _UnsubmittedContentState extends State<UnsubmittedContent> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -176,7 +177,7 @@ class _UnsubmittedContentState extends State<UnsubmittedContent> {
           margin: const EdgeInsets.symmetric(horizontal: 100.0, vertical: 15.0),
           height: 6,
           decoration: BoxDecoration(
-            color: Colors.grey,
+            color: theme.colorScheme.onBackground,
             borderRadius: BorderRadius.circular(20.0),
           ),
         ),
@@ -193,12 +194,13 @@ class _UnsubmittedContentState extends State<UnsubmittedContent> {
                 height: 150,
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10), color: Colors.red),
-                child: const Center(
+                    borderRadius: BorderRadius.circular(10),
+                    color: theme.colorScheme.errorContainer),
+                child: Center(
                   child: Text(
                     'You can no longer submit this assignment since it was already past the deadline.',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: theme.colorScheme.onErrorContainer,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -220,7 +222,7 @@ class _UnsubmittedContentState extends State<UnsubmittedContent> {
                           final data = state.data;
 
                           if (data == null) {
-                            context.showErrorSnackBar(
+                            context.showErrorSnackBar(context,
                                 message:
                                     'There is something wrong with the submission file.');
                             return;
@@ -231,16 +233,18 @@ class _UnsubmittedContentState extends State<UnsubmittedContent> {
                               .add(UploadEvent(data: state.data!));
                         } else if (state is GetSubmissionFileResult &&
                             !state.isSuccess) {
-                          context.showErrorSnackBar(message: state.message);
+                          context.showErrorSnackBar(context,
+                              message: state.message);
                         }
 
                         if (state is UploadStateResult && state.isSuccess) {
-                          context.showSnackBar(
+                          context.showSuccessSnackBar(
                               message: 'You have uploaded your assignment!',
-                              backgroundColor: Colors.green);
+                              );
                         } else if (state is UploadStateResult &&
                             !state.isSuccess) {
-                          context.showErrorSnackBar(message: state.message);
+                          context.showErrorSnackBar(context,
+                              message: state.message);
                         }
                       },
                       child: ElevatedButton(

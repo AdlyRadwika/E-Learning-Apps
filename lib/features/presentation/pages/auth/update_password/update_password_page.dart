@@ -96,7 +96,8 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                           labelContent: 'Your password has been updated.');
                     } else if (state is UpdatePasswordResult &&
                         !state.isSuccess) {
-                      context.showErrorSnackBar(message: state.message);
+                      context.showErrorSnackBar(context,
+                          message: state.message);
                     }
                   },
                   child: BlocBuilder<UserCloudBloc, UserCloudState>(

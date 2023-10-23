@@ -101,7 +101,8 @@ class _LoginPageState extends State<LoginPage> {
                             (route) => false,
                           );
                         } else if (state is LoginResult && !state.isSuccess) {
-                          context.showErrorSnackBar(message: state.message);
+                          context.showErrorSnackBar(context,
+                              message: state.message);
                         }
                       },
                       child: ElevatedButton(

@@ -36,10 +36,11 @@ class _AddAssignmentPageState extends State<AddAssignmentPage> {
 
   Future<void> _pickDate() async {
     final currentDate = DateTime.now();
+    final tomorrow = DateTime(currentDate.day + 1);
     final newDate = await showDatePicker(
         context: context,
-        initialDate: currentDate,
-        firstDate: currentDate,
+        initialDate: tomorrow,
+        firstDate: tomorrow,
         lastDate: DateTime(currentDate.year + 1));
 
     if (newDate == null) return;
@@ -115,20 +116,20 @@ class _AddAssignmentPageState extends State<AddAssignmentPage> {
           listener: (context, state) {
             if (state is InsertAssignmentResult && state.isSuccess) {
               Navigator.pop(context);
-              context.showSnackBar(
+              context.showSuccessSnackBar(
                   message: 'You have created a new assignment!',
-                  backgroundColor: Colors.green);
+                  );
             } else if (state is InsertAssignmentResult && !state.isSuccess) {
-              context.showErrorSnackBar(message: state.message);
+              context.showErrorSnackBar(context, message: state.message);
             }
 
             if (state is UpdateAssignmentResult && state.isSuccess) {
               Navigator.pop(context);
-              context.showSnackBar(
+              context.showSuccessSnackBar(
                   message: 'You have updated the assignment!',
-                  backgroundColor: Colors.green);
+                  );
             } else if (state is UpdateAssignmentResult && !state.isSuccess) {
-              context.showErrorSnackBar(message: state.message);
+              context.showErrorSnackBar(context, message: state.message);
             }
           },
           child: Padding(

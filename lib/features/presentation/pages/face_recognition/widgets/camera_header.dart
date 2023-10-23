@@ -7,6 +7,7 @@ class CameraHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 150,
@@ -25,7 +26,7 @@ class CameraHeader extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: theme.colorScheme.primaryContainer,
                 borderRadius: BorderRadius.circular(10),
               ),
               height: 50,

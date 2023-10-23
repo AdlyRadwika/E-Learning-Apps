@@ -129,7 +129,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (_formKey.currentState!.validate()) {
       if (role.isEmpty) {
-        context.showErrorSnackBar(message: 'Role should not be empty!');
+        context.showErrorSnackBar(context,
+            message: 'Role should not be empty!');
         return;
       }
 

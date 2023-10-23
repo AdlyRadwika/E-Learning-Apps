@@ -47,6 +47,7 @@ class _AssignmentDetailPageState extends State<AssignmentDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Assignment Detail'),
@@ -60,6 +61,7 @@ class _AssignmentDetailPageState extends State<AssignmentDetailPage> {
           }
         }
         return SlidingUpPanel(
+          color: theme.colorScheme.background,
           padding: const EdgeInsets.only(
             left: 15.0,
             right: 15.0,

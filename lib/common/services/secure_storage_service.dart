@@ -66,4 +66,13 @@ class SecureStorageService {
   void deleteUserData() {
     storage.delete(key: _userKey);
   }
+
+  static const _themeKey = 'theme';
+  Future<void> saveThemeData({required String value}) async {
+    await storage.write(key: _themeKey, value: value);
+  }
+
+  Future<String> getTheme() async {
+    return await storage.read(key: _themeKey) ?? 'system';
+  }
 }

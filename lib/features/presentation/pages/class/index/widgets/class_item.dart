@@ -36,6 +36,7 @@ class _ClassItemState extends State<ClassItem> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return MenuAnchor(
         childFocusNode: _buttonFocusNode,
         menuChildren: [
@@ -48,7 +49,7 @@ class _ClassItemState extends State<ClassItem> {
             height: 150,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              color: Colors.lightBlue[200],
+              color: theme.colorScheme.secondaryContainer,
             ),
             child: Material(
               type: MaterialType.transparency,
@@ -61,7 +62,11 @@ class _ClassItemState extends State<ClassItem> {
                       'data': widget.data,
                     }),
                 child: Center(
-                  child: Text(widget.data?.title ?? "Unknown Class"),
+                  child: Text(
+                    widget.data?.title ?? "Unknown Class",
+                    style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.onSecondaryContainer),
+                  ),
                 ),
               ),
             ),
