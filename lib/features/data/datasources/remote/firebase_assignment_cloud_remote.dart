@@ -239,56 +239,61 @@ class FirebaseAssignmentCloudRemoteImpl
   @override
   Future<List<StudentsAssignmentStatusModel>> getUnsubmittedAssignments(
       {required String assignmentId}) {
-    try {
-      return FirebaseFirestore.instance.runTransaction((transaction) async {
-        final assignmentQuery =
-            await _assignmentCollection.doc(assignmentId).get();
-        final assignmentData = assignmentQuery.data();
+    return FirebaseFirestore.instance.runTransaction((transaction) async {
+      final assignmentQuery =
+          await _assignmentCollection.doc(assignmentId).get();
+      final assignmentData = assignmentQuery.data();
 
-        final submissionQuery = await _submissionCollection
-            .where(
-              'assignment_id',
-              isEqualTo: assignmentData?.id ?? "-",
-            )
-            .get();
+      final submissionQuery = await _submissionCollection
+          .where(
+            'assignment_id',
+            isEqualTo: assignmentData?.id ?? "-",
+          )
+          .get();
 
-        QuerySnapshot<EnrolledClassModel>? enrolledQuery;
+      final submissionDocs = submissionQuery.docs;
+      final submittedStudents = <String>{};
 
-        final submissionDocs = submissionQuery.docs;
+      for (var submission in submissionDocs) {
+        final submissionData = submission.data();
+        final studentId = submissionData.studentId;
 
-        List<StudentsAssignmentStatusModel> result = [];
-        if (submissionDocs.isNotEmpty) {
-          enrolledQuery = await _enrolledCollection
-              .where('code', isEqualTo: assignmentData?.classCode ?? "-")
-              .endBeforeDocument(submissionDocs.last)
-              .get();
-        } else {
-          enrolledQuery = await _enrolledCollection
-              .where('code', isEqualTo: assignmentData?.classCode ?? "-")
-              .get();
+        if (studentId.isNotEmpty) {
+          submittedStudents.add(studentId);
+        }
+      }
+
+      final enrolledQuery = await _enrolledCollection
+          .where('code', isEqualTo: assignmentData?.classCode ?? "-")
+          .get();
+
+      final result = <StudentsAssignmentStatusModel>[];
+
+      for (var enrolled in enrolledQuery.docs) {
+        final enrolledData = enrolled.data();
+        final studentId = enrolledData.studentId;
+        final userRef = _userCollection.doc(studentId);
+        final userDoc = await transaction.get(userRef);
+        final userData = userDoc.data();
+
+        if (userData == null) {
+          throw Exception('User does not exist!');
         }
 
-        for (var enrolled in enrolledQuery.docs) {
-          final enrolledData = enrolled.data();
-          final userRef = _userCollection.doc(enrolledData.studentId);
-          final userDoc = await transaction.get(userRef);
-          final userData = userDoc.data();
-
-          if (userData == null) {
-            throw Exception('User is not exist!');
-          }
-
+        if (!submittedStudents.contains(studentId)) {
           final data = StudentsAssignmentStatusModel(
               studentName: userData.name, fileUrl: '-', submittedDate: "-");
           result.add(data);
         }
+      }
 
-        return result;
-      });
-    } on FirebaseException catch (e) {
-      throw ServerException(e.message ?? "Unknown Firebase Exception");
-    } catch (e) {
-      throw Exception(e.toString());
-    }
+      return result;
+    }).catchError((e) {
+      if (e is FirebaseException) {
+        throw ServerException(e.message ?? "Unknown Firebase Exception");
+      } else {
+        throw Exception(e.toString());
+      }
+    });
   }
 }

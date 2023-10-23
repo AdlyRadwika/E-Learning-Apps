@@ -45,6 +45,7 @@ class _SubmissionContentState extends State<SubmissionContent> {
 
             if (docs?.isEmpty == true || data == null) {
               return UnsubmittedContent(
+                  deadline: widget.data?.deadline,
                   data: null,
                   submissionFile: _submissionFile,
                   theme: theme,
@@ -65,6 +66,7 @@ class _SubmissionContentState extends State<SubmissionContent> {
         );
       }
       return UnsubmittedContent(
+          deadline: widget.data?.deadline,
           data: null,
           submissionFile: _submissionFile,
           theme: theme,
@@ -133,6 +135,7 @@ class SubmittedContent extends StatelessWidget {
 
 class UnsubmittedContent extends StatefulWidget {
   final ThemeData theme;
+  final String? deadline;
   final Submission? data;
   final Function(File file) onUpload;
   final File? submissionFile;
@@ -144,7 +147,8 @@ class UnsubmittedContent extends StatefulWidget {
       required this.onUpload,
       this.submissionFile,
       required this.onSubmit,
-      required this.data});
+      required this.data,
+      required this.deadline});
 
   @override
   State<UnsubmittedContent> createState() => _UnsubmittedContentState();
@@ -152,13 +156,11 @@ class UnsubmittedContent extends StatefulWidget {
 
 class _UnsubmittedContentState extends State<UnsubmittedContent> {
   bool _isDeadline() {
-    final currentDay = DateTime.now().day;
+    final currentDay = DateTime.now();
     final deadlineDay =
-        DateTime.tryParse(widget.data?.createdAt ?? DateTime.now().toString())
-                ?.day ??
-            0;
+        DateTime.parse(widget.deadline ?? DateTime.now().toString());
 
-    if (currentDay <= deadlineDay) {
+    if (currentDay.isBefore(deadlineDay)) {
       return false;
     }
 

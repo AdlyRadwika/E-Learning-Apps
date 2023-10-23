@@ -150,16 +150,19 @@ class _TeacherContentState extends State<TeacherContent> {
                   }
                   return ExpansionTile(
                       title: const Text('Unsubmitted Assignments'),
-                      children: data
-                          .map((e) => Card(
-                                child: ListTile(
-                                  leading: const Icon(Icons.warning),
-                                  title: Text("${e.studentName}'s Assignment"),
-                                  subtitle: const Text(
-                                      "There is currently no attachment."),
-                                ),
-                              ))
-                          .toList());
+                      children: data.map((e) {
+                        if (e.fileUrl != '-') {
+                          return const SizedBox();
+                        }
+                        return Card(
+                          child: ListTile(
+                            leading: const Icon(Icons.warning),
+                            title: Text("${e.studentName}'s Assignment"),
+                            subtitle:
+                                const Text("There is currently no attachment."),
+                          ),
+                        );
+                      }).toList());
                 }
                 return const SizedBox.shrink();
               },
