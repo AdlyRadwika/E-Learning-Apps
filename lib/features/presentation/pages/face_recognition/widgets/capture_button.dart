@@ -67,7 +67,12 @@ class _CaptureButtonState extends State<CaptureButton> {
                       'User not found 😞',
                       style: TextStyle(fontSize: 20),
                     )
-                  : Container(),
+                  : TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        widget.reload();
+                      },
+                      child: const Text('Try Again')),
         );
       },
     ).then((value) {
@@ -147,8 +152,10 @@ class _CaptureButtonState extends State<CaptureButton> {
                 onPressed: () {
                   if (widget.isUpdate) {
                     _onSaveToCloud(userId: data?.uid ?? "-");
-                  } else {
+                  } else if (widget.isAttendance) {
                     _onAttendancePressed(currentUser: data);
+                  } else {
+                    _onSaveToCloud(userId: data?.uid ?? "-");
                   }
                 },
                 icon: const Icon(
