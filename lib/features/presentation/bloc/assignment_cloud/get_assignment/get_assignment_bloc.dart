@@ -16,13 +16,14 @@ class GetAssignmentsBloc
     on<GetAssignmentsByClassEvent>((event, emit) async {
       emit(GetAssignmentsByClassLoading());
 
-      final result = await getAssignmentsUseCase.execute(classCode: event.classCode);
+      final result =
+          await getAssignmentsUseCase.execute(classCode: event.classCode);
 
       emit(result.fold(
           (l) =>
               GetAssignmentsByClassResult(isSuccess: false, message: l.message),
-          (r) =>
-              GetAssignmentsByClassResult(isSuccess: true, assignmentStream: r)));
+          (r) => GetAssignmentsByClassResult(
+              isSuccess: true, assignmentStream: r)));
     });
   }
 }

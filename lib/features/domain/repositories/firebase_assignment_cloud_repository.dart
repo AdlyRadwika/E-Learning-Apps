@@ -6,6 +6,7 @@ import 'package:final_project/common/error/failure.dart';
 import 'package:final_project/features/data/models/assignment/assignment_model.dart';
 import 'package:final_project/features/data/models/assignment/submission_model.dart';
 import 'package:final_project/features/domain/entities/assignment/assignment.dart';
+import 'package:final_project/features/domain/entities/assignment/students_assignment_status.dart';
 import 'package:final_project/features/domain/entities/assignment/submission.dart';
 
 abstract class FirebaseAssignmentCloudRepository {
@@ -26,4 +27,10 @@ abstract class FirebaseAssignmentCloudRepository {
   Future<Either<Failure, Stream<QuerySnapshot<SubmissionModel>>>>
       getSubmissionStatus(
           {required String assignmentId, required String studentId});
+    Future<Either<Failure, List<StudentsAssignmentStatus>>> getSubmittedAssignments({
+    required String assignmentId,
+  });
+  Future<Either<Failure, List<StudentsAssignmentStatus>>> getUnsubmittedAssignments({
+    required String assignmentId,
+  });
 }

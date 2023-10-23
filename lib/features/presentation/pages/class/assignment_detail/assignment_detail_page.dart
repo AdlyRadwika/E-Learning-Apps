@@ -1,9 +1,12 @@
 import 'package:final_project/common/util/user_config.dart';
 import 'package:final_project/features/domain/entities/assignment/assignment.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submission_status/get_submission_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submitted_assignments/get_submitted_assignment_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_unsubmitted_assignments/get_unsubmitted_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/assignment_detail/widgets/assignment_info.dart';
 import 'package:final_project/features/presentation/pages/class/assignment_detail/widgets/submission_content.dart';
+import 'package:final_project/features/presentation/pages/class/assignment_detail/widgets/teacher_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
@@ -20,12 +23,26 @@ class AssignmentDetailPage extends StatefulWidget {
 }
 
 class _AssignmentDetailPageState extends State<AssignmentDetailPage> {
+  void _getData() {
+    final assignmentData = widget.data;
+    context.read<GetSubmissionsBloc>().add(GetSubmissionsStatusEvent(
+        assignmentId: widget.data?.id ?? "-", studentId: UserConfigUtil.uid));
+
+    if (UserConfigUtil.role == 'teacher') {
+      context.read<GetSubmittedAssignmentsBloc>().add(
+          FetchSubmittedAssignmentEvent(
+              assignmentId: assignmentData?.id ?? '-'));
+      context.read<GetUnsubmittedAssignmentsBloc>().add(
+          FetchUnsubmittedAssignmentEvent(
+              assignmentId: assignmentData?.id ?? '-'));
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
-    context.read<GetSubmissionsBloc>().add(GetSubmissionsStatusEvent(
-        assignmentId: widget.data?.id ?? "-", studentId: UserConfigUtil.uid));
+    _getData();
   }
 
   @override
@@ -39,12 +56,7 @@ class _AssignmentDetailPageState extends State<AssignmentDetailPage> {
         if (state is GetUserByIdResult && state.isSuccess) {
           final isTeacher = state.user?.role == "teacher";
           if (isTeacher) {
-            return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: AssignmentInfo(
-                  data: widget.data,
-                  isTeacher: true,
-                ));
+            return TeacherContent(data: widget.data);
           }
         }
         return SlidingUpPanel(

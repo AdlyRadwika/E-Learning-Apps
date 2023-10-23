@@ -8,6 +8,7 @@ import 'package:final_project/features/data/datasources/remote/firebase_assignme
 import 'package:final_project/features/data/models/assignment/assignment_model.dart';
 import 'package:final_project/features/data/models/assignment/submission_model.dart';
 import 'package:final_project/features/domain/entities/assignment/assignment.dart';
+import 'package:final_project/features/domain/entities/assignment/students_assignment_status.dart';
 import 'package:final_project/features/domain/entities/assignment/submission.dart';
 import 'package:final_project/features/domain/repositories/firebase_assignment_cloud_repository.dart';
 
@@ -114,6 +115,36 @@ class FirebaseAssignmentCloudRepositoryImpl
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message.toString()));
     } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<StudentsAssignmentStatus>>>
+      getSubmittedAssignments({required String assignmentId}) async {
+    try {
+      final result = await remoteDataSource.getSubmittedAssignments(
+          assignmentId: assignmentId);
+      return Right(result.map((e) => e.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message.toString()));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<StudentsAssignmentStatus>>>
+      getUnsubmittedAssignments({required String assignmentId}) async {
+    try {
+      final result = await remoteDataSource.getUnsubmittedAssignments(
+          assignmentId: assignmentId);
+      return Right(result.map((e) => e.toEntity()).toList());
+    } on ServerException catch (e) {
+      print(e.toString());
+      return Left(ServerFailure(e.message.toString()));
+    } catch (e) {
+      print(e.toString());
       return Left(UnexpectedFailure(e.toString()));
     }
   }

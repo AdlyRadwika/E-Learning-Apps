@@ -26,6 +26,8 @@ import 'package:final_project/features/domain/usecases/assignment_cloud/delete_a
 import 'package:final_project/features/domain/usecases/assignment_cloud/get_assignments_by_class.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/get_submission_file.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/get_submission_status.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/get_submitted_assignments.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/get_unsubmitted_assignments.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/insert_assignment.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/update_assignment.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/upload_submission.dart';
@@ -49,6 +51,8 @@ import 'package:final_project/features/presentation/bloc/announcement_cloud/get_
 import 'package:final_project/features/presentation/bloc/assignment_cloud/assignment_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_assignment/get_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submission_status/get_submission_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submitted_assignments/get_submitted_assignment_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_unsubmitted_assignments/get_unsubmitted_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/upload_submission/upload_submission_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
@@ -111,6 +115,14 @@ void init() {
   locator.registerFactory<GetSubmissionsBloc>(() => GetSubmissionsBloc(
         getSubmissionsUseCase: locator(),
       ));
+  locator.registerFactory<GetSubmittedAssignmentsBloc>(
+      () => GetSubmittedAssignmentsBloc(
+            getSubmittedAssignmentsUseCase: locator(),
+          ));
+  locator.registerFactory<GetUnsubmittedAssignmentsBloc>(
+      () => GetUnsubmittedAssignmentsBloc(
+            getUnsubmittedAssignmentsUseCase: locator(),
+          ));
 
   // Usecases
   locator.registerLazySingleton<LoginUseCase>(() => LoginUseCase(locator()));
@@ -163,6 +175,10 @@ void init() {
       () => GetSubmissionStatusUseCase(locator()));
   locator.registerLazySingleton<UploadSubmissionUseCase>(
       () => UploadSubmissionUseCase(locator()));
+  locator.registerLazySingleton<GetSubmittedAssignmentsUseCase>(
+      () => GetSubmittedAssignmentsUseCase(locator()));
+  locator.registerLazySingleton<GetUnsubmittedAssignmentsUseCase>(
+      () => GetUnsubmittedAssignmentsUseCase(locator()));
 
   // Repository
   locator.registerLazySingleton<FirebaseAuthRepository>(
