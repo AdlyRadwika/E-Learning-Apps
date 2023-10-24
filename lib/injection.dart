@@ -36,6 +36,7 @@ import 'package:final_project/features/domain/usecases/assignment_cloud/insert_a
 import 'package:final_project/features/domain/usecases/assignment_cloud/update_assignment.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/upload_submission.dart';
 import 'package:final_project/features/domain/usecases/attendance_cloud/get_attendance_by_class.dart';
+import 'package:final_project/features/domain/usecases/attendance_cloud/get_attendance_status.dart';
 import 'package:final_project/features/domain/usecases/attendance_cloud/insert_attendance.dart';
 import 'package:final_project/features/domain/usecases/auth/login.dart';
 import 'package:final_project/features/domain/usecases/auth/logout.dart';
@@ -62,6 +63,7 @@ import 'package:final_project/features/presentation/bloc/assignment_cloud/get_un
 import 'package:final_project/features/presentation/bloc/assignment_cloud/upload_submission/upload_submission_bloc.dart';
 import 'package:final_project/features/presentation/bloc/attendance_cloud/attendance_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/attendance_cloud/get_attendance/get_attendance_bloc.dart';
+import 'package:final_project/features/presentation/bloc/attendance_cloud/get_attendance_status/get_attendance_status_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
@@ -137,6 +139,9 @@ void init() {
   locator.registerFactory<AttendanceCloudBloc>(() => AttendanceCloudBloc(
         insertUseCase: locator(),
       ));
+  locator.registerFactory<GetAttendanceStatusBloc>(() => GetAttendanceStatusBloc(
+    getAttendanceStatusUseCase: locator(),
+      ));
 
   // Usecases
   locator.registerLazySingleton<LoginUseCase>(() => LoginUseCase(locator()));
@@ -197,6 +202,8 @@ void init() {
       () => GetAttendancesByClassUseCase(locator()));
   locator.registerLazySingleton<InsertAttendanceUseCase>(
       () => InsertAttendanceUseCase(locator()));
+  locator.registerLazySingleton<GetAttendanceStatusUseCase>(
+      () => GetAttendanceStatusUseCase(locator()));
 
   // Repository
   locator.registerLazySingleton<FirebaseAuthRepository>(

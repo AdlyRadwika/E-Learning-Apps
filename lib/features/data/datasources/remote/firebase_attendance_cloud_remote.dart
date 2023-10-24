@@ -11,6 +11,8 @@ abstract class FirebaseAttendanceCloudRemote {
   Future<List<AttendanceContentModel>> getAttendancesByClass({
     required String classCode,
   });
+  Future<Stream<QuerySnapshot<AttendanceModel>>> getAttendanceStatus(
+      {required String classCode, required String studentId});
 }
 
 class FirebaseAttendanceCloudRemoteImpl
@@ -81,6 +83,22 @@ class FirebaseAttendanceCloudRemoteImpl
   Future<void> insertAttendance({required AttendanceModel data}) async {
     try {
       await _attendanceCollection.doc(data.id).set(data);
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? "Unknown Firebase Exception");
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<Stream<QuerySnapshot<AttendanceModel>>> getAttendanceStatus(
+      {required String classCode, required String studentId}) async {
+    try {
+      final streamQuerySnapshot = _attendanceCollection
+          .where('class_code', isEqualTo: classCode)
+          .where('student_id', isEqualTo: studentId)
+          .snapshots();
+      return streamQuerySnapshot;
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? "Unknown Firebase Exception");
     } catch (e) {

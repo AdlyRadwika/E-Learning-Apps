@@ -1,3 +1,5 @@
+import 'package:final_project/features/domain/entities/attendance/attendance.dart';
+
 class AttendanceModel {
   final String id;
   final String label;
@@ -32,4 +34,14 @@ class AttendanceModel {
         "updated_at": updatedAt,
         "created_at": createdAt,
       };
+
+  Attendance toEntity() {
+    return Attendance(
+        id: id,
+        label: label,
+        studentId: studentId,
+        updatedAt: updatedAt,
+        createdAt: createdAt,
+        classCode: classCode);
+  }
 }

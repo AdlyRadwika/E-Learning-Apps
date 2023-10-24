@@ -1,7 +1,8 @@
+import 'package:final_project/common/util/user_config.dart';
 import 'package:final_project/features/presentation/bloc/attendance_cloud/get_attendance/get_attendance_bloc.dart';
-import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/attendance_cloud/get_attendance_status/get_attendance_status_bloc.dart';
+import 'package:final_project/features/presentation/pages/class/attendance/widgets/attendance_fab.dart';
 import 'package:final_project/features/presentation/pages/class/attendance/widgets/attendance_item.dart';
-import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,6 +24,9 @@ class _AttendancePageState extends State<AttendancePage> {
     context
         .read<GetAttendancesBloc>()
         .add(GetAttendancesByClassEvent(classCode: widget.classCode));
+    context.read<GetAttendanceStatusBloc>().add(
+        GetAttendanceStatusByStudentEvent(
+            classCode: widget.classCode, studentId: UserConfigUtil.uid));
   }
 
   @override
@@ -106,24 +110,7 @@ class _AttendancePageState extends State<AttendancePage> {
         }),
       ),
       floatingActionButton:
-          BlocBuilder<UserCloudBloc, UserCloudState>(builder: (context, state) {
-        if (state is GetUserByIdResult && state.isSuccess) {
-          final data = state.user;
-          if (data?.role == 'teacher') {
-            return const SizedBox.shrink();
-          }
-        }
-        return FloatingActionButton(
-          onPressed: () => Navigator.pushNamed(
-              context, FaceRecognitionV2Page.route,
-              arguments: {
-                "classCode": widget.classCode,
-                "isAttendance": true,
-                "isUpdate": false,
-              }),
-          child: const Icon(Icons.camera_alt),
-        );
-      }),
+          AttendanceFAB(classCode: widget.classCode),
     );
   }
 }
