@@ -50,7 +50,7 @@ class FirebaseAttendanceCloudRemoteImpl
           final userData = userDoc.data();
 
           if (userData == null) {
-            throw Exception('User is not the Attendance owner!');
+            return result;
           }
 
           final data = AttendanceContentModel(

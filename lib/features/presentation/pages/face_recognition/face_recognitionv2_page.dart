@@ -16,11 +16,12 @@ class FaceRecognitionV2Page extends StatefulWidget {
   static const route = '/face-recognition-v2';
 
   const FaceRecognitionV2Page(
-      {Key? key, this.isAttendance = false, this.isUpdate = false})
+      {Key? key, this.isAttendance = false, this.isUpdate = false, required this.classCode})
       : super(key: key);
 
   final bool isAttendance;
   final bool isUpdate;
+  final String classCode;
 
   @override
   FaceRecognitionV2PageState createState() => FaceRecognitionV2PageState();
@@ -216,6 +217,7 @@ class FaceRecognitionV2PageState extends State<FaceRecognitionV2Page> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: CaptureButton(
+          classCode: widget.classCode,
           isUpdate: widget.isUpdate,
           onPressed: onShot,
           isAttendance: widget.isAttendance,

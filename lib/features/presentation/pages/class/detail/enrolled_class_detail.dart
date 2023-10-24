@@ -110,7 +110,11 @@ class _EnrolledClassDetailPageState extends State<EnrolledClassDetailPage> {
           ),
         ),
         floatingActionButton: FloatingActionButton.extended(
-            onPressed: () => Navigator.pushNamed(context, AttendancePage.route),
+            onPressed: () => Navigator.pushNamed(context, AttendancePage.route,
+                    arguments: {
+                      "classCode": widget.data?.code ?? '-',
+                      "classTitle": widget.data?.title ?? '-'
+                    }),
             label: const Text('Attendance')),
       ),
     );

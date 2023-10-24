@@ -37,6 +37,7 @@ Route<dynamic>? controller(RouteSettings settings) {
           settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
           builder: (context) => FaceRecognitionV2Page(
+                classCode: args['classCode'] ?? '-',
                 isAttendance: args["isAttendance"] ?? false,
                 isUpdate: args["isUpdate"] ?? false,
               ));
@@ -62,7 +63,11 @@ Route<dynamic>? controller(RouteSettings settings) {
                 data: args['data'],
               ));
     case AttendancePage.route:
-      return MaterialPageRoute(builder: (context) => const AttendancePage());
+    Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(builder: (context) => AttendancePage(
+        classTitle: args['classTitle'] ?? '-',
+        classCode: args['classCode'] ?? '-',
+      ));
     case ClassInfoPage.route:
       Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(

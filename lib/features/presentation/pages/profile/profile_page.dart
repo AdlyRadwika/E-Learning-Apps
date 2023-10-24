@@ -148,6 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     onTap: () => Navigator.pushNamed(
                         context, FaceRecognitionV2Page.route,
                         arguments: {
+                          "classCode": '-',
                           "isAttendace": false,
                           "isUpdate": true,
                         }),

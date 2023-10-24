@@ -1,9 +1,14 @@
 import 'dart:io';
 
+import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/common/services/camera_service.dart';
 import 'package:final_project/common/services/ml_service.dart';
 import 'package:final_project/common/services/secure_storage_service.dart';
+import 'package:final_project/common/services/uuid_service.dart';
+import 'package:final_project/features/domain/entities/attendance/attendance.dart';
 import 'package:final_project/features/domain/entities/user/user.dart';
+import 'package:final_project/features/presentation/bloc/attendance_cloud/attendance_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/attendance_cloud/get_attendance/get_attendance_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/widgets/sign_up_sheet.dart';
 import 'package:final_project/injection.dart';
@@ -18,11 +23,13 @@ class CaptureButton extends StatefulWidget {
     required this.isAttendance,
     required this.isUpdate,
     required this.reload,
+    required this.classCode,
   });
   final Function onPressed;
   final bool isAttendance;
   final bool isUpdate;
   final Function reload;
+  final String classCode;
 
   @override
   State<CaptureButton> createState() => _CaptureButtonState();
@@ -32,6 +39,7 @@ class _CaptureButtonState extends State<CaptureButton> {
   final _mlService = locator<MLService>();
   final _storageService = locator<SecureStorageService>();
   final _cameraService = locator<CameraService>();
+  final _uuidService = locator<UuidService>();
 
   late Map<String, dynamic> _registerForm;
 
@@ -52,27 +60,70 @@ class _CaptureButtonState extends State<CaptureButton> {
     return result;
   }
 
-  void _showLoginDialog() {
+  void _showResultDialog() {
+    final isAttendanceValid = widget.isAttendance && predictedUser != null;
     showDialog(
       context: context,
+      barrierDismissible: isAttendanceValid,
       builder: (context) {
         return AlertDialog(
-          content: widget.isAttendance && predictedUser != null
-              ? Text(
-                  'Welcome back, ${predictedUser!.name}.',
-                  style: const TextStyle(fontSize: 20),
-                )
-              : widget.isAttendance && predictedUser == null
-                  ? const Text(
-                      'User not found 😞',
-                      style: TextStyle(fontSize: 20),
-                    )
-                  : TextButton(
-                      onPressed: () {
+          content: Wrap(
+            children: [
+              Center(
+                child: isAttendanceValid
+                    ? Text(
+                        'Your attendance has been submitted, ${predictedUser?.name ?? "Unknown"}.',
+                        style: const TextStyle(fontSize: 20),
+                      )
+                    : widget.isAttendance && predictedUser == null
+                        ? const Text(
+                            'Face is not recognized 😞',
+                            style: TextStyle(fontSize: 20),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              widget.reload();
+                            },
+                            child: const Text('Try Again')),
+              ),
+            ],
+          ),
+          actions: [
+            isAttendanceValid
+                ? BlocListener<AttendanceCloudBloc, AttendanceCloudState>(
+                    listener: (context, state) {
+                      if (state is InsertAttendanceResult && state.isSuccess) {
                         Navigator.pop(context);
-                        widget.reload();
-                      },
-                      child: const Text('Try Again')),
+                        context.read<GetAttendancesBloc>().add(
+                            GetAttendancesByClassEvent(
+                                classCode: widget.classCode));
+                      } else if (state is InsertAttendanceResult &&
+                          !state.isSuccess) {
+                        context.showErrorSnackBar(context,
+                            message: state.message);
+                      }
+                    },
+                    child: ElevatedButton(
+                        onPressed: () {
+                          final data = Attendance(
+                              id: _uuidService.generateUuidV4(),
+                              label:
+                                  "${predictedUser?.name ?? "Unknown"}'s Attendance",
+                              studentId: predictedUser?.uid ?? "-",
+                              updatedAt: '-',
+                              createdAt: DateTime.now().toString(),
+                              classCode: widget.classCode);
+                          context
+                              .read<AttendanceCloudBloc>()
+                              .add(InsertAttendanceEvent(data: data));
+                        },
+                        child: const Text('Confirm')),
+                  )
+                : TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Confirm')),
+          ],
         );
       },
     ).then((value) {
@@ -89,7 +140,7 @@ class _CaptureButtonState extends State<CaptureButton> {
           predictedUser = user;
         }
         if (mounted) {
-          _showLoginDialog();
+          _showResultDialog();
         } else {
           widget.reload();
         }
