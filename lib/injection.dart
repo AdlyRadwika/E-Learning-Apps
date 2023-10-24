@@ -6,16 +6,19 @@ import 'package:final_project/common/services/uuid_service.dart';
 import 'package:final_project/common/util/switch_theme_util.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_announcement_cloud_remote.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_assignment_cloud_remote.dart';
+import 'package:final_project/features/data/datasources/remote/firebase_attendance_cloud_remote.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_auth_remote.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_class_cloud_remote.dart';
 import 'package:final_project/features/data/datasources/remote/firebase_user_cloud_remote.dart';
 import 'package:final_project/features/data/repositories/firebase_announcement_cloud_repository_impl.dart';
 import 'package:final_project/features/data/repositories/firebase_assignment_cloud_repository_impl.dart';
+import 'package:final_project/features/data/repositories/firebase_attendance_cloud_repository_impl.dart';
 import 'package:final_project/features/data/repositories/firebase_auth_repository_impl.dart';
 import 'package:final_project/features/data/repositories/firebase_class_cloud_repository_impl.dart';
 import 'package:final_project/features/data/repositories/firebase_user_cloud_repository_impl.dart';
 import 'package:final_project/features/domain/repositories/firebase_announcement_cloud_repository.dart';
 import 'package:final_project/features/domain/repositories/firebase_assignment_cloud_repository.dart';
+import 'package:final_project/features/domain/repositories/firebase_attendance_cloud_repository.dart';
 import 'package:final_project/features/domain/repositories/firebase_auth_repository.dart';
 import 'package:final_project/features/domain/repositories/firebase_class_cloud_repository.dart';
 import 'package:final_project/features/domain/repositories/firebase_user_cloud_repository.dart';
@@ -32,6 +35,8 @@ import 'package:final_project/features/domain/usecases/assignment_cloud/get_unsu
 import 'package:final_project/features/domain/usecases/assignment_cloud/insert_assignment.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/update_assignment.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/upload_submission.dart';
+import 'package:final_project/features/domain/usecases/attendance_cloud/get_attendance_by_class.dart';
+import 'package:final_project/features/domain/usecases/attendance_cloud/insert_attendance.dart';
 import 'package:final_project/features/domain/usecases/auth/login.dart';
 import 'package:final_project/features/domain/usecases/auth/logout.dart';
 import 'package:final_project/features/domain/usecases/auth/register.dart';
@@ -55,6 +60,8 @@ import 'package:final_project/features/presentation/bloc/assignment_cloud/get_su
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submitted_assignments/get_submitted_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_unsubmitted_assignments/get_unsubmitted_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/upload_submission/upload_submission_bloc.dart';
+import 'package:final_project/features/presentation/bloc/attendance_cloud/attendance_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/attendance_cloud/get_attendance/get_attendance_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
@@ -124,6 +131,12 @@ void init() {
       () => GetUnsubmittedAssignmentsBloc(
             getUnsubmittedAssignmentsUseCase: locator(),
           ));
+  locator.registerFactory<GetAttendancesBloc>(() => GetAttendancesBloc(
+        getAttendancesUseCase: locator(),
+      ));
+  locator.registerFactory<AttendanceCloudBloc>(() => AttendanceCloudBloc(
+        insertUseCase: locator(),
+      ));
 
   // Usecases
   locator.registerLazySingleton<LoginUseCase>(() => LoginUseCase(locator()));
@@ -180,6 +193,10 @@ void init() {
       () => GetSubmittedAssignmentsUseCase(locator()));
   locator.registerLazySingleton<GetUnsubmittedAssignmentsUseCase>(
       () => GetUnsubmittedAssignmentsUseCase(locator()));
+  locator.registerLazySingleton<GetAttendancesByClassUseCase>(
+      () => GetAttendancesByClassUseCase(locator()));
+  locator.registerLazySingleton<InsertAttendanceUseCase>(
+      () => InsertAttendanceUseCase(locator()));
 
   // Repository
   locator.registerLazySingleton<FirebaseAuthRepository>(
@@ -192,6 +209,8 @@ void init() {
       FirebaseAnnouncementCloudRepositoryImpl(remoteDataSource: locator()));
   locator.registerLazySingleton<FirebaseAssignmentCloudRepository>(
       () => FirebaseAssignmentCloudRepositoryImpl(remoteDataSource: locator()));
+  locator.registerLazySingleton<FirebaseAttendanceCloudRepository>(
+      () => FirebaseAttendanceCloudRepositoryImpl(remoteDataSource: locator()));
 
   // Data source
   locator.registerLazySingleton<FirebaseAuthRemote>(
@@ -204,6 +223,8 @@ void init() {
       () => FirebaseAnnouncementCloudRemoteImpl());
   locator.registerLazySingleton<FirebaseAssignmentCloudRemote>(
       () => FirebaseAssignmentCloudRemoteImpl());
+  locator.registerLazySingleton<FirebaseAttendanceCloudRemote>(
+      () => FirebaseAttendanceCloudRemoteImpl());
 
   // External
   locator.registerLazySingleton<CameraService>(() => CameraService());

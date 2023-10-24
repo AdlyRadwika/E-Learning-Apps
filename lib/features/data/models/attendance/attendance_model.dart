@@ -1,46 +1,35 @@
-
 class AttendanceModel {
   final String id;
+  final String label;
   final String classCode;
-  final String content;
-  final String teacherId;
+  final String studentId;
   final String updatedAt;
   final String createdAt;
 
   const AttendanceModel(
       {required this.id,
-      required this.content,
-      required this.teacherId,
+      required this.label,
+      required this.studentId,
       required this.updatedAt,
       required this.createdAt,
       required this.classCode});
 
   factory AttendanceModel.fromJson(Map<String, dynamic> json) =>
       AttendanceModel(
+        label: json["label"],
         classCode: json["class_code"],
         id: json["id"],
-        content: json["content"],
-        teacherId: json["teacher_id"],
+        studentId: json["student_id"],
         updatedAt: json["updated_at"],
         createdAt: json["created_at"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "label": label,
         "class_code": classCode,
-        "content": content,
-        "teacher_id": teacherId,
+        "student_id": studentId,
         "updated_at": updatedAt,
         "created_at": createdAt,
       };
-
-  // Attendance toEntity() {
-  //   return Attendance(
-  //       id: id,
-  //       content: content,
-  //       teacherId: teacherId,
-  //       updatedAt: updatedAt,
-  //       createdAt: createdAt,
-  //       classCode: classCode);
-  // }
 }

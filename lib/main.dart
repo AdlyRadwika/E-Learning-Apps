@@ -8,6 +8,8 @@ import 'package:final_project/features/presentation/bloc/assignment_cloud/get_su
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submitted_assignments/get_submitted_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_unsubmitted_assignments/get_unsubmitted_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/upload_submission/upload_submission_bloc.dart';
+import 'package:final_project/features/presentation/bloc/attendance_cloud/attendance_cloud_bloc.dart';
+import 'package:final_project/features/presentation/bloc/attendance_cloud/get_attendance/get_attendance_bloc.dart';
 import 'package:final_project/features/presentation/bloc/auth/auth_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
@@ -82,6 +84,10 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
             create: (context) => di.locator<GetSubmittedAssignmentsBloc>()),
         BlocProvider<GetUnsubmittedAssignmentsBloc>(
             create: (context) => di.locator<GetUnsubmittedAssignmentsBloc>()),
+        BlocProvider<GetAttendancesBloc>(
+            create: (context) => di.locator<GetAttendancesBloc>()),
+        BlocProvider<AttendanceCloudBloc>(
+            create: (context) => di.locator<AttendanceCloudBloc>()),
       ],
       child: ChangeNotifierProvider(
         create: (_) => di.locator<SwitchThemeProvider>(),
