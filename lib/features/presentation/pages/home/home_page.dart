@@ -3,6 +3,7 @@ import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_b
 import 'package:final_project/features/presentation/pages/class/index/class_index_page.dart';
 import 'package:final_project/features/presentation/pages/home/widgets/appbar_content.dart';
 import 'package:final_project/features/presentation/pages/home/widgets/home_content.dart';
+import 'package:final_project/features/presentation/pages/profile/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,7 +72,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const AppBarContent(),
+        title: GestureDetector(
+            onTap: () => Navigator.pushNamed(context, ProfilePage.route),
+            child: const AppBarContent()),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),

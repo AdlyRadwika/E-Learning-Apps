@@ -6,6 +6,7 @@ import 'package:final_project/features/presentation/bloc/announcement_cloud/anno
 import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/class/announcements/post_announcement_page.dart';
+import 'package:final_project/features/presentation/pages/profile/other_profile_page.dart';
 import 'package:final_project/features/presentation/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,31 +84,36 @@ class _AnnoucementItemState extends State<AnnoucementItem> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          owner?.imageUrl ?? AssetConts.imageUserDefault),
-                      backgroundColor: Colors.white,
-                      radius: 20.0,
-                    ),
-                    const SizedBox(
-                      width: 10.0,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(owner?.name ?? 'Teacher',
-                            style: theme.textTheme.labelLarge),
-                        Text(
-                          DateUtil.formatDate(
-                              data?.createdAt ?? DateTime.now().toString()),
-                          style: theme.textTheme.bodyMedium
-                              ?.copyWith(color: Colors.grey[600]),
-                        ),
-                      ],
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: () => Navigator.pushNamed(
+                      context, OtherProfilePage.route,
+                      arguments: {"uid": owner?.uid}),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(
+                            owner?.imageUrl ?? AssetConts.imageUserDefault),
+                        backgroundColor: Colors.white,
+                        radius: 20.0,
+                      ),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(owner?.name ?? 'Teacher',
+                              style: theme.textTheme.labelLarge),
+                          Text(
+                            DateUtil.formatDate(
+                                data?.createdAt ?? DateTime.now().toString()),
+                            style: theme.textTheme.bodyMedium
+                                ?.copyWith(color: Colors.grey[600]),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 BlocBuilder<UserCloudBloc, UserCloudState>(
                   builder: (context, state) {

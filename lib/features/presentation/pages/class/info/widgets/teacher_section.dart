@@ -1,6 +1,7 @@
 import 'package:final_project/common/consts/asset_conts.dart';
 import 'package:final_project/common/util/date_util.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/get_class_teacher/get_class_teacher_bloc.dart';
+import 'package:final_project/features/presentation/pages/profile/other_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,6 +31,9 @@ class TeacherSection extends StatelessWidget {
             final data = state.teacher;
             return Card(
               child: ListTile(
+                onTap: () => Navigator.pushNamed(
+                    context, OtherProfilePage.route,
+                    arguments: {"uid": data?.uid}),
                 leading: CircleAvatar(
                   backgroundColor: Colors.grey,
                   backgroundImage: NetworkImage(

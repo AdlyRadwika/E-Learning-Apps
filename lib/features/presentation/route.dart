@@ -16,6 +16,7 @@ import 'package:final_project/features/presentation/pages/class/info/class_info_
 import 'package:final_project/features/presentation/pages/class/info/enrolled_class_info_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
+import 'package:final_project/features/presentation/pages/profile/other_profile_page.dart';
 import 'package:final_project/features/presentation/pages/profile/profile_page.dart';
 import 'package:final_project/features/presentation/pages/splash/splash_page.dart';
 import 'package:flutter/material.dart';
@@ -114,6 +115,12 @@ Route<dynamic>? controller(RouteSettings settings) {
                 classCode: args['classCode'],
                 data: args['data'],
                 isEdit: args['isEdit'],
+              ));
+    case OtherProfilePage.route:
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => OtherProfilePage(
+                uid: args['uid'],
               ));
     default:
       return null;

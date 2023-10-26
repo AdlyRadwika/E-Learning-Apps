@@ -69,6 +69,7 @@ import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud
 import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/get_class_students/get_class_students_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/get_class_teacher/get_class_teacher_bloc.dart';
+import 'package:final_project/features/presentation/bloc/user_cloud/get_other_user/get_other_user_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:get_it/get_it.dart';
 
@@ -141,6 +142,9 @@ void init() {
       ));
   locator.registerFactory<GetAttendanceStatusBloc>(() => GetAttendanceStatusBloc(
     getAttendanceStatusUseCase: locator(),
+      ));
+  locator.registerFactory<GetOtherUserBloc>(() => GetOtherUserBloc(
+    getOtherUserByIdUseCase: locator(),
       ));
 
   // Usecases

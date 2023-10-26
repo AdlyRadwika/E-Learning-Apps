@@ -1,3 +1,4 @@
+import 'package:final_project/common/util/date_util.dart';
 import 'package:final_project/common/util/user_config.dart';
 import 'package:final_project/features/domain/entities/attendance/attendance.dart';
 import 'package:final_project/features/presentation/bloc/attendance_cloud/get_attendance_status/get_attendance_status_bloc.dart';
@@ -65,8 +66,10 @@ class AttendanceFAB extends StatelessWidget {
                 final docs = snapshot.data?.docs;
                 final data =
                     docs?.map((item) => item.data().toEntity()).firstWhere(
-                          (element) => DateTime.parse(element.createdAt)
-                              .isBefore(DateTime.now()),
+                          (element) =>
+                              DateUtil.calculateDifference(
+                                  DateTime.parse(element.createdAt)) ==
+                              0,
                           orElse: () => const Attendance(
                               id: '-',
                               label: '-',
