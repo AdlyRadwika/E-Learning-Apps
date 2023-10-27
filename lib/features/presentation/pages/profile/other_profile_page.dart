@@ -1,4 +1,5 @@
 import 'package:final_project/common/consts/asset_conts.dart';
+import 'package:final_project/common/util/date_util.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/get_other_user/get_other_user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,13 +72,13 @@ class _OtherProfilePageState extends State<OtherProfilePage> {
                         height: 5,
                       ),
                       Text(
-                        data?.email ?? "Unknown@mail.com",
+                        data?.role ?? "Unknown Role",
                       ),
                       const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        data?.role ?? "Unknown Role",
+                        "Registered at ${DateUtil.formatDate(data?.createdAt ?? DateTime.now().toString())}",
                       ),
                     ],
                   ),
