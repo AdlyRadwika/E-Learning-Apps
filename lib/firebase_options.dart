@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,6 +43,16 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDo3RYkfaPAriBqoJlincpcAMyPFWzqurU',
+    appId: '1:882607693559:web:e30d72d2b93ba115973df2',
+    messagingSenderId: '882607693559',
+    projectId: 'e-l34rn1ng-4pp5',
+    authDomain: 'e-l34rn1ng-4pp5.firebaseapp.com',
+    storageBucket: 'e-l34rn1ng-4pp5.appspot.com',
+    measurementId: 'G-Q4B5GPW451',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyASfR_WW7ud6LM40EXf0mM7yTgMmz5qkZE',
     appId: '1:882607693559:android:8244faae622e786f973df2',
@@ -65,5 +69,14 @@ class DefaultFirebaseOptions {
     storageBucket: 'e-l34rn1ng-4pp5.appspot.com',
     iosClientId: '882607693559-hhlb02ivqhlnlfbeetehgi768ick3hbi.apps.googleusercontent.com',
     iosBundleId: 'com.example.finalProject',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDcaKoGB4WZlL6Ox2sIeVAU4zcKxL9hcUs',
+    appId: '1:882607693559:ios:c9e61ea3fa57793d973df2',
+    messagingSenderId: '882607693559',
+    projectId: 'e-l34rn1ng-4pp5',
+    storageBucket: 'e-l34rn1ng-4pp5.appspot.com',
+    iosBundleId: 'com.example.finalProject.RunnerTests',
   );
 }

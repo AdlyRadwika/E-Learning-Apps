@@ -2,6 +2,7 @@ import 'package:final_project/common/services/secure_storage_service.dart';
 import 'package:final_project/common/util/switch_theme_util.dart';
 import 'package:final_project/features/presentation/pages/auth/login/login_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
+import 'package:final_project/features/presentation/widgets/logo_widget.dart';
 import 'package:final_project/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,6 +53,10 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            LogoWidget(theme: theme),
+            const SizedBox(
+              height: 20,
+            ),
             Text(
               'E-Learning Mobile Apps',
               style: theme.textTheme.headlineMedium,

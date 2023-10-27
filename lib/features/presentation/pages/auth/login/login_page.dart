@@ -7,6 +7,7 @@ import 'package:final_project/features/presentation/pages/auth/register/register
 import 'package:final_project/features/presentation/pages/auth/reset_password/reset_password_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
+import 'package:final_project/features/presentation/widgets/logo_widget.dart';
 import 'package:final_project/injection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -57,37 +59,43 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 Expanded(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomTextFormField(
-                          icon: Icons.alternate_email,
-                          controller: emailC,
-                          keyboardType: TextInputType.emailAddress,
-                          label: 'Email',
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      LogoWidget(theme: theme),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CustomTextFormField(
+                              icon: Icons.alternate_email,
+                              controller: emailC,
+                              keyboardType: TextInputType.emailAddress,
+                              label: 'Email',
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            CustomTextFormField(
+                              icon: Icons.lock,
+                              controller: passC,
+                              isPassword: true,
+                              label: 'Password',
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const NavigateRichTextWidget(
+                              questionText: 'Forget password?',
+                              btnText: 'Reset here',
+                              route: ResetPasswordPage.route,
+                            ),
+                          ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomTextFormField(
-                          icon: Icons.lock,
-                          controller: passC,
-                          isPassword: true,
-                          label: 'Password',
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const NavigateRichTextWidget(
-                          questionText: 'Forget password?',
-                          btnText: 'Reset here',
-                          route: ResetPasswordPage.route,
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 Column(

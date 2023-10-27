@@ -13,6 +13,7 @@ dependencies:
   dartz: ^0.10.1
   equatable: ^2.0.5
   file_picker: ^6.0.0
+  firebase_analytics: ^10.6.2
   firebase_auth: ^4.9.0
   firebase_core: ^2.15.1
   firebase_crashlytics: ^3.3.5
@@ -45,3 +46,4 @@ flutter:
 
   assets:
     - assets/mobilefacenet.tflite
+    - assets/logo.png
