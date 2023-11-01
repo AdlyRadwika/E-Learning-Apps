@@ -11,13 +11,14 @@ class CalendarWidget extends StatelessWidget {
     return Container(
       height: 200,
       decoration: BoxDecoration(
-        color: theme.colorScheme.primary,
+        color: theme.colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Center(
           child: Text(
         'Calendar',
-        style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white),
+        style: theme.textTheme.bodyLarge
+            ?.copyWith(color: theme.colorScheme.onSecondaryContainer),
       )),
     );
   }

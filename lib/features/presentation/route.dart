@@ -15,6 +15,11 @@ import 'package:final_project/features/presentation/pages/class/index/class_inde
 import 'package:final_project/features/presentation/pages/class/info/class_info_page.dart';
 import 'package:final_project/features/presentation/pages/class/info/enrolled_class_info_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
+import 'package:final_project/features/presentation/pages/grades/assignment_grades/assignment_grades_page.dart';
+import 'package:final_project/features/presentation/pages/grades/class_report/class_report_page.dart';
+import 'package:final_project/features/presentation/pages/grades/final_grades/final_grades_page.dart';
+import 'package:final_project/features/presentation/pages/grades/mark_grades/mark_grades_page.dart';
+import 'package:final_project/features/presentation/pages/grades/student_report/student_report_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/features/presentation/pages/profile/other_profile_page.dart';
 import 'package:final_project/features/presentation/pages/profile/profile_page.dart';
@@ -64,11 +69,12 @@ Route<dynamic>? controller(RouteSettings settings) {
                 data: args['data'],
               ));
     case AttendancePage.route:
-    Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
-      return MaterialPageRoute(builder: (context) => AttendancePage(
-        classTitle: args['classTitle'] ?? '-',
-        classCode: args['classCode'] ?? '-',
-      ));
+      Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
+      return MaterialPageRoute(
+          builder: (context) => AttendancePage(
+                classTitle: args['classTitle'] ?? '-',
+                classCode: args['classCode'] ?? '-',
+              ));
     case ClassInfoPage.route:
       Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
@@ -122,6 +128,17 @@ Route<dynamic>? controller(RouteSettings settings) {
           builder: (context) => OtherProfilePage(
                 uid: args['uid'],
               ));
+    case MarkGradePage.route:
+      return MaterialPageRoute(builder: (context) => const MarkGradePage());
+    case FinalGradesPage.route:
+      return MaterialPageRoute(builder: (context) => const FinalGradesPage());
+    case AssignmentGradesPage.route:
+      return MaterialPageRoute(
+          builder: (context) => const AssignmentGradesPage());
+    case ClassReportPage.route:
+      return MaterialPageRoute(builder: (context) => const ClassReportPage());
+    case StudentReportPage.route:
+      return MaterialPageRoute(builder: (context) => const StudentReportPage());
     default:
       return null;
   }
