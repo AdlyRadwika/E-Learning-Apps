@@ -19,6 +19,7 @@ import 'package:final_project/features/presentation/pages/grades/assignment_grad
 import 'package:final_project/features/presentation/pages/grades/class_report/class_report_page.dart';
 import 'package:final_project/features/presentation/pages/grades/final_grades/final_grades_page.dart';
 import 'package:final_project/features/presentation/pages/grades/mark_grades/mark_grades_page.dart';
+import 'package:final_project/features/presentation/pages/grades/student_assignment_report/student_assignment_report_page.dart';
 import 'package:final_project/features/presentation/pages/grades/student_report/student_report_page.dart';
 import 'package:final_project/features/presentation/pages/home/home_page.dart';
 import 'package:final_project/features/presentation/pages/profile/other_profile_page.dart';
@@ -139,6 +140,8 @@ Route<dynamic>? controller(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const ClassReportPage());
     case StudentReportPage.route:
       return MaterialPageRoute(builder: (context) => const StudentReportPage());
+    case StudentAssignmentReportPage.route:
+      return MaterialPageRoute(builder: (context) => const StudentAssignmentReportPage());
     default:
       return null;
   }

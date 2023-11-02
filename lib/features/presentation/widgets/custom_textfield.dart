@@ -9,8 +9,10 @@ class CustomTextFormField extends StatefulWidget {
   final String valueComparison;
   final bool isPassword;
   final bool isReadOnly;
+  final bool isGrade;
   final bool isDone;
   final int maxLines;
+  final int? maxLength;
   final Function(String value)? onChanged;
   final Function()? onTap;
 
@@ -21,10 +23,14 @@ class CustomTextFormField extends StatefulWidget {
     required this.icon,
     this.keyboardType = TextInputType.text,
     this.isPassword = false,
+    this.isGrade = false,
     this.valueComparison = "",
     this.onChanged,
     this.isReadOnly = false,
-    this.isDone = false, this.maxLines = 1, this.onTap,
+    this.isDone = false,
+    this.maxLines = 1,
+    this.maxLength,
+    this.onTap,
   });
 
   @override
@@ -54,6 +60,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         if (value == null || value.isEmpty) {
           return 'Please fill your ${widget.label.toLowerCase()}!';
         }
+        if (widget.isGrade && int.parse(value) >= 100) {
+          return 'The grade should be less than 100!';
+        }
+        if (widget.isGrade && int.parse(value) <= 0) {
+          return 'The grade should not be 0!';
+        }
         if (widget.isPassword && value.length < 8) {
           return "${widget.label} should be at least 8 characters!";
         }
@@ -70,6 +82,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       onTap: widget.onTap,
       onChanged: widget.onChanged,
       maxLines: widget.maxLines,
+      maxLength: widget.maxLength,
       inputFormatters: widget.keyboardType ==
               const TextInputType.numberWithOptions(decimal: false)
           ? [

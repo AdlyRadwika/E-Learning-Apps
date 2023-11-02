@@ -1,4 +1,4 @@
-import 'package:final_project/features/presentation/pages/grades/student_report/widgets/student_assignments_info.dart';
+import 'package:final_project/features/presentation/pages/grades/student_report/widgets/student_assignments_content.dart';
 import 'package:final_project/features/presentation/pages/grades/student_report/widgets/student_final_grade.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel2/sliding_up_panel2.dart';
@@ -37,7 +37,7 @@ class StudentReportPage extends StatelessWidget {
         panelBuilder: () => StudentFinalGrade(theme: theme),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: StudentAssignmentInfo(theme: theme),
+          child: StudentAssignmentContent(theme: theme),
         ),
       ),
     );
