@@ -1,3 +1,4 @@
+import 'package:final_project/common/util/user_config.dart';
 import 'package:final_project/features/presentation/pages/grades/student_report/widgets/student_assignments_content.dart';
 import 'package:final_project/features/presentation/pages/grades/student_report/widgets/student_final_grade.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,9 @@ class StudentReportPage extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Student 1's Report"),
+        title: Text(UserConfigUtil.role == 'teacher'
+            ? "Student 1's Report"
+            : 'Class 1 Report'),
         actions: [
           IconButton(
               onPressed: () => print,

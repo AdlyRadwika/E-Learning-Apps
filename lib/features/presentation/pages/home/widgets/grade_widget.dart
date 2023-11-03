@@ -1,5 +1,6 @@
 import 'package:final_project/common/util/user_config.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
+import 'package:final_project/features/presentation/pages/grades/grade_report/grade_report_page.dart';
 import 'package:final_project/features/presentation/pages/grades/mark_grades/mark_grades_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,7 @@ class GradeWidget extends StatelessWidget {
         child: InkWell(
           onTap: () {
             UserConfigUtil.role == 'student'
-                ? Navigator.pushNamed(context, MarkGradePage.route)
+                ? Navigator.pushNamed(context, GradeReportPage.route)
                 : Navigator.pushNamed(context, MarkGradePage.route);
           },
           child: Center(child: BlocBuilder<UserCloudBloc, UserCloudState>(

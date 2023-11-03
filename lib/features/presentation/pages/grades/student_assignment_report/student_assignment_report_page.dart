@@ -1,4 +1,5 @@
 import 'package:final_project/common/extensions/snackbar.dart';
+import 'package:final_project/common/util/user_config.dart';
 import 'package:final_project/features/presentation/pages/grades/student_assignment_report/widgets/grade_content.dart';
 import 'package:final_project/features/presentation/pages/grades/student_assignment_report/widgets/student_assignment_report_body.dart';
 import 'package:flutter/material.dart';
@@ -33,41 +34,40 @@ class _StudentAssignmentReportPageState
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Student 1's Assignment"),
-        ),
-        body: SlidingUpPanel(
-          color: theme.colorScheme.background,
-          padding: const EdgeInsets.only(
-            left: 15.0,
-            right: 15.0,
-            top: 10.0,
+          appBar: AppBar(
+            title: const Text("Student 1's Assignment"),
           ),
-          maxHeight: 300,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
-          ),
-          panelBuilder: () => Column(
-            children: [
-              GradeContent(
-                formKey: _formKey,
-                theme: theme,
-                gradeC: _gradeC,
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              ElevatedButton(
-                  onPressed: () => _submit(), child: const Text('Submit'))
-            ],
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: StudentAssignmentReportBody(theme: theme),
-          ),
-        ),
-      ),
+          body: UserConfigUtil.role == 'teacher'
+              ? SlidingUpPanel(
+                  color: theme.colorScheme.background,
+                  padding: const EdgeInsets.only(
+                    left: 15.0,
+                    right: 15.0,
+                    top: 10.0,
+                  ),
+                  maxHeight: 300,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
+                  panelBuilder: () => Column(
+                    children: [
+                      GradeContent(
+                        formKey: _formKey,
+                        theme: theme,
+                        gradeC: _gradeC,
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      ElevatedButton(
+                          onPressed: () => _submit(),
+                          child: const Text('Submit'))
+                    ],
+                  ),
+                  body: Body(theme: theme),
+                )
+              : Body(theme: theme)),
     );
   }
 
@@ -75,5 +75,22 @@ class _StudentAssignmentReportPageState
     if (_formKey.currentState!.validate()) {
       context.showSuccessSnackBar(message: 'Hello!');
     }
+  }
+}
+
+class Body extends StatelessWidget {
+  const Body({
+    super.key,
+    required this.theme,
+  });
+
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: StudentAssignmentReportBody(theme: theme),
+    );
   }
 }
