@@ -15,9 +15,7 @@ import 'package:final_project/features/presentation/pages/class/index/class_inde
 import 'package:final_project/features/presentation/pages/class/info/class_info_page.dart';
 import 'package:final_project/features/presentation/pages/class/info/enrolled_class_info_page.dart';
 import 'package:final_project/features/presentation/pages/face_recognition/face_recognitionv2_page.dart';
-import 'package:final_project/features/presentation/pages/grades/assignment_grades/assignment_grades_page.dart';
 import 'package:final_project/features/presentation/pages/grades/class_report/class_report_page.dart';
-import 'package:final_project/features/presentation/pages/grades/final_grades/final_grades_page.dart';
 import 'package:final_project/features/presentation/pages/grades/mark_grades/mark_grades_page.dart';
 import 'package:final_project/features/presentation/pages/grades/student_assignment_report/student_assignment_report_page.dart';
 import 'package:final_project/features/presentation/pages/grades/student_report/student_report_page.dart';
@@ -131,17 +129,13 @@ Route<dynamic>? controller(RouteSettings settings) {
               ));
     case MarkGradePage.route:
       return MaterialPageRoute(builder: (context) => const MarkGradePage());
-    case FinalGradesPage.route:
-      return MaterialPageRoute(builder: (context) => const FinalGradesPage());
-    case AssignmentGradesPage.route:
-      return MaterialPageRoute(
-          builder: (context) => const AssignmentGradesPage());
     case ClassReportPage.route:
       return MaterialPageRoute(builder: (context) => const ClassReportPage());
     case StudentReportPage.route:
       return MaterialPageRoute(builder: (context) => const StudentReportPage());
     case StudentAssignmentReportPage.route:
-      return MaterialPageRoute(builder: (context) => const StudentAssignmentReportPage());
+      return MaterialPageRoute(
+          builder: (context) => const StudentAssignmentReportPage());
     default:
       return null;
   }
