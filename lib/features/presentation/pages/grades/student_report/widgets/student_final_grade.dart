@@ -1,9 +1,12 @@
+import 'package:final_project/features/domain/entities/grade/grade_content.dart';
 import 'package:flutter/material.dart';
 
 class StudentFinalGrade extends StatelessWidget {
+  final GradeContent? data;
+
   const StudentFinalGrade({
     super.key,
-    required this.theme,
+    required this.theme, required this.data,
   });
 
   final ThemeData theme;
@@ -32,7 +35,7 @@ class StudentFinalGrade extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              '80',
+              '${data?.finalGrade ?? 0}',
               style: theme.textTheme.titleLarge
                   ?.copyWith(color: theme.colorScheme.onPrimaryContainer),
             ),

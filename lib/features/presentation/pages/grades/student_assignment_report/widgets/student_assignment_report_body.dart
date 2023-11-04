@@ -1,15 +1,16 @@
-
 import 'package:final_project/common/extensions/strings.dart';
 import 'package:final_project/common/util/date_util.dart';
+import 'package:final_project/features/domain/entities/grade/grade_content.dart';
 import 'package:flutter/material.dart';
 
 class StudentAssignmentReportBody extends StatelessWidget {
   const StudentAssignmentReportBody({
     super.key,
-    required this.theme,
+    required this.theme, required this.data,
   });
 
   final ThemeData theme;
+  final AssignmentDetail data;
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +18,11 @@ class StudentAssignmentReportBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Assignment 1",
+          data.assignmentName,
           style: theme.textTheme.titleLarge,
         ),
         Text(
-          "Submitted at ${DateUtil.formatDate(DateTime.now().toString())}",
+          "Submitted at ${DateUtil.formatDate(data.submittedDate)}",
           style: theme.textTheme.bodyLarge?.copyWith(color: Colors.grey),
         ),
         const Divider(),
@@ -34,7 +35,6 @@ class StudentAssignmentReportBody extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            subtitle: const Text("1 MB"),
             trailing: const Icon(Icons.download),
           ),
         )

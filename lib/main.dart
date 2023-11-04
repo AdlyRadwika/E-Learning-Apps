@@ -16,6 +16,8 @@ import 'package:final_project/features/presentation/bloc/class_cloud/class_cloud
 import 'package:final_project/features/presentation/bloc/class_cloud/class_index/class_index_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/get_class_students/get_class_students_bloc.dart';
 import 'package:final_project/features/presentation/bloc/class_cloud/get_class_teacher/get_class_teacher_bloc.dart';
+import 'package:final_project/features/presentation/bloc/grade_cloud/get_grade/get_grades_bloc.dart';
+import 'package:final_project/features/presentation/bloc/grade_cloud/grade_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/get_other_user/get_other_user_bloc.dart';
 import 'package:final_project/features/presentation/bloc/user_cloud/user_cloud_bloc.dart';
 import 'package:final_project/features/presentation/pages/splash/splash_page.dart';
@@ -94,6 +96,10 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
             create: (context) => di.locator<GetAttendanceStatusBloc>()),
         BlocProvider<GetOtherUserBloc>(
             create: (context) => di.locator<GetOtherUserBloc>()),
+        BlocProvider<GetGradesBloc>(
+            create: (context) => di.locator<GetGradesBloc>()),
+        BlocProvider<GradeCloudBloc>(
+            create: (context) => di.locator<GradeCloudBloc>()),
       ],
       child: ChangeNotifierProvider(
         create: (_) => di.locator<SwitchThemeProvider>(),

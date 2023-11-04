@@ -1,10 +1,14 @@
+import 'package:final_project/features/domain/entities/grade/grade_content.dart';
 import 'package:final_project/features/presentation/pages/grades/widgets/student_assignment_item.dart';
 import 'package:flutter/material.dart';
 
 class StudentAssignmentContent extends StatelessWidget {
+  final List<AssignmentDetail>? data;
+
   const StudentAssignmentContent({
     super.key,
     required this.theme,
+    required this.data,
   });
 
   final ThemeData theme;
@@ -23,9 +27,11 @@ class StudentAssignmentContent extends StatelessWidget {
           child: Divider(),
         ),
         SliverList.separated(
-          itemCount: 2,
+          itemCount: data?.length,
           itemBuilder: (context, index) {
+            final itemData = data?[index];
             return StudentAssignmentItem(
+              data: itemData,
               theme: theme,
               showStudentName: false,
             );

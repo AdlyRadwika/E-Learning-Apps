@@ -60,7 +60,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         if (value == null || value.isEmpty) {
           return 'Please fill your ${widget.label.toLowerCase()}!';
         }
-        if (widget.isGrade && int.parse(value) >= 100) {
+        if (widget.isGrade && int.parse(value) > 100) {
           return 'The grade should be less than 100!';
         }
         if (widget.isGrade && int.parse(value) <= 0) {

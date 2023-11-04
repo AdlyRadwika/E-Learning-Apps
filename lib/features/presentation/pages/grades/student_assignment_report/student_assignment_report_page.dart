@@ -1,5 +1,6 @@
 import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/common/util/user_config.dart';
+import 'package:final_project/features/domain/entities/grade/grade_content.dart' as ent;
 import 'package:final_project/features/presentation/pages/grades/student_assignment_report/widgets/grade_content.dart';
 import 'package:final_project/features/presentation/pages/grades/student_assignment_report/widgets/student_assignment_report_body.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,9 @@ import 'package:sliding_up_panel2/sliding_up_panel2.dart';
 class StudentAssignmentReportPage extends StatefulWidget {
   static const route = '/student-assignment-report';
 
-  const StudentAssignmentReportPage({super.key});
+  final ent.AssignmentDetail data;
+
+  const StudentAssignmentReportPage({super.key, required this.data});
 
   @override
   State<StudentAssignmentReportPage> createState() =>
@@ -65,9 +68,9 @@ class _StudentAssignmentReportPageState
                           child: const Text('Submit'))
                     ],
                   ),
-                  body: Body(theme: theme),
+                  body: Body(theme: theme, data: widget.data,),
                 )
-              : Body(theme: theme)),
+              : Body(theme: theme, data: widget.data,)),
     );
   }
 
@@ -81,16 +84,17 @@ class _StudentAssignmentReportPageState
 class Body extends StatelessWidget {
   const Body({
     super.key,
-    required this.theme,
+    required this.theme, required this.data,
   });
 
   final ThemeData theme;
+  final ent.AssignmentDetail data;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: StudentAssignmentReportBody(theme: theme),
+      child: StudentAssignmentReportBody(theme: theme, data: data),
     );
   }
 }
