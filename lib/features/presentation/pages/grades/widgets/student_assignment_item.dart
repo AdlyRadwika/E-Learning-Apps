@@ -7,22 +7,28 @@ class StudentAssignmentItem extends StatelessWidget {
   final bool showStudentName;
   final AssignmentDetail? data;
   final ThemeData theme;
+  final GradeContentOwner? user;
+  final String classCode;
 
   const StudentAssignmentItem({
     super.key,
     required this.theme,
     required this.showStudentName,
     required this.data,
+    required this.user,
+    required this.classCode,
   });
-
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        onTap: () =>
-            Navigator.pushNamed(context, StudentAssignmentReportPage.route, arguments: {
+        onTap: () => Navigator.pushNamed(
+            context, StudentAssignmentReportPage.route,
+            arguments: {
               'data': data,
+              'studentId': user?.uid ?? '-',
+              'classCode': classCode,
             }),
         leading: const Icon(Icons.assignment_ind_outlined),
         title: Row(
@@ -30,7 +36,9 @@ class StudentAssignmentItem extends StatelessWidget {
           children: [
             Expanded(
                 child: Text(
-              showStudentName ? "Student 1" : 'Assignment 1',
+              showStudentName
+                  ? user?.name ?? "Someone"
+                  : data?.assignmentName ?? "Unknown",
               overflow: TextOverflow.ellipsis,
             )),
             const Expanded(
@@ -44,7 +52,8 @@ class StudentAssignmentItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: Text(DateUtil.formatDate(DateTime.now().toString())),
+              child: Text(DateUtil.formatDate(
+                  data?.submittedDate ?? DateTime.now().toString())),
             ),
             Expanded(
               child: Text(
@@ -55,6 +64,7 @@ class StudentAssignmentItem extends StatelessWidget {
             ),
           ],
         ),
+        trailing: const Icon(Icons.arrow_forward_ios),
       ),
     );
   }

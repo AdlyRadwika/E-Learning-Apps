@@ -1,4 +1,3 @@
-
 import 'package:final_project/features/presentation/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
@@ -8,11 +7,13 @@ class GradeContent extends StatelessWidget {
     required this.formKey,
     required this.theme,
     required this.gradeC,
+    required this.grade,
   });
 
   final GlobalKey<FormState> formKey;
   final ThemeData theme;
   final TextEditingController gradeC;
+  final int grade;
 
   @override
   Widget build(BuildContext context) {
@@ -34,20 +35,58 @@ class GradeContent extends StatelessWidget {
             'Grade',
             style: theme.textTheme.titleLarge,
           ),
-          const Text("It seems that you haven’t set the grade yet."),
-          const SizedBox(
-            height: 20,
-          ),
-          CustomTextFormField(
-            controller: gradeC,
-            label: 'Input Grade',
-            maxLength: 3,
-            isGrade: true,
-            keyboardType: const TextInputType.numberWithOptions(decimal: false),
-            icon: Icons.grade_rounded,
-          ),
+          grade == 0
+              ? _UngradedContent(gradeC: gradeC)
+              : Column(
+                  children: [
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Container(
+                      height: 100,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: theme.colorScheme.secondaryContainer,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                          child: Text(
+                        "$grade",
+                        style: theme.textTheme.titleLarge?.copyWith(
+                            color: theme.colorScheme.onSecondaryContainer),
+                      )),
+                    ),
+                  ],
+                ),
         ],
       ),
+    );
+  }
+}
+
+class _UngradedContent extends StatelessWidget {
+  const _UngradedContent({
+    required this.gradeC,
+  });
+
+  final TextEditingController gradeC;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Text("It seems that you haven’t set the grade yet."),
+        const SizedBox(
+          height: 20,
+        ),
+        CustomTextFormField(
+          controller: gradeC,
+          label: 'Input Grade',
+          maxLength: 3,
+          isGrade: true,
+          keyboardType: const TextInputType.numberWithOptions(decimal: false),
+          icon: Icons.grade_rounded,
+        ),
+      ],
     );
   }
 }

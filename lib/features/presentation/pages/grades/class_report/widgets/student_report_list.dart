@@ -79,7 +79,8 @@ class _StudentReportItem extends StatelessWidget {
       child: ListTile(
         onTap: () => Navigator.pushNamed(context, StudentReportPage.route, arguments: {
           'classCode': classCode ?? '-',
-          'studentId': data?.uid ?? '-'
+          'studentId': data?.uid ?? '-',
+          'studentName': data?.name ?? '-'
         }),
         leading: CircleAvatar(
           backgroundColor: Colors.grey,

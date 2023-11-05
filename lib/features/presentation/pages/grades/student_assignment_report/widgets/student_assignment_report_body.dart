@@ -1,12 +1,15 @@
+import 'package:final_project/common/extensions/snackbar.dart';
 import 'package:final_project/common/extensions/strings.dart';
 import 'package:final_project/common/util/date_util.dart';
 import 'package:final_project/features/domain/entities/grade/grade_content.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StudentAssignmentReportBody extends StatelessWidget {
   const StudentAssignmentReportBody({
     super.key,
-    required this.theme, required this.data,
+    required this.theme,
+    required this.data,
   });
 
   final ThemeData theme;
@@ -28,10 +31,20 @@ class StudentAssignmentReportBody extends StatelessWidget {
         const Divider(),
         Card(
           child: ListTile(
-            onTap: () => print,
+            onTap: () async {
+              final uri = Uri.tryParse(data.fileUrl);
+              if (await canLaunchUrl(uri!)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              } else {
+                if (context.mounted) {
+                  context.showErrorSnackBar(context,
+                      message: "Your submission file couldn't be opened.");
+                }
+              }
+            },
             leading: const Icon(Icons.attach_file),
             title: Text(
-              "${"Filename".truncateTo(10)} .pdf",
+              "${data.fileName.truncateTo(10)} .pdf",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

@@ -132,24 +132,28 @@ Route<dynamic>? controller(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const MarkGradePage());
     case ClassReportPage.route:
       Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
-      return MaterialPageRoute(builder: (context) => ClassReportPage(
-        classCode: args['classCode'],
-      ));
+      return MaterialPageRoute(
+          builder: (context) => ClassReportPage(
+                classCode: args['classCode'],
+              ));
     case StudentReportPage.route:
       Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
-      return MaterialPageRoute(builder: (context) => StudentReportPage(
-        classCode: args['classCode'],
-        studentId: args['studentId'],
-      ));
+      return MaterialPageRoute(
+          builder: (context) => StudentReportPage(
+                classCode: args['classCode'],
+                studentName: args['studentName'],
+                studentId: args['studentId'],
+              ));
     case StudentAssignmentReportPage.route:
       Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
           builder: (context) => StudentAssignmentReportPage(
-            data: args['data'],
-          ));
+                studentId: args['studentId'],
+                classCode: args['classCode'],
+                data: args['data'],
+              ));
     case GradeReportPage.route:
-      return MaterialPageRoute(
-          builder: (context) => const GradeReportPage());
+      return MaterialPageRoute(builder: (context) => const GradeReportPage());
     default:
       return null;
   }

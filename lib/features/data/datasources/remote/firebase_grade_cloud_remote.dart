@@ -49,118 +49,132 @@ class FirebaseGradeCloudRemoteImpl implements FirebaseGradeCloudRemote {
   Future<GradeContentModel> getGradesByStudent(
       {required String classCode, required String studentId}) async {
     try {
-      return FirebaseFirestore.instance.runTransaction((transaction) async {
-        final assignmentQuery = await _assignmentCollection
-            .where('class_code', isEqualTo: classCode)
+      GradeContentModel result = GradeContentModel(
+        classCode: classCode,
+        id: '-',
+        finalGrade: 0,
+        updatedAt: '-',
+        createdAt: DateTime.now().toString(),
+        user: const GradeContentOwnerModel(
+          uid: '-',
+          name: '-',
+          imageUrl: '-',
+        ),
+        details: [],
+      );
+
+      final assignmentQuery = await _assignmentCollection
+          .where('class_code', isEqualTo: classCode)
+          .get();
+
+      if (assignmentQuery.docs.isEmpty) {
+        return result;
+      }
+
+      List<GradeContentModel> gradeContentList = [];
+
+      for (var doc in assignmentQuery.docs) {
+        final assignmentData = doc.data();
+        final assignmentId = assignmentData.id;
+
+        final submissionQuery = await _submissionCollection
+            .where('assignment_id', isEqualTo: assignmentId)
+            .where('student_id', isEqualTo: studentId)
             .get();
 
-        GradeContentModel? result;
-        List<AssignmentModel> assignments = [];
-        List<AssignmentDetailModel> assignmentDetails = [];
-        for (var doc in assignmentQuery.docs) {
-          final assignmentData = doc.data();
+        final userRef = _userCollection.doc(studentId);
+        final userDoc = await userRef.get();
+        final userData = userDoc.data();
 
-          //FIXME: something went wrong here
-          assignments.add(assignmentData);
+        if (userData == null) {
+          throw Exception('User is not the Grade owner!');
+        }
 
-          final submissionQuery = await _submissionCollection
-              .where(
-                'assignment_id',
-                isEqualTo: assignmentData.id,
-              )
-              .where(
-                'student_id',
-                isEqualTo: studentId,
-              )
-              .get();
+        double finalGrade = 0;
+        List<GradeModel> grades = [];
+
+        if (submissionQuery.docs.isNotEmpty) {
+          final assignmentDetails = <AssignmentDetailModel>[];
+
           for (var submissionDoc in submissionQuery.docs) {
             final submissionData = submissionDoc.data();
 
-            final data = AssignmentDetailModel(
-                assignmentId: submissionData.assignmentId,
-                assignmentName: assignmentData.title,
-                fileUrl: submissionData.fileUrl,
-                submittedDate: submissionData.createdAt,
-                grade: 0,
-                fileName: submissionData.fileName);
-
-            assignmentDetails.add(data);
+            assignmentDetails.add(AssignmentDetailModel(
+              assignmentId: submissionData.assignmentId,
+              assignmentName: assignmentData.title,
+              fileUrl: submissionData.fileUrl,
+              submittedDate: submissionData.createdAt,
+              grade: 0,
+              fileName: submissionData.fileName,
+            ));
           }
 
           final gradeQuery = await _gradeCollection
-              .where('assignment_id', isEqualTo: assignmentData.id)
+              .where('assignment_id', isEqualTo: assignmentId)
+              .where('student_id', isEqualTo: studentId)
               .get();
-          List<GradeModel> grades = [];
-          int calculateFinalGrade = 0;
+
           for (var doc in gradeQuery.docs) {
             final gradeData = doc.data();
-
             grades.add(gradeData);
-            final grade = gradeData.grade;
-            if (grade == 0) {
-              calculateFinalGrade *= 0;
-            } else {
-              calculateFinalGrade += gradeData.grade;
-            }
           }
 
-          final finalGrade =
-              grades.isNotEmpty ? calculateFinalGrade / grades.length : 0;
+          if (grades.isNotEmpty) {
+            double calculateFinalGrade = 0;
 
-          for (var grade in grades) {
-            final userRef = _userCollection.doc(grade.studentId);
-            final userDoc = await transaction.get(userRef);
-            final userData = userDoc.data();
-
-            if (userData == null) {
-              throw Exception('User is not the Grade owner!');
+            for (final grade in grades) {
+              calculateFinalGrade += grade.grade;
             }
 
-            print(classCode);
-            print(studentId);
+            finalGrade = calculateFinalGrade / gradeQuery.docs.length;
 
-            result = GradeContentModel(
+            for (var i = 0; i < assignmentDetails.length; i++) {
+              assignmentDetails[i].grade = grades[i].grade;
+            }
+
+            final gradeContent = GradeContentModel(
               classCode: classCode,
-              id: grade.id,
+              id: assignmentId,
               finalGrade: finalGrade.floor(),
-              updatedAt: grade.updatedAt,
-              createdAt: grade.createdAt,
+              updatedAt: '-',
+              createdAt: DateTime.now().toString(),
               user: GradeContentOwnerModel(
-                  uid: userData.uid,
-                  name: userData.name,
-                  imageUrl: userData.imageUrl),
-              details: assignmentDetails.map((data) {
-                final assignmentGrade =
-                    data.assignmentId == grade.assignmentId ? grade.grade : 0;
-                return AssignmentDetailModel(
-                    assignmentId: data.assignmentId,
-                    assignmentName: data.assignmentName,
-                    fileUrl: data.fileUrl,
-                    grade: assignmentGrade,
-                    submittedDate: data.submittedDate,
-                    fileName: data.fileName);
-              }).toList(),
+                uid: userData.uid,
+                name: userData.name,
+                imageUrl: userData.imageUrl,
+              ),
+              details: assignmentDetails,
             );
 
-            print("result.id");
-            print(result.id);
-            print(result.finalGrade);
+            gradeContentList.add(gradeContent);
+          } else {
+            final gradeContent = GradeContentModel(
+              classCode: classCode,
+              id: assignmentId,
+              finalGrade: finalGrade.floor(),
+              updatedAt: '-',
+              createdAt: DateTime.now().toString(),
+              user: GradeContentOwnerModel(
+                uid: userData.uid,
+                name: userData.name,
+                imageUrl: userData.imageUrl,
+              ),
+              details: assignmentDetails,
+            );
+
+            gradeContentList.add(gradeContent);
           }
         }
+      }
 
-        if (result != null) {
-          return result;
-        } else {
-          throw Exception('Grade is empty!');
-        }
-      });
+      return gradeContentList.isNotEmpty ? gradeContentList.last : result;
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? "Unknown Firebase Exception");
     } catch (e) {
       throw Exception(e.toString());
     }
   }
-
+  
   @override
   Future<void> insertGrade({required GradeModel data}) async {
     try {

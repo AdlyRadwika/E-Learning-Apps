@@ -11,9 +11,13 @@ class StudentReportPage extends StatefulWidget {
 
   final String classCode;
   final String studentId;
+  final String studentName;
 
   const StudentReportPage(
-      {super.key, required this.classCode, required this.studentId});
+      {super.key,
+      required this.classCode,
+      required this.studentId,
+      required this.studentName});
 
   @override
   State<StudentReportPage> createState() => _StudentReportPageState();
@@ -38,7 +42,7 @@ class _StudentReportPageState extends State<StudentReportPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(UserConfigUtil.role == 'teacher'
-            ? "Student 1's Report"
+            ? "${widget.studentName}'s Report"
             : 'Class 1 Report'),
         actions: [
           IconButton(
@@ -56,8 +60,6 @@ class _StudentReportPageState extends State<StudentReportPage> {
         }
 
         if (state is GetGradesByStudentResult && !state.isSuccess) {
-          
-          
           return Padding(
             padding: const EdgeInsets.all(15),
             child: Column(
@@ -99,7 +101,7 @@ class _StudentReportPageState extends State<StudentReportPage> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: StudentAssignmentContent(
                 theme: theme,
-                data: data?.details,
+                data: data,
               ),
             ),
           );

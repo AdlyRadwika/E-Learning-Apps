@@ -33,16 +33,16 @@ class GradeContentModel {
 class AssignmentDetailModel {
   final String assignmentId;
   final String assignmentName;
-  final int grade;
+  int grade;
   final String fileUrl;
   final String fileName;
   final String submittedDate;
 
-  const AssignmentDetailModel({
+  AssignmentDetailModel({
     required this.assignmentId,
     required this.assignmentName,
     required this.fileUrl,
-    required this.grade,
+    this.grade = 0,
     required this.fileName,
     required this.submittedDate,
   });

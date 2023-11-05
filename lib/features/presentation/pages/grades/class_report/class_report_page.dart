@@ -7,6 +7,7 @@ class ClassReportPage extends StatefulWidget {
   static const route = '/class-report';
 
   final String classCode;
+  
 
   const ClassReportPage({super.key, required this.classCode});
 

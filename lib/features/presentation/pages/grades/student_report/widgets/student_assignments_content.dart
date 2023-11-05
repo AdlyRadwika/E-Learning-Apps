@@ -3,7 +3,7 @@ import 'package:final_project/features/presentation/pages/grades/widgets/student
 import 'package:flutter/material.dart';
 
 class StudentAssignmentContent extends StatelessWidget {
-  final List<AssignmentDetail>? data;
+  final GradeContent? data;
 
   const StudentAssignmentContent({
     super.key,
@@ -15,6 +15,7 @@ class StudentAssignmentContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final list = data?.details;
     return CustomScrollView(
       slivers: [
         SliverToBoxAdapter(
@@ -26,20 +27,32 @@ class StudentAssignmentContent extends StatelessWidget {
         const SliverToBoxAdapter(
           child: Divider(),
         ),
-        SliverList.separated(
-          itemCount: data?.length,
-          itemBuilder: (context, index) {
-            final itemData = data?[index];
-            return StudentAssignmentItem(
-              data: itemData,
-              theme: theme,
-              showStudentName: false,
-            );
-          },
-          separatorBuilder: (context, index) => const SizedBox(
-            height: 10,
-          ),
-        )
+        list?.isEmpty == true
+            ? const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Center(
+                    child:
+                        Text("This student hasn't submit any assignment yet."),
+                  ),
+                ),
+              )
+            : SliverList.separated(
+                itemCount: list?.length,
+                itemBuilder: (context, index) {
+                  final itemData = list?[index];
+                  return StudentAssignmentItem(
+                    data: itemData,
+                    theme: theme,
+                    classCode: data?.classCode ?? '-',
+                    user: data?.user,
+                    showStudentName: false,
+                  );
+                },
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 10,
+                ),
+              )
       ],
     );
   }
