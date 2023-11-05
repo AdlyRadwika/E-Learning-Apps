@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   bloc: ^8.1.2
+  calendar_view: ^1.0.4
   camera: ^0.10.5+4
   cloud_firestore: ^4.9.2
   dartz: ^0.10.1

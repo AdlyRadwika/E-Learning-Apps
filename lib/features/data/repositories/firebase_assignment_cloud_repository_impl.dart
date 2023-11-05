@@ -146,4 +146,32 @@ class FirebaseAssignmentCloudRepositoryImpl
       return Left(UnexpectedFailure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, List<Assignment>>> getAssignmentSchedules(
+      {required String studentId}) async {
+    try {
+      final result =
+          await remoteDataSource.getAssignmentSchedules(studentId: studentId);
+      return Right(result.map((e) => e.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message.toString()));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Assignment>>> getTeacherSchedules(
+      {required String teacherId}) async {
+    try {
+      final result =
+          await remoteDataSource.getTeacherSchedules(teacherId: teacherId);
+      return Right(result.map((e) => e.toEntity()).toList());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message.toString()));
+    } catch (e) {
+      return Left(UnexpectedFailure(e.toString()));
+    }
+  }
 }

@@ -27,10 +27,16 @@ abstract class FirebaseAssignmentCloudRepository {
   Future<Either<Failure, Stream<QuerySnapshot<SubmissionModel>>>>
       getSubmissionStatus(
           {required String assignmentId, required String studentId});
-    Future<Either<Failure, List<StudentsAssignmentStatus>>> getSubmittedAssignments({
+  Future<Either<Failure, List<StudentsAssignmentStatus>>>
+      getSubmittedAssignments({
     required String assignmentId,
   });
-  Future<Either<Failure, List<StudentsAssignmentStatus>>> getUnsubmittedAssignments({
+  Future<Either<Failure, List<StudentsAssignmentStatus>>>
+      getUnsubmittedAssignments({
     required String assignmentId,
   });
+  Future<Either<Failure, List<Assignment>>> getAssignmentSchedules(
+      {required String studentId});
+  Future<Either<Failure, List<Assignment>>> getTeacherSchedules(
+      {required String teacherId});
 }

@@ -30,10 +30,12 @@ import 'package:final_project/features/domain/usecases/announcement_cloud/get_an
 import 'package:final_project/features/domain/usecases/announcement_cloud/insert_announcement.dart';
 import 'package:final_project/features/domain/usecases/announcement_cloud/update_announcement.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/delete_assignment.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/get_assignment_schedules.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/get_assignments_by_class.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/get_submission_file.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/get_submission_status.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/get_submitted_assignments.dart';
+import 'package:final_project/features/domain/usecases/assignment_cloud/get_teacher_schedules.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/get_unsubmitted_assignments.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/insert_assignment.dart';
 import 'package:final_project/features/domain/usecases/assignment_cloud/update_assignment.dart';
@@ -63,6 +65,7 @@ import 'package:final_project/features/presentation/bloc/announcement_cloud/anno
 import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/assignment_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_assignment/get_assignment_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_assignment_schedule/get_assignment_schedule_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submission_status/get_submission_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submitted_assignments/get_submitted_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_unsubmitted_assignments/get_unsubmitted_assignment_bloc.dart';
@@ -125,6 +128,10 @@ void init() {
         updateUseCase: locator(),
       ));
   locator.registerFactory<GetAssignmentsBloc>(() => GetAssignmentsBloc(
+        getAssignmentsUseCase: locator(),
+      ));
+  locator.registerFactory<GetScheduleBloc>(() => GetScheduleBloc(
+        getTeacherScheduleUseCase: locator(),
         getAssignmentsUseCase: locator(),
       ));
   locator.registerFactory<UploadSubmissionBloc>(() => UploadSubmissionBloc(
@@ -230,6 +237,10 @@ void init() {
       () => InsertGradeUseCase(locator()));
   locator.registerLazySingleton<UpdateGradeUseCase>(
       () => UpdateGradeUseCase(locator()));
+  locator.registerLazySingleton<GetAssignmentsSchedulesUseCase>(
+      () => GetAssignmentsSchedulesUseCase(locator()));
+  locator.registerLazySingleton<GetTeacherSchedulesUseCase>(
+      () => GetTeacherSchedulesUseCase(locator()));
 
   // Repository
   locator.registerLazySingleton<FirebaseAuthRepository>(

@@ -4,6 +4,7 @@ import 'package:final_project/features/presentation/bloc/announcement_cloud/anno
 import 'package:final_project/features/presentation/bloc/announcement_cloud/get_announcement/get_announcements_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/assignment_cloud_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_assignment/get_assignment_bloc.dart';
+import 'package:final_project/features/presentation/bloc/assignment_cloud/get_assignment_schedule/get_assignment_schedule_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submission_status/get_submission_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_submitted_assignments/get_submitted_assignment_bloc.dart';
 import 'package:final_project/features/presentation/bloc/assignment_cloud/get_unsubmitted_assignments/get_unsubmitted_assignment_bloc.dart';
@@ -80,6 +81,8 @@ class MainApp extends StatelessWidget with WidgetsBindingObserver {
             create: (context) => di.locator<AssignmentCloudBloc>()),
         BlocProvider<GetAssignmentsBloc>(
             create: (context) => di.locator<GetAssignmentsBloc>()),
+        BlocProvider<GetScheduleBloc>(
+            create: (context) => di.locator<GetScheduleBloc>()),
         BlocProvider<GetSubmissionsBloc>(
             create: (context) => di.locator<GetSubmissionsBloc>()),
         BlocProvider<UploadSubmissionBloc>(

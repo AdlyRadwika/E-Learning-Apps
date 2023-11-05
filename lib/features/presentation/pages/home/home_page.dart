@@ -31,8 +31,6 @@ class _HomePageState extends State<HomePage> {
       label: 'Class',
       tooltip: 'Class',
     ),
-    BottomNavigationBarItem(
-        icon: Icon(Icons.inbox), label: 'Inbox', tooltip: 'Inbox'),
   ];
 
   static const _navbarPage = [

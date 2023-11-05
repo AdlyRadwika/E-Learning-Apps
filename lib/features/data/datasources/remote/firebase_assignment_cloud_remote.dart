@@ -6,6 +6,7 @@ import 'package:final_project/common/extensions/file.dart';
 import 'package:final_project/features/data/models/assignment/assignment_model.dart';
 import 'package:final_project/features/data/models/assignment/students_assignment_status_model.dart';
 import 'package:final_project/features/data/models/assignment/submission_model.dart';
+import 'package:final_project/features/data/models/class/class_model.dart';
 import 'package:final_project/features/data/models/class/enrolled_class_model.dart';
 import 'package:final_project/features/data/models/grade/grade_model.dart';
 import 'package:final_project/features/data/models/user/user_model.dart';
@@ -37,6 +38,10 @@ abstract class FirebaseAssignmentCloudRemote {
   Future<List<StudentsAssignmentStatusModel>> getUnsubmittedAssignments({
     required String assignmentId,
   });
+  Future<List<AssignmentModel>> getAssignmentSchedules(
+      {required String studentId});
+  Future<List<AssignmentModel>> getTeacherSchedules(
+      {required String teacherId});
 }
 
 class FirebaseAssignmentCloudRemoteImpl
@@ -72,6 +77,12 @@ class FirebaseAssignmentCloudRemoteImpl
       .withConverter<EnrolledClassModel>(
           fromFirestore: (snapshot, _) =>
               EnrolledClassModel.fromJson(snapshot.data()!),
+          toFirestore: (value, _) => value.toJson());
+
+  final _classCollection = FirebaseFirestore.instance
+      .collection('classes')
+      .withConverter<ClassModel>(
+          fromFirestore: (snapshot, _) => ClassModel.fromJson(snapshot.data()!),
           toFirestore: (value, _) => value.toJson());
 
   final _fileStorage = FirebaseStorage.instance.ref('files');
@@ -311,5 +322,71 @@ class FirebaseAssignmentCloudRemoteImpl
         throw Exception(e.toString());
       }
     });
+  }
+
+  @override
+  Future<List<AssignmentModel>> getAssignmentSchedules(
+      {required String studentId}) async {
+    try {
+      return FirebaseFirestore.instance.runTransaction((transaction) async {
+        final enrolledQuery = await _enrolledCollection
+            .where('student_id', isEqualTo: studentId)
+            .get();
+
+        List<AssignmentModel> result = [];
+        for (var doc in enrolledQuery.docs) {
+          final docData = doc.data();
+
+          final assignmentQuery = await _assignmentCollection
+              .where('class_code', isEqualTo: docData.code)
+              .get();
+
+          for (var assignment in assignmentQuery.docs) {
+            final data = assignment.data();
+
+            result.add(data);
+          }
+        }
+
+        return result;
+      });
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? "Unknown Firebase Exception");
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<List<AssignmentModel>> getTeacherSchedules(
+      {required String teacherId}) async {
+    try {
+      return FirebaseFirestore.instance.runTransaction((transaction) async {
+        final classQuery = await _classCollection
+            .where('teacher_id', isEqualTo: teacherId)
+            .get();
+
+        List<AssignmentModel> result = [];
+        for (var doc in classQuery.docs) {
+          final docData = doc.data();
+
+          final assignmentQuery = await _assignmentCollection
+              .where('class_code', isEqualTo: docData.code)
+              .get();
+
+          for (var assignment in assignmentQuery.docs) {
+            final data = assignment.data();
+
+            result.add(data);
+          }
+        }
+
+        return result;
+      });
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? "Unknown Firebase Exception");
+    } catch (e) {
+      throw Exception(e.toString());
+    }
   }
 }
