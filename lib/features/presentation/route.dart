@@ -134,12 +134,14 @@ Route<dynamic>? controller(RouteSettings settings) {
       Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
           builder: (context) => ClassReportPage(
+                className: args['className'],
                 classCode: args['classCode'],
               ));
     case StudentReportPage.route:
       Map<String, dynamic> args = settings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
           builder: (context) => StudentReportPage(
+                className: args['className'],
                 classCode: args['classCode'],
                 studentName: args['studentName'],
                 studentId: args['studentId'],

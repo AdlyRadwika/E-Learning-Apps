@@ -12,12 +12,13 @@ class StudentReportPage extends StatefulWidget {
   final String classCode;
   final String studentId;
   final String studentName;
+  final String className;
 
   const StudentReportPage(
       {super.key,
       required this.classCode,
       required this.studentId,
-      required this.studentName});
+      required this.studentName, required this.className});
 
   @override
   State<StudentReportPage> createState() => _StudentReportPageState();
@@ -43,13 +44,7 @@ class _StudentReportPageState extends State<StudentReportPage> {
       appBar: AppBar(
         title: Text(UserConfigUtil.role == 'teacher'
             ? "${widget.studentName}'s Report"
-            : 'Class 1 Report'),
-        actions: [
-          IconButton(
-              onPressed: () => print,
-              tooltip: 'Download',
-              icon: const Icon(Icons.download))
-        ],
+            : "${widget.className}'s Report"),
       ),
       body:
           BlocBuilder<GetGradesBloc, GetGradesState>(builder: (context, state) {

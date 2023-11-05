@@ -78,6 +78,7 @@ class _StudentReportItem extends StatelessWidget {
     return Card(
       child: ListTile(
         onTap: () => Navigator.pushNamed(context, StudentReportPage.route, arguments: {
+          'className': '-',
           'classCode': classCode ?? '-',
           'studentId': data?.uid ?? '-',
           'studentName': data?.name ?? '-'

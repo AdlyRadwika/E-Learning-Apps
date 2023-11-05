@@ -7,9 +7,10 @@ class ClassReportPage extends StatefulWidget {
   static const route = '/class-report';
 
   final String classCode;
-  
+  final String className;
 
-  const ClassReportPage({super.key, required this.classCode});
+
+  const ClassReportPage({super.key, required this.classCode, required this.className});
 
   @override
   State<ClassReportPage> createState() => _ClassReportPageState();
@@ -30,13 +31,7 @@ class _ClassReportPageState extends State<ClassReportPage> {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Class 1's Report"),
-        actions: [
-          IconButton(
-              tooltip: 'Download',
-              onPressed: () => print,
-              icon: const Icon(Icons.download))
-        ],
+        title: Text("${widget.className}'s Report"),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(

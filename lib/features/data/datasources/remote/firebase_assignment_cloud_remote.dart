@@ -7,6 +7,7 @@ import 'package:final_project/features/data/models/assignment/assignment_model.d
 import 'package:final_project/features/data/models/assignment/students_assignment_status_model.dart';
 import 'package:final_project/features/data/models/assignment/submission_model.dart';
 import 'package:final_project/features/data/models/class/enrolled_class_model.dart';
+import 'package:final_project/features/data/models/grade/grade_model.dart';
 import 'package:final_project/features/data/models/user/user_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -54,6 +55,12 @@ class FirebaseAssignmentCloudRemoteImpl
               SubmissionModel.fromJson(snapshot.data()!),
           toFirestore: (value, _) => value.toJson());
 
+  final _gradeCollection = FirebaseFirestore.instance
+      .collection('assignments_grades')
+      .withConverter<GradeModel>(
+          fromFirestore: (snapshot, _) => GradeModel.fromJson(snapshot.data()!),
+          toFirestore: (value, _) => value.toJson());
+
   final _userCollection = FirebaseFirestore.instance
       .collection('users')
       .withConverter<UserModel>(
@@ -77,6 +84,15 @@ class FirebaseAssignmentCloudRemoteImpl
       await _assignmentCollection.doc(assignmentId).delete();
 
       await _submissionCollection
+          .where('assignment_id', isEqualTo: assignmentId)
+          .get()
+          .then((querySnapshot) {
+        for (var document in querySnapshot.docs) {
+          batch.delete(document.reference);
+        }
+      });
+
+      await _gradeCollection
           .where('assignment_id', isEqualTo: assignmentId)
           .get()
           .then((querySnapshot) {

@@ -4,10 +4,12 @@ import 'package:final_project/features/presentation/bloc/assignment_cloud/get_as
 import 'package:final_project/features/presentation/pages/class/assignments/assignments_page.dart';
 import 'package:final_project/features/presentation/pages/class/attendance/attendance_page.dart';
 import 'package:final_project/features/presentation/pages/class/detail/widgets/annoucement_section.dart';
+import 'package:final_project/features/presentation/pages/class/detail/widgets/expanding_fab.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/add_assignment_widget.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/announcement_list.dart';
 import 'package:final_project/features/presentation/pages/class/info/class_info_page.dart';
 import 'package:final_project/features/presentation/pages/class/widgets/assignment_list.dart';
+import 'package:final_project/features/presentation/pages/grades/class_report/class_report_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -106,13 +108,25 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-            onPressed: () => Navigator.pushNamed(context, AttendancePage.route,
-                    arguments: {
-                      "classCode": widget.data?.code ?? '-',
-                      "classTitle": widget.data?.title ?? '-'
-                    }),
-            label: const Text('Attendance')),
+        floatingActionButton: ExpandableFab(distance: 80, children: [
+          ActionButton(
+              onPressed: () => Navigator.pushNamed(
+                      context, AttendancePage.route, arguments: {
+                    "classCode": widget.data?.code ?? '-',
+                    "classTitle": widget.data?.title ?? '-'
+                  }),
+              tooltip: 'Attendance',
+              icon: const Icon(Icons.person_search_sharp)),
+          ActionButton(
+              tooltip: 'Class Report',
+              onPressed: () => Navigator.pushNamed(
+                      context, ClassReportPage.route,
+                      arguments: {
+                        'classCode': widget.data?.code ?? '-',
+                        'className': widget.data?.title ?? '-',
+                      }),
+              icon: const Icon(Icons.grade)),
+        ]),
       ),
     );
   }

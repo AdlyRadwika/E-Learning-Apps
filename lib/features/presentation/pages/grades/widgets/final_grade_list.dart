@@ -44,7 +44,10 @@ class _TeacherGradeItem extends StatelessWidget {
     return Card(
       child: ListTile(
         onTap: () => Navigator.pushNamed(context, ClassReportPage.route,
-            arguments: {'classCode': data?.code ?? '-'}),
+            arguments: {
+              'classCode': data?.code ?? '-',
+              'className': data?.title ?? '-'
+            }),
         leading: const Icon(Icons.star),
         title: Text('${data?.title ?? "Unknown"} Report'),
         trailing: const Icon(Icons.arrow_forward_ios),
@@ -67,6 +70,7 @@ class _StudentGradeItem extends StatelessWidget {
           'classCode': data?.code ?? '-',
           'studentId': data?.studentId ?? '-',
           'studentName': '-',
+          'className': data?.title ?? '-',
         }),
         leading: const Icon(Icons.star),
         title: Text('${data?.title ?? "Unknown"} Report'),
