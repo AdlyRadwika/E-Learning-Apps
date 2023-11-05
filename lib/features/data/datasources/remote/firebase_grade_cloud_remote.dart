@@ -62,6 +62,7 @@ class FirebaseGradeCloudRemoteImpl implements FirebaseGradeCloudRemote {
         ),
         details: [],
       );
+      final assignmentDetails = <AssignmentDetailModel>[];
 
       final assignmentQuery = await _assignmentCollection
           .where('class_code', isEqualTo: classCode)
@@ -72,6 +73,8 @@ class FirebaseGradeCloudRemoteImpl implements FirebaseGradeCloudRemote {
       }
 
       List<GradeContentModel> gradeContentList = [];
+      List<GradeModel> grades;
+      double calculateFinalGrade = 0;
 
       for (var doc in assignmentQuery.docs) {
         final assignmentData = doc.data();
@@ -91,79 +94,62 @@ class FirebaseGradeCloudRemoteImpl implements FirebaseGradeCloudRemote {
         }
 
         double finalGrade = 0;
-        List<GradeModel> grades = [];
 
         if (submissionQuery.docs.isNotEmpty) {
-          final assignmentDetails = <AssignmentDetailModel>[];
+          grades = [];
 
           for (var submissionDoc in submissionQuery.docs) {
             final submissionData = submissionDoc.data();
 
-            assignmentDetails.add(AssignmentDetailModel(
+            AssignmentDetailModel assignmentDetail = AssignmentDetailModel(
               assignmentId: submissionData.assignmentId,
               assignmentName: assignmentData.title,
               fileUrl: submissionData.fileUrl,
               submittedDate: submissionData.createdAt,
               grade: 0,
               fileName: submissionData.fileName,
-            ));
-          }
-
-          final gradeQuery = await _gradeCollection
-              .where('assignment_id', isEqualTo: assignmentId)
-              .where('student_id', isEqualTo: studentId)
-              .get();
-
-          for (var doc in gradeQuery.docs) {
-            final gradeData = doc.data();
-            grades.add(gradeData);
-          }
-
-          if (grades.isNotEmpty) {
-            double calculateFinalGrade = 0;
-
-            for (final grade in grades) {
-              calculateFinalGrade += grade.grade;
-            }
-
-            finalGrade = calculateFinalGrade / gradeQuery.docs.length;
-
-            for (var i = 0; i < assignmentDetails.length; i++) {
-              assignmentDetails[i].grade = grades[i].grade;
-            }
-
-            final gradeContent = GradeContentModel(
-              classCode: classCode,
-              id: assignmentId,
-              finalGrade: finalGrade.floor(),
-              updatedAt: '-',
-              createdAt: DateTime.now().toString(),
-              user: GradeContentOwnerModel(
-                uid: userData.uid,
-                name: userData.name,
-                imageUrl: userData.imageUrl,
-              ),
-              details: assignmentDetails,
             );
 
-            gradeContentList.add(gradeContent);
-          } else {
-            final gradeContent = GradeContentModel(
-              classCode: classCode,
-              id: assignmentId,
-              finalGrade: finalGrade.floor(),
-              updatedAt: '-',
-              createdAt: DateTime.now().toString(),
-              user: GradeContentOwnerModel(
-                uid: userData.uid,
-                name: userData.name,
-                imageUrl: userData.imageUrl,
-              ),
-              details: assignmentDetails,
-            );
+            final gradeQuery = await _gradeCollection
+                .where('assignment_id', isEqualTo: assignmentId)
+                .where('student_id', isEqualTo: studentId)
+                .get();
 
-            gradeContentList.add(gradeContent);
+            for (var doc in gradeQuery.docs) {
+              final gradeData = doc.data();
+              grades.add(gradeData);
+            }
+
+            if (grades.isNotEmpty) {
+              for (final grade in grades) {
+                calculateFinalGrade += grade.grade;
+              }
+
+              for (var i = 0; i < grades.length; i++) {
+                assignmentDetail.grade = grades[i].grade;
+              }
+            }
+
+            assignmentDetails.add(assignmentDetail);
           }
+
+          finalGrade = calculateFinalGrade / assignmentDetails.length;
+
+          final gradeContent = GradeContentModel(
+            classCode: classCode,
+            id: assignmentId,
+            finalGrade: finalGrade.floor(),
+            updatedAt: '-',
+            createdAt: DateTime.now().toString(),
+            user: GradeContentOwnerModel(
+              uid: userData.uid,
+              name: userData.name,
+              imageUrl: userData.imageUrl,
+            ),
+            details: assignmentDetails,
+          );
+
+          gradeContentList.add(gradeContent);
         }
       }
 
@@ -174,7 +160,7 @@ class FirebaseGradeCloudRemoteImpl implements FirebaseGradeCloudRemote {
       throw Exception(e.toString());
     }
   }
-  
+
   @override
   Future<void> insertGrade({required GradeModel data}) async {
     try {
